@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Οχήματα — Φραγκάκης</title>
+<title>Garage — Φραγκάκης</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3.28.0/lib/msal-browser.min.js"></script>
 <style>
 :root {
   --bg: #080a0f;
@@ -593,7 +593,7 @@ const msalConfig = {
   auth: {
     clientId: 'd2d56ac0-53cd-4de1-afb6-0e89c9be4e8e',
     authority: 'https://login.microsoftonline.com/common',
-    redirectUri: window.location.href.split('?')[0].split('#')[0],
+    redirectUri: 'https://fragarianos.github.io/garage',
   },
   cache: { cacheLocation: 'localStorage', storeAuthStateInCookie: false }
 };

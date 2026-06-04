@@ -599,6 +599,7 @@ const msalConfig = {
 };
 const scopes = ['Files.ReadWrite', 'User.Read'];
 const msalInstance = new msal.PublicClientApplication(msalConfig);
+await msalInstance.initialize();
 const FILE_PATH = '/me/drive/root:/garage_ochimata.json:/content';
 
 let token = null;

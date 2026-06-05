@@ -606,7 +606,6 @@ const msalConfig = {
 };
 const scopes = ['Files.ReadWrite', 'User.Read'];
 const msalInstance = new msal.PublicClientApplication(msalConfig);
-await msalInstance.initialize();
 const FILE_PATH = '/me/drive/root:/garage_ochimata.json:/content';
 
 let token = null;
@@ -1074,6 +1073,7 @@ function showPage(name, btn) {
 //  INIT — check if already logged in
 // ══════════════════════════════════════════════════════
 (async()=>{
+  await msalInstance.initialize();
   await msalInstance.handleRedirectPromise();
   const accounts = msalInstance.getAllAccounts();
   if(accounts.length>0) {

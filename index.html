@@ -521,12 +521,19 @@ select.fi option { background: #12151e; }
       <div class="fl"><label>Τέλη Κυκλοφορίας (€)</label><input class="fi" id="nv_tax" type="number"></div>
       <div class="fl"><label>Λήξη Τελών</label><input class="fi" id="nv_tax_exp" type="date"></div>
     </div>
+    <div class="modal-section">Παράβολο / Άλλες Λήξεις</div>
+    <div class="fg2">
+      <div class="fl"><label>Άδεια Οδήγησης — Λήξη</label><input class="fi" id="nv_license_exp" type="date"></div>
+      <div class="fl"><label>Παράβολο — Λήξη</label><input class="fi" id="nv_paravolo_exp" type="date"></div>
+      <div class="fl" style="grid-column:1/-1"><label>Παράβολο — Περιγραφή</label><input class="fi" id="nv_paravolo_desc" placeholder="π.χ. Ανανέωση άδειας οδήγησης"></div>
+    </div>
     <div class="modal-section">Service</div>
     <div class="fg2">
       <div class="fl"><label>Τελευταίο Service</label><input class="fi" id="nv_svc_last" type="date"></div>
       <div class="fl"><label>Χλμ Τελευταίου</label><input class="fi" id="nv_svc_last_km" type="number"></div>
       <div class="fl"><label>Επόμενο Service</label><input class="fi" id="nv_svc_next" type="date"></div>
       <div class="fl"><label>Χλμ Επόμενου</label><input class="fi" id="nv_svc_next_km" type="number"></div>
+      <div class="fl" style="grid-column:1/-1"><label>Τι περιλαμβάνει το επόμενο service</label><input class="fi" id="nv_svc_next_desc" placeholder="π.χ. Αλλαγή λαδιών, φίλτρων, μπουζί, ιμάντας..."></div>
     </div>
     <div class="modal-section">Σημειώσεις</div>
     <textarea class="fi" id="nv_notes" rows="3" placeholder="Ελεύθερο κείμενο..."></textarea>
@@ -703,8 +710,8 @@ function setSyncing(loading, saving=false) {
 // ══════════════════════════════════════════════════════
 function defaultVehicles() {
   return [
-    { id:'v1', plate:'ΑΝΡ3848', type:'car', make:'MITSUBISHI', model:'ASX', year:'', color:'ΓΚΡΙ', vin:'JMBXJGA7WFZD09160', fuel:'Βενζίνη', cc:'', owner:'ΠΛΑΤΗ ΠΕΛΑΓΙΑ', km:'', regdate:'', ins_co:'', ins_num:'', ins_exp:'', ins_cost:'', kteo:'', kteo_next:'', tax:'', tax_exp:'', svc_last:'', svc_last_km:'', svc_next:'', svc_next_km:'', notes:'', services:[] },
-    { id:'v2', plate:'ΑΝΗ4951', type:'car', make:'NISSAN', model:'ALMERA', year:'', color:'ΜΑΥΡΟ', vin:'SJNFAAN16U2600759', fuel:'Βενζίνη', cc:'', owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ', km:'', regdate:'', ins_co:'', ins_num:'', ins_exp:'', ins_cost:'', kteo:'', kteo_next:'', tax:'', tax_exp:'', svc_last:'', svc_last_km:'', svc_next:'', svc_next_km:'', notes:'', services:[] },
+    { id:'v1', plate:'ΑΝΡ3848', type:'car', make:'MITSUBISHI', model:'ASX', year:'', color:'ΓΚΡΙ', vin:'JMBXJGA7WFZD09160', fuel:'Βενζίνη', cc:'', owner:'ΠΛΑΤΗ ΠΕΛΑΓΙΑ', km:'', regdate:'', ins_co:'', ins_num:'', ins_exp:'', ins_cost:'', kteo:'', kteo_next:'', tax:'', tax_exp:'', svc_last:'', svc_last_km:'', svc_next:'', svc_next_km:'', svc_next_desc:'', license_exp:'', paravolo_exp:'', paravolo_desc:'', notes:'', services:[] },
+    { id:'v2', plate:'ΑΝΗ4951', type:'car', make:'NISSAN', model:'ALMERA', year:'', color:'ΜΑΥΡΟ', vin:'SJNFAAN16U2600759', fuel:'Βενζίνη', cc:'', owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ', km:'', regdate:'', ins_co:'', ins_num:'', ins_exp:'', ins_cost:'', kteo:'', kteo_next:'', tax:'', tax_exp:'', svc_last:'', svc_last_km:'', svc_next:'', svc_next_km:'', svc_next_desc:'', license_exp:'', paravolo_exp:'', paravolo_desc:'', notes:'', services:[] },
     { id:'v3', plate:'ΤΤΕ0304', type:'moto', make:'VOGE', model:'SR16 200', year:'', color:'ΓΚΡΙ', vin:'LLCVTKF03SC000181', fuel:'Βενζίνη', cc:'200', owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ', km:'', regdate:'', ins_co:'', ins_num:'', ins_exp:'', ins_cost:'', kteo:'', kteo_next:'', tax:'', tax_exp:'', svc_last:'', svc_last_km:'', svc_next:'', svc_next_km:'', notes:'', services:[] }
   ];
 }
@@ -821,11 +828,14 @@ function renderDetail() {
         <div class="dp-title" style="margin-top:20px">ΚΤΕΟ & Τέλη</div>
         ${fr('Τελευταίο ΚΤΕΟ',fmtDate(v.kteo))}${fr('Επόμενο ΚΤΕΟ',fmtDate(v.kteo_next))}
         ${fr('Τέλη Κυκλοφορίας',v.tax?'€'+v.tax:'')}${fr('Λήξη Τελών',fmtDate(v.tax_exp))}
+        ${fr('Άδεια Οδήγησης — Λήξη',fmtDate(v.license_exp))}${fr('Παράβολο — Λήξη',fmtDate(v.paravolo_exp))}
+        ${v.paravolo_desc?fr('Παράβολο — Περιγραφή',v.paravolo_desc):''}
       </div>
       <div class="dp-section">
         <div class="dp-title">Service</div>
         ${fr('Τελευταίο',fmtDate(v.svc_last))}${fr('Χλμ Τελευταίου',v.svc_last_km?Number(v.svc_last_km).toLocaleString('el-GR')+' χλμ':'')}
         ${fr('Επόμενο',fmtDate(v.svc_next))}${fr('Χλμ Επόμενου',v.svc_next_km?Number(v.svc_next_km).toLocaleString('el-GR')+' χλμ':'')}
+        ${v.svc_next_desc?fr('Εργασίες επόμενου service',v.svc_next_desc):''}
         ${v.notes?`<div class="dp-title" style="margin-top:20px">Σημειώσεις</div><div style="font-size:0.85rem;color:var(--text2);line-height:1.7">${v.notes}</div>`:''}
       </div>
     </div>
@@ -866,7 +876,7 @@ function delSvc(vid,i) {
 // ══════════════════════════════════════════════════════
 //  VEHICLE MODAL
 // ══════════════════════════════════════════════════════
-const vFields = ['plate','type','make','model','year','color','vin','fuel','cc','owner','km','regdate','ins_co','ins_num','ins_exp','ins_cost','kteo','kteo_next','tax','tax_exp','svc_last','svc_last_km','svc_next','svc_next_km','notes'];
+const vFields = ['plate','type','make','model','year','color','vin','fuel','cc','owner','km','regdate','ins_co','ins_num','ins_exp','ins_cost','kteo','kteo_next','tax','tax_exp','license_exp','paravolo_exp','paravolo_desc','svc_last','svc_last_km','svc_next','svc_next_km','svc_next_desc','notes'];
 
 function openAddV() {
   editingVid=null;
@@ -907,32 +917,65 @@ function saveVehicle() {
 // ══════════════════════════════════════════════════════
 //  REMINDERS
 // ══════════════════════════════════════════════════════
+function remColor(days) {
+  if (days===null) return 'nil';
+  if (days<0) return 'red';
+  if (days<=30) return 'yellow';
+  return 'green';
+}
+
 function renderReminders() {
   const list=document.getElementById('remList');
   const items=[];
   appData.vehicles.forEach(v=>{
-    [['Ασφάλεια',v.ins_exp],['ΚΤΕΟ',v.kteo_next],['Τέλη Κυκλοφορίας',v.tax_exp],['Επόμενο Service',v.svc_next]].forEach(([label,date])=>{
-      if(!date) return;
-      items.push({plate:v.plate,make:v.make,model:v.model,label,date,days:daysUntil(date)});
+    const checks=[
+      {label:'Ασφάλεια', date:v.ins_exp, icon:'🛡️', extra:''},
+      {label:'ΚΤΕΟ', date:v.kteo_next, icon:'🔍', extra:''},
+      {label:'Τέλη Κυκλοφορίας', date:v.tax_exp, icon:'📋', extra:''},
+      {label:'Επόμενο Service', date:v.svc_next, icon:'🔧', extra:v.svc_next_desc||''},
+      {label:'Άδεια Οδήγησης', date:v.license_exp, icon:'🪪', extra:''},
+      {label:'Παράβολο', date:v.paravolo_exp, icon:'📄', extra:v.paravolo_desc||''},
+    ];
+    checks.forEach(c=>{
+      if(!c.date) return;
+      const days=daysUntil(c.date);
+      items.push({plate:v.plate,make:v.make,model:v.model,label:c.label,date:c.date,days,icon:c.icon,extra:c.extra,colorKey:remColor(days)});
     });
   });
-  items.sort((a,b)=>a.days-b.days);
+
+  // Sort: red first (most urgent = smallest days), then yellow, then green
+  const order = {red:0, yellow:1, green:2, nil:3};
+  items.sort((a,b)=> {
+    if(order[a.colorKey]!==order[b.colorKey]) return order[a.colorKey]-order[b.colorKey];
+    return a.days-b.days;
+  });
+
   if(!items.length){list.innerHTML='<div class="empty">Δεν υπάρχουν υπενθυμίσεις.<br>Συμπλήρωσε ημερομηνίες στα οχήματα.</div>';return;}
-  list.innerHTML=items.map(it=>{
-    const c=statusColor(it.days);
-    const dTxt=it.days<0?`Έληξε πριν ${Math.abs(it.days)} μέρες`:it.days===0?'Λήγει σήμερα!':`Απομένουν ${it.days} μέρες`;
-    return `<div class="rem-item">
-      <div class="rem-bar" style="background:${c}"></div>
-      <div class="rem-info">
-        <div class="rem-title">${it.label}</div>
-        <div class="rem-sub">${it.plate} — ${it.make} ${it.model}</div>
-      </div>
-      <div class="rem-right">
-        <div class="rem-date" style="color:${c}">${fmtDate(it.date)}</div>
-        <div class="rem-days" style="color:${c}">${dTxt}</div>
-      </div>
-    </div>`;
-  }).join('');
+
+  // Group by color
+  const groups = [{key:'red',label:'🔴 Ληγμένα / Επείγοντα',color:'var(--red)'},{key:'yellow',label:'🟡 Λήγουν σε 1 μήνα',color:'var(--amber)'},{key:'green',label:'🟢 OK — άνω των 2 μηνών',color:'var(--green)'}];
+  let html='';
+  groups.forEach(g=>{
+    const gItems=items.filter(i=>i.colorKey===g.key);
+    if(!gItems.length) return;
+    html+=`<div style="font-family:'Outfit',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${g.color};margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">${g.label}</div>`;
+    html+=gItems.map(it=>{
+      const c=statusColor(it.days);
+      const dTxt=it.days<0?`Έληξε πριν ${Math.abs(it.days)} μέρες`:it.days===0?'Λήγει σήμερα!':`Απομένουν ${it.days} μέρες`;
+      return `<div class="rem-item" style="border-left:3px solid ${c};margin-bottom:8px">
+        <div class="rem-bar" style="background:${c}"></div>
+        <div class="rem-info">
+          <div class="rem-title">${it.icon} ${it.label}</div>
+          <div class="rem-sub">${it.plate} — ${it.make} ${it.model}${it.extra?` · <em>${it.extra}</em>`:''}</div>
+        </div>
+        <div class="rem-right">
+          <div class="rem-date" style="color:${c}">${fmtDate(it.date)}</div>
+          <div class="rem-days" style="color:${c}">${dTxt}</div>
+        </div>
+      </div>`;
+    }).join('');
+  });
+  list.innerHTML=html||'<div class="empty">Δεν υπάρχουν υπενθυμίσεις.</div>';
 }
 
 // ══════════════════════════════════════════════════════

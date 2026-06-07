@@ -439,6 +439,38 @@ select.fi option { background: #12151e; }
 .toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
 
 
+
+/* ── TIRES ── */
+.tire-current { background: rgba(201,168,76,.06); border: 1px solid rgba(201,168,76,.25); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+.tire-current-label { font-size: .65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+.tire-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tire-spec { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; }
+.tire-spec-label { font-size: .62rem; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px; }
+.tire-spec-val { font-size: .88rem; font-weight: 600; }
+.tire-spec-val.big { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 1px; color: var(--gold2); }
+.tire-warn { background: rgba(255,152,0,.08); border: 1px solid rgba(255,152,0,.3); border-radius: 8px; padding: 8px 12px; font-size: .8rem; color: var(--amber); margin-bottom: 10px; }
+.tire-danger { background: rgba(244,67,54,.08); border: 1px solid rgba(244,67,54,.3); border-radius: 8px; padding: 8px 12px; font-size: .8rem; color: var(--red); margin-bottom: 10px; }
+.tire-history { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.tire-item { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid #888; border-radius: 9px; padding: 12px 14px; position: relative; }
+.tire-item.current { border-left-color: var(--gold); }
+.tire-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.tire-item-date { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 1px; color: var(--gold); }
+.tire-item-cost { font-size: .85rem; color: var(--green); font-weight: 600; }
+.tire-item-brand { font-size: .9rem; font-weight: 700; margin-bottom: 2px; }
+.tire-item-size { font-size: .8rem; color: var(--text2); margin-bottom: 4px; }
+.tire-item-km { font-size: .75rem; color: var(--text3); }
+.tire-item-age { font-size: .72rem; margin-top: 4px; }
+.tire-section-title { font-size: .68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin: 10px 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+.tire-del { position: absolute; top: 10px; right: 10px; background: none; border: none; cursor: pointer; color: var(--text3); font-size: .85rem; padding: 2px 5px; border-radius: 4px; }
+.tire-del:hover { color: var(--red); }
+.tire-add-form { background: var(--bg2); border: 1px dashed var(--border2); border-radius: 10px; padding: 14px; margin-top: 8px; }
+.tire-add-title { font-size: .7rem; font-weight: 700; color: var(--text2); margin-bottom: 12px; letter-spacing: .5px; text-transform: uppercase; }
+.tire-add-btn { margin-top: 10px; background: rgba(201,168,76,.1); color: var(--gold); border: 1px solid rgba(201,168,76,.3); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: .82rem; padding: 10px; border-radius: 9px; cursor: pointer; width: 100%; }
+.tire-add-btn:hover { background: rgba(201,168,76,.2); }
+.tire-type-toggle { display: flex; gap: 6px; margin-bottom: 12px; }
+.tire-type-btn { flex: 1; background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; color: var(--text3); font-family: 'Outfit', sans-serif; font-size: .8rem; font-weight: 600; padding: 8px; cursor: pointer; text-align: center; transition: all .2s; }
+.tire-type-btn.active { background: rgba(201,168,76,.12); border-color: var(--gold); color: var(--gold); }
+
 /* ── PAYMENTS TAB ── */
 .pay-timeline { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
 .pay-item { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--blue); border-radius: 10px; padding: 12px 16px; position: relative; }
@@ -788,7 +820,7 @@ function defaultVehicles() {
       services:[
         {date:'2025-12-01', km:'94363', cost:'', desc:'Τακτικό Service', tags:['Γενικός έλεγχος']},
         {date:'2025-10-31', km:'', cost:'', desc:'ΚΤΕΟ Περιοδικός — Επιτυχής', tags:['ΚΤΕΟ']}
-      ], payments:[]
+      ], payments:[], tires:[]
     },
     {
       id:'v2', plate:'ΑΝΗ4951', type:'car', make:'NISSAN', model:'ALMERA',
@@ -804,7 +836,7 @@ function defaultVehicles() {
       services:[
         {date:'2025-12-01', km:'268293', cost:'', desc:'Τακτικό Service', tags:['Γενικός έλεγχος']},
         {date:'2025-05-19', km:'268293', cost:'', desc:'ΚΤΕΟ Περιοδικός — Δευτερεύουσες Ελλείψεις', tags:['ΚΤΕΟ']}
-      ], payments:[]
+      ], payments:[], tires:[]
     },
     {
       id:'v3', plate:'ΤΤΕ0304', type:'moto', make:'VOGE', model:'SR16 200',
@@ -819,7 +851,7 @@ function defaultVehicles() {
       notes:'Μεταβίβαση 03/06/2026. Κατασκευαστής: VOGE/LONCIN. Φορολογήσιμη ισχύς: 2. Επιβάτες: 2. ΑΦΜ: 110385729.',
       services:[
         {date:'2025-12-01', km:'', cost:'', desc:'Τακτικό Service', tags:['Γενικός έλεγχος']}
-      ], payments:[]
+      ], payments:[], tires:[]
     }
   ];
 }
@@ -924,6 +956,66 @@ function requestNotificationPermission() {
   }
 }
 
+
+// ══════════════════════════════════════════════════════
+//  TIRES
+// ══════════════════════════════════════════════════════
+function addTire(vid) {
+  const v = appData.vehicles.find(x=>x.id===vid);
+  if (!v) return;
+  const date = document.getElementById('tf_dt_'+vid)?.value;
+  if (!date) { toast('Συμπλήρωσε ημερομηνία τοποθέτησης','error'); return; }
+  if (!v.tires) v.tires = [];
+  const isMoto = v.type === 'moto';
+  let entry = {
+    date,
+    km_at: document.getElementById('tf_km_'+vid)?.value || v.km || '',
+    install_cost: document.getElementById('tf_ic_'+vid)?.value || '',
+    total_cost: document.getElementById('tf_tc_'+vid)?.value || '',
+    notes: document.getElementById('tf_nt_'+vid)?.value || '',
+  };
+  if (isMoto) {
+    entry.front_size  = document.getElementById('tf_fs_'+vid)?.value || '';
+    entry.front_brand = document.getElementById('tf_fb_'+vid)?.value || '';
+    entry.front_model = document.getElementById('tf_fm_'+vid)?.value || '';
+    entry.front_dot   = document.getElementById('tf_fd_'+vid)?.value || '';
+    entry.front_load  = document.getElementById('tf_fl_'+vid)?.value || '';
+    entry.front_speed = document.getElementById('tf_fsp_'+vid)?.value || '';
+    entry.front_cost  = document.getElementById('tf_fc_'+vid)?.value || '';
+    entry.rear_size   = document.getElementById('tf_rs_'+vid)?.value || '';
+    entry.rear_brand  = document.getElementById('tf_rb_'+vid)?.value || '';
+    entry.rear_model  = document.getElementById('tf_rm_'+vid)?.value || '';
+    entry.rear_dot    = document.getElementById('tf_rd_'+vid)?.value || '';
+    entry.rear_load   = document.getElementById('tf_rl_'+vid)?.value || '';
+    entry.rear_speed  = document.getElementById('tf_rsp_'+vid)?.value || '';
+    entry.rear_cost   = document.getElementById('tf_rc_'+vid)?.value || '';
+  } else {
+    entry.size   = document.getElementById('tf_sz_'+vid)?.value || '';
+    entry.brand  = document.getElementById('tf_br_'+vid)?.value || '';
+    entry.model  = document.getElementById('tf_mo_'+vid)?.value || '';
+    entry.season = document.getElementById('tf_se_'+vid)?.value || '';
+    entry.dot    = document.getElementById('tf_do_'+vid)?.value || '';
+    entry.load   = document.getElementById('tf_lo_'+vid)?.value || '';
+    entry.speed  = document.getElementById('tf_sp_'+vid)?.value || '';
+    entry.purchase_cost = document.getElementById('tf_pc_'+vid)?.value || '';
+  }
+  v.tires.unshift(entry);
+  saveToOneDrive();
+  renderDetail();
+  switchDpTab(vid, 'tire');
+  toast('Ελαστικά καταχωρήθηκαν ✓');
+}
+
+function delTire(vid, idx) {
+  if (!confirm('Διαγραφή εγγραφής ελαστικών;')) return;
+  const v = appData.vehicles.find(x=>x.id===vid);
+  if (!v) return;
+  v.tires.splice(idx, 1);
+  saveToOneDrive();
+  renderDetail();
+  switchDpTab(vid, 'tire');
+}
+
 // ══════════════════════════════════════════════════════
 //  PAYMENTS
 // ══════════════════════════════════════════════════════
@@ -932,13 +1024,13 @@ function switchDpTab(vid, tab) {
   const payDiv = document.getElementById('dp-pay-' + vid);
   const svcBtn = document.getElementById('tab-svc-' + vid);
   const payBtn = document.getElementById('tab-pay-' + vid);
-  if (tab === 'svc') {
-    svcDiv.style.display = 'block'; payDiv.style.display = 'none';
-    svcBtn.classList.add('active'); payBtn.classList.remove('active');
-  } else {
-    svcDiv.style.display = 'none'; payDiv.style.display = 'block';
-    svcBtn.classList.remove('active'); payBtn.classList.add('active');
-  }
+  const tireDiv = document.getElementById('dp-tire-' + vid);
+  const tireBtn = document.getElementById('tab-tire-' + vid);
+  [svcDiv, payDiv, tireDiv].forEach(d => { if(d) d.style.display = 'none'; });
+  [svcBtn, payBtn, tireBtn].forEach(b => { if(b) b.classList.remove('active'); });
+  if (tab === 'svc') { if(svcDiv) svcDiv.style.display='block'; if(svcBtn) svcBtn.classList.add('active'); }
+  else if (tab === 'pay') { if(payDiv) payDiv.style.display='block'; if(payBtn) payBtn.classList.add('active'); }
+  else if (tab === 'tire') { if(tireDiv) tireDiv.style.display='block'; if(tireBtn) tireBtn.classList.add('active'); }
 }
 
 function addPayment(vid) {
@@ -951,6 +1043,7 @@ function addPayment(vid) {
   const desc = document.getElementById('p_desc_'+vid)?.value;
   if (!date) { toast('Συμπλήρωσε ημερομηνία πληρωμής', 'error'); return; }
   if (!v.payments) v.payments = [];
+      if (!v.tires) v.tires = [];
   v.payments.unshift({ cat, date, amount, exp_date, desc });
   // Auto-update expiry date on vehicle if relevant
   if (cat === 'Ασφάλεια' && exp_date) v.ins_exp = exp_date;
@@ -1152,6 +1245,144 @@ function renderDetail() {
     <button class="dp-tab-btn active" id="tab-svc-${v.id}" onclick="switchDpTab('${v.id}','svc')">🔧 Service</button>
     <button class="dp-tab-btn" id="tab-pay-${v.id}" onclick="switchDpTab('${v.id}','pay')">💳 Πληρωμές (${(v.payments||[]).length})</button>
   </div>`;
+
+      <!-- TIRES TAB -->
+      <div id="dp-tire-${v.id}" style="display:none">
+        ${(()=>{
+          const tires = v.tires||[];
+          const isMoto = v.type==='moto';
+          let html = '';
+
+          // Current tires warning
+          if(tires.length > 0) {
+            const cur = tires[0];
+            const dotYear = cur.dot ? parseInt(cur.dot.slice(-2)) + 2000 : null;
+            const dotAge = dotYear ? new Date().getFullYear() - dotYear : null;
+            const kmDriven = (v.km && cur.km_at) ? (Number(v.km) - Number(cur.km_at)) : null;
+
+            if(dotAge !== null && dotAge >= 6) {
+              html += `<div class="tire-danger">⛔ Τα ελαστικά είναι ${dotAge} ετών! Συστήνεται άμεση αλλαγή.</div>`;
+            } else if(dotAge !== null && dotAge >= 4) {
+              html += `<div class="tire-warn">⚠️ Τα ελαστικά είναι ${dotAge} ετών. Εξετάστε αλλαγή σύντομα.</div>`;
+            }
+            if(kmDriven !== null && kmDriven >= 40000) {
+              html += `<div class="tire-danger">⛔ Τα ελαστικά έχουν ${Number(kmDriven).toLocaleString('el-GR')} χλμ! Άμεση αλλαγή.</div>`;
+            } else if(kmDriven !== null && kmDriven >= 30000) {
+              html += `<div class="tire-warn">⚠️ Τα ελαστικά έχουν ${Number(kmDriven).toLocaleString('el-GR')} χλμ. Προγραμματίστε αλλαγή.</div>`;
+            }
+
+            // Current tires display
+            html += '<div class="tire-current"><div class="tire-current-label">🛞 Τρέχοντα Ελαστικά</div>';
+            if(isMoto) {
+              html += '<div class="tire-section-title">Εμπρός</div>';
+              html += '<div class="tire-specs">';
+              html += cur.front_size ? `<div class="tire-spec"><div class="tire-spec-label">Διάσταση</div><div class="tire-spec-val big">${cur.front_size}</div></div>` : '';
+              html += cur.front_brand ? `<div class="tire-spec"><div class="tire-spec-label">Μάρκα/Μοντέλο</div><div class="tire-spec-val">${cur.front_brand} ${cur.front_model||''}</div></div>` : '';
+              html += cur.front_dot ? `<div class="tire-spec"><div class="tire-spec-label">DOT</div><div class="tire-spec-val">${cur.front_dot}</div></div>` : '';
+              html += cur.front_cost ? `<div class="tire-spec"><div class="tire-spec-label">Κόστος</div><div class="tire-spec-val">€${cur.front_cost}</div></div>` : '';
+              html += '</div>';
+              html += '<div class="tire-section-title">Πίσω</div>';
+              html += '<div class="tire-specs">';
+              html += cur.rear_size ? `<div class="tire-spec"><div class="tire-spec-label">Διάσταση</div><div class="tire-spec-val big">${cur.rear_size}</div></div>` : '';
+              html += cur.rear_brand ? `<div class="tire-spec"><div class="tire-spec-label">Μάρκα/Μοντέλο</div><div class="tire-spec-val">${cur.rear_brand} ${cur.rear_model||''}</div></div>` : '';
+              html += cur.rear_dot ? `<div class="tire-spec"><div class="tire-spec-label">DOT</div><div class="tire-spec-val">${cur.rear_dot}</div></div>` : '';
+              html += cur.rear_cost ? `<div class="tire-spec"><div class="tire-spec-label">Κόστος</div><div class="tire-spec-val">€${cur.rear_cost}</div></div>` : '';
+              html += '</div>';
+            } else {
+              html += '<div class="tire-specs">';
+              html += cur.size ? `<div class="tire-spec"><div class="tire-spec-label">Διάσταση</div><div class="tire-spec-val big">${cur.size}</div></div>` : '';
+              html += cur.brand ? `<div class="tire-spec"><div class="tire-spec-label">Μάρκα/Μοντέλο</div><div class="tire-spec-val">${cur.brand} ${cur.model||''}</div></div>` : '';
+              html += cur.season ? `<div class="tire-spec"><div class="tire-spec-label">Τύπος</div><div class="tire-spec-val">${cur.season}</div></div>` : '';
+              html += cur.dot ? `<div class="tire-spec"><div class="tire-spec-label">DOT</div><div class="tire-spec-val">${cur.dot}</div></div>` : '';
+              html += cur.load ? `<div class="tire-spec"><div class="tire-spec-label">Φορτίο/Ταχύτητα</div><div class="tire-spec-val">${cur.load}${cur.speed||''}</div></div>` : '';
+              html += kmDriven !== null ? `<div class="tire-spec"><div class="tire-spec-label">Χλμ στα ελαστικά</div><div class="tire-spec-val">${Number(kmDriven).toLocaleString('el-GR')} χλμ</div></div>` : '';
+              html += '</div>';
+            }
+            if(cur.notes) html += `<div style="margin-top:8px;font-size:.82rem;color:var(--text2)">${cur.notes}</div>`;
+            html += '</div>';
+          }
+
+          // History
+          if(tires.length > 0) {
+            html += '<div style="font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Ιστορικό Αλλαγών</div>';
+            html += '<div class="tire-history">';
+            tires.forEach((t,i) => {
+              const isFirst = i===0;
+              const dotYear = t.dot||t.front_dot ? parseInt((t.dot||t.front_dot).slice(-2)) + 2000 : null;
+              const age = dotYear ? `${new Date().getFullYear()-dotYear} έτη` : '';
+              const size = isMoto ? `${t.front_size||''}/${t.rear_size||''}` : (t.size||'');
+              const brand = isMoto ? `${t.front_brand||''}` : (t.brand||'');
+              html += `<div class="tire-item ${isFirst?'current':''}">
+                <button class="tire-del" onclick="delTire('${v.id}',${i})">✕</button>
+                <div class="tire-item-header">
+                  <span class="tire-item-date">${fmtDate(t.date)}</span>
+                  <span class="tire-item-cost">${t.total_cost?'€'+t.total_cost:''}</span>
+                </div>
+                <div class="tire-item-brand">${brand}</div>
+                <div class="tire-item-size">${size}${t.season?' · '+t.season:''}</div>
+                <div class="tire-item-km">${t.km_at?'Τοποθέτηση: '+Number(t.km_at).toLocaleString('el-GR')+' χλμ':''}</div>
+                ${age?`<div class="tire-item-age" style="color:${dotYear&&new Date().getFullYear()-dotYear>=6?'var(--red)':dotYear&&new Date().getFullYear()-dotYear>=4?'var(--amber)':'var(--text3)'}">Ηλικία: ${age}</div>`:''}
+                ${isFirst?'<span style="position:absolute;top:10px;left:14px;font-size:.6rem;background:rgba(201,168,76,.2);color:var(--gold);padding:1px 6px;border-radius:4px;font-weight:700">ΤΡΕΧΟΝΤΑ</span>':''}
+              </div>`;
+            });
+            html += '</div>';
+          } else {
+            html += '<div class="pay-empty">🛞 Δεν υπάρχουν εγγραφές ελαστικών.</div>';
+          }
+          return html;
+        })()}
+
+        <!-- Add tire form -->
+        <div class="tire-add-form">
+          <div class="tire-add-title">➕ Νέα Αλλαγή Ελαστικών</div>
+          ${v.type==='moto' ? `
+            <div class="tire-section-title">Εμπρός Ελαστικό</div>
+            <div class="fg2" style="margin-bottom:8px">
+              <div class="fl"><label>Διάσταση εμπρός</label><input class="fi" id="tf_fs_${v.id}" placeholder="π.χ. 120/70-17"></div>
+              <div class="fl"><label>Μάρκα</label><input class="fi" id="tf_fb_${v.id}" placeholder="π.χ. Michelin"></div>
+              <div class="fl"><label>Μοντέλο</label><input class="fi" id="tf_fm_${v.id}" placeholder="π.χ. Road 6"></div>
+              <div class="fl"><label>DOT εμπρός</label><input class="fi" id="tf_fd_${v.id}" placeholder="π.χ. 2424"></div>
+              <div class="fl"><label>Δείκτης φορτίου</label><input class="fi" id="tf_fl_${v.id}" placeholder="π.χ. 58"></div>
+              <div class="fl"><label>Δείκτης ταχύτητας</label><input class="fi" id="tf_fsp_${v.id}" placeholder="π.χ. W"></div>
+              <div class="fl"><label>Κόστος εμπρός (€)</label><input class="fi" id="tf_fc_${v.id}" type="number" step="0.01"></div>
+            </div>
+            <div class="tire-section-title">Πίσω Ελαστικό</div>
+            <div class="fg2" style="margin-bottom:8px">
+              <div class="fl"><label>Διάσταση πίσω</label><input class="fi" id="tf_rs_${v.id}" placeholder="π.χ. 160/60-17"></div>
+              <div class="fl"><label>Μάρκα</label><input class="fi" id="tf_rb_${v.id}" placeholder="π.χ. Michelin"></div>
+              <div class="fl"><label>Μοντέλο</label><input class="fi" id="tf_rm_${v.id}" placeholder="π.χ. Road 6"></div>
+              <div class="fl"><label>DOT πίσω</label><input class="fi" id="tf_rd_${v.id}" placeholder="π.χ. 2424"></div>
+              <div class="fl"><label>Δείκτης φορτίου</label><input class="fi" id="tf_rl_${v.id}" placeholder="π.χ. 62"></div>
+              <div class="fl"><label>Δείκτης ταχύτητας</label><input class="fi" id="tf_rsp_${v.id}" placeholder="π.χ. W"></div>
+              <div class="fl"><label>Κόστος πίσω (€)</label><input class="fi" id="tf_rc_${v.id}" type="number" step="0.01"></div>
+            </div>
+          ` : `
+            <div class="fg2" style="margin-bottom:8px">
+              <div class="fl"><label>Διάσταση</label><input class="fi" id="tf_sz_${v.id}" placeholder="π.χ. 205/55 R16"></div>
+              <div class="fl"><label>Μάρκα</label><input class="fi" id="tf_br_${v.id}" placeholder="π.χ. Michelin"></div>
+              <div class="fl"><label>Μοντέλο</label><input class="fi" id="tf_mo_${v.id}" placeholder="π.χ. Primacy 4"></div>
+              <div class="fl"><label>Τύπος</label>
+                <select class="fi" id="tf_se_${v.id}">
+                  <option>Θερινό</option><option>Χειμερινό</option><option>All Season</option>
+                </select>
+              </div>
+              <div class="fl"><label>DOT (4 ψηφία)</label><input class="fi" id="tf_do_${v.id}" placeholder="π.χ. 2424 = εβδ.24/2024"></div>
+              <div class="fl"><label>Δείκτης φορτίου</label><input class="fi" id="tf_lo_${v.id}" placeholder="π.χ. 91"></div>
+              <div class="fl"><label>Δείκτης ταχύτητας</label><input class="fi" id="tf_sp_${v.id}" placeholder="π.χ. V"></div>
+              <div class="fl"><label>Κόστος αγοράς (€)</label><input class="fi" id="tf_pc_${v.id}" type="number" step="0.01"></div>
+            </div>
+          `}
+          <div class="fg2" style="margin-bottom:8px">
+            <div class="fl"><label>Ημερομηνία τοποθέτησης *</label><input class="fi" id="tf_dt_${v.id}" type="date"></div>
+            <div class="fl"><label>Χλμ κατά τοποθέτηση</label><input class="fi" id="tf_km_${v.id}" type="number" placeholder="${v.km||''}"></div>
+            <div class="fl"><label>Κόστος τοποθέτησης (€)</label><input class="fi" id="tf_ic_${v.id}" type="number" step="0.01"></div>
+            <div class="fl"><label>Συνολικό κόστος (€)</label><input class="fi" id="tf_tc_${v.id}" type="number" step="0.01"></div>
+          </div>
+          <div class="fl" style="margin-bottom:10px"><label>Παρατηρήσεις</label><input class="fi" id="tf_nt_${v.id}" placeholder="π.χ. Από κατάστημα XYZ, ισορρόπηση included"></div>
+          <button class="tire-add-btn" onclick="addTire('${v.id}')">✓ Καταχώρηση Ελαστικών</button>
+        </div>
+      </div>
+
   p.innerHTML = p.innerHTML.replace('<div class="dp-title">Ιστορικό Service</div>', tabsHtml + '<div id="dp-svc-${v.id}"><div class="dp-title">Ιστορικό Service</div>');
 }
 

@@ -313,6 +313,16 @@ select.fi option { background: #12151e; }
 .add-svc-btn:hover { background: rgba(45,206,137,0.2); }
 
 /* ── REMINDERS ── */
+.rem-filter-wrap { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 16px; scrollbar-width: none; }
+.rem-filter-wrap::-webkit-scrollbar { display: none; }
+.rem-filter-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; color: var(--text3); font-family: 'Outfit', sans-serif; font-size: 0.78rem; font-weight: 600; padding: 7px 14px; cursor: pointer; white-space: nowrap; transition: all .2s; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.rem-filter-btn.active { background: rgba(201,168,76,.12); border-color: var(--gold); color: var(--gold); }
+.rem-filter-plate { font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; letter-spacing: 1.5px; }
+.rem-count-badge { font-size: 0.65rem; font-weight: 700; padding: 1px 7px; border-radius: 10px; }
+.rem-count-badge.red { background: rgba(244,67,54,.2); color: var(--red); }
+.rem-count-badge.amber { background: rgba(255,152,0,.2); color: var(--amber); }
+.rem-count-badge.green { background: rgba(45,206,137,.1); color: var(--green); }
+.rem-group-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin: 18px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
 .rem-list { display: flex; flex-direction: column; gap: 10px; }
 .rem-item {
   background: var(--surface); border: 1px solid var(--border);
@@ -463,7 +473,8 @@ select.fi option { background: #12151e; }
     <!-- REMINDERS -->
     <div class="page" id="page-reminders">
       <div class="page-hdr"><h1>ΥΠΕΝΘΥ<span>ΜΙΣΕΙΣ</span></h1></div>
-      <div class="rem-list" id="remList"></div>
+      <div class="rem-filter-wrap" id="remFilter"></div>
+      <div id="remList"></div>
     </div>
 
     <!-- EXPENSES -->
@@ -709,9 +720,53 @@ function setSyncing(loading, saving=false) {
 // ══════════════════════════════════════════════════════
 function defaultVehicles() {
   return [
-    { id:'v1', plate:'ΑΝΡ3848', type:'car', make:'MITSUBISHI', model:'ASX', year:'', color:'ΓΚΡΙ', vin:'JMBXJGA7WFZD09160', fuel:'Βενζίνη', cc:'', owner:'ΠΛΑΤΗ ΠΕΛΑΓΙΑ', km:'', regdate:'', ins_co:'', ins_num:'', ins_exp:'', ins_cost:'', kteo:'', kteo_next:'', tax:'', tax_exp:'', svc_last:'', svc_last_km:'', svc_next:'', svc_next_km:'', svc_next_desc:'', license_exp:'', paravolo_exp:'', paravolo_desc:'', notes:'', services:[] },
-    { id:'v2', plate:'ΑΝΗ4951', type:'car', make:'NISSAN', model:'ALMERA', year:'', color:'ΜΑΥΡΟ', vin:'SJNFAAN16U2600759', fuel:'Βενζίνη', cc:'', owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ', km:'', regdate:'', ins_co:'', ins_num:'', ins_exp:'', ins_cost:'', kteo:'', kteo_next:'', tax:'', tax_exp:'', svc_last:'', svc_last_km:'', svc_next:'', svc_next_km:'', svc_next_desc:'', license_exp:'', paravolo_exp:'', paravolo_desc:'', notes:'', services:[] },
-    { id:'v3', plate:'ΤΤΕ0304', type:'moto', make:'VOGE', model:'SR16 200', year:'', color:'ΓΚΡΙ', vin:'LLCVTKF03SC000181', fuel:'Βενζίνη', cc:'200', owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ', km:'', regdate:'', ins_co:'', ins_num:'', ins_exp:'', ins_cost:'', kteo:'', kteo_next:'', tax:'', tax_exp:'', svc_last:'', svc_last_km:'', svc_next:'', svc_next_km:'', notes:'', services:[] }
+    {
+      id:'v1', plate:'ΑΝΡ3848', type:'car', make:'MITSUBISHI', model:'ASX',
+      year:'2016', color:'ΓΚΡΙ', vin:'JMBXJGA7WFZD09160',
+      fuel:'Βενζίνη', cc:'1560', owner:'ΠΛΑΤΗ ΠΕΛΑΓΙΑ',
+      km:'94363', regdate:'2016-06-06',
+      ins_co:'ΙΝΤΕΡΣΑΛΟΝΙΚΑ Α.Ε.Γ.Α.', ins_num:'19016268831', ins_exp:'2026-11-03', ins_cost:'',
+      kteo:'2025-10-31', kteo_next:'2027-10-31',
+      tax:'', tax_exp:'2026-12-31',
+      license_exp:'', paravolo_exp:'', paravolo_desc:'',
+      svc_last:'2025-12-01', svc_last_km:'94363', svc_next:'2026-12-01', svc_next_km:'', svc_next_desc:'',
+      notes:'ΚΤΕΟ 31/10/2025 — Επιτυχής. Ασφάλεια ΙΝΤΕΡΣΑΛΟΝΙΚΑ #19016268831 έως 03/11/2026. Φορολογήσιμη ισχύς: 11. Επιβάτες: 5. ΑΦΜ: 146405988.',
+      services:[
+        {date:'2025-12-01', km:'94363', cost:'', desc:'Τακτικό Service', tags:['Γενικός έλεγχος']},
+        {date:'2025-10-31', km:'', cost:'', desc:'ΚΤΕΟ Περιοδικός — Επιτυχής', tags:['ΚΤΕΟ']}
+      ]
+    },
+    {
+      id:'v2', plate:'ΑΝΗ4951', type:'car', make:'NISSAN', model:'ALMERA',
+      year:'2005', color:'ΜΑΥΡΟ', vin:'SJNFAAN16U2600759',
+      fuel:'Βενζίνη', cc:'1497', owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ',
+      km:'268293', regdate:'2005-07-29',
+      ins_co:'ΜΙΝΕΤΤΑ Α.Α.Ε.', ins_num:'2782228', ins_exp:'2026-08-20', ins_cost:'',
+      kteo:'2025-05-19', kteo_next:'2027-05-19',
+      tax:'', tax_exp:'2026-12-31',
+      license_exp:'', paravolo_exp:'', paravolo_desc:'',
+      svc_last:'2025-12-01', svc_last_km:'268293', svc_next:'2026-12-01', svc_next_km:'', svc_next_desc:'',
+      notes:'ΚΤΕΟ 19/05/2025 — Δευτερεύουσες Ελλείψεις (268.293 χλμ). Αρ.Δελτίου: 2940048651. ΑΦΜ: 110385729.',
+      services:[
+        {date:'2025-12-01', km:'268293', cost:'', desc:'Τακτικό Service', tags:['Γενικός έλεγχος']},
+        {date:'2025-05-19', km:'268293', cost:'', desc:'ΚΤΕΟ Περιοδικός — Δευτερεύουσες Ελλείψεις', tags:['ΚΤΕΟ']}
+      ]
+    },
+    {
+      id:'v3', plate:'ΤΤΕ0304', type:'moto', make:'VOGE', model:'SR16 200',
+      year:'2025', color:'ΓΚΡΙ', vin:'LLCVTKF03SC000181',
+      fuel:'Βενζίνη', cc:'174', owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ',
+      km:'', regdate:'2025-10-10',
+      ins_co:'ΙΝΤΕΡΣΑΛΟΝΙΚΑ Α.Ε.Γ.Α.', ins_num:'19017333236', ins_exp:'2027-06-03', ins_cost:'',
+      kteo:'', kteo_next:'',
+      tax:'', tax_exp:'2026-12-31',
+      license_exp:'', paravolo_exp:'', paravolo_desc:'',
+      svc_last:'2025-12-01', svc_last_km:'', svc_next:'2026-12-01', svc_next_km:'', svc_next_desc:'',
+      notes:'Μεταβίβαση 03/06/2026. Κατασκευαστής: VOGE/LONCIN. Φορολογήσιμη ισχύς: 2. Επιβάτες: 2. ΑΦΜ: 110385729.',
+      services:[
+        {date:'2025-12-01', km:'', cost:'', desc:'Τακτικό Service', tags:['Γενικός έλεγχος']}
+      ]
+    }
   ];
 }
 
@@ -745,6 +800,22 @@ function toast(msg, type='ok') {
   setTimeout(()=>t.classList.remove('show'), 3000);
 }
 
+
+// ══════════════════════════════════════════════════════
+//  DELETE VEHICLE
+// ══════════════════════════════════════════════════════
+function delVehicle(vid) {
+  const v = appData.vehicles.find(x=>x.id===vid);
+  if (!v) return;
+  if (!confirm('Διαγραφή οχήματος ' + v.plate + ' — ' + v.make + ' ' + v.model + ';\n\nΘα διαγραφούν επίσης τα σχετικά έξοδα και καύσιμα.')) return;
+  appData.vehicles = appData.vehicles.filter(x=>x.id!==vid);
+  appData.expenses = (appData.expenses||[]).filter(e=>e.vehicle!==vid);
+  appData.fuel = (appData.fuel||[]).filter(f=>f.vehicle!==vid);
+  saveToOneDrive();
+  renderVehicles();
+  toast('Το όχημα διαγράφηκε');
+}
+
 // ══════════════════════════════════════════════════════
 //  RENDER VEHICLES
 // ══════════════════════════════════════════════════════
@@ -771,7 +842,8 @@ function renderVehicles() {
       </div>
       <div class="vcard-bot">
         <div class="vcard-km">Χλμ: <strong>${v.km?Number(v.km).toLocaleString('el-GR'):'—'}</strong></div>
-        <button class="edit-btn" onclick="event.stopPropagation();openEditV('${v.id}')">Επεξεργασία</button>
+        <button class="edit-btn" onclick="event.stopPropagation();openEditV('${v.id}')">✏️ Επεξεργασία</button>
+        <button class="edit-btn" style="border-color:rgba(244,67,54,.35);color:var(--red);margin-left:4px" onclick="event.stopPropagation();delVehicle('${v.id}')">🗑️ Διαγραφή</button>
       </div>
     `;
     grid.appendChild(el);
@@ -924,57 +996,106 @@ function remColor(days) {
 }
 
 function renderReminders() {
-  const list=document.getElementById('remList');
-  const items=[];
-  appData.vehicles.forEach(v=>{
-    const checks=[
-      {label:'Ασφάλεια', date:v.ins_exp, icon:'🛡️', extra:''},
-      {label:'ΚΤΕΟ', date:v.kteo_next, icon:'🔍', extra:''},
-      {label:'Τέλη Κυκλοφορίας', date:v.tax_exp, icon:'📋', extra:''},
-      {label:'Επόμενο Service', date:v.svc_next, icon:'🔧', extra:v.svc_next_desc||''},
-      {label:'Άδεια Οδήγησης', date:v.license_exp, icon:'🪪', extra:''},
-      {label:'Παράβολο', date:v.paravolo_exp, icon:'📄', extra:v.paravolo_desc||''},
-    ];
-    checks.forEach(c=>{
-      if(!c.date) return;
-      const days=daysUntil(c.date);
-      items.push({plate:v.plate,make:v.make,model:v.model,label:c.label,date:c.date,days,icon:c.icon,extra:c.extra,colorKey:remColor(days)});
+  const filterEl = document.getElementById('remFilter');
+  const listEl = document.getElementById('remList');
+
+  // Build all items
+  function getItems(vehicles) {
+    const items = [];
+    vehicles.forEach(v => {
+      [
+        {lbl:'Ασφάλεια', date:v.ins_exp, icon:'🛡️', extra:v.ins_co||''},
+        {lbl:'ΚΤΕΟ', date:v.kteo_next, icon:'🔍', extra:''},
+        {lbl:'Τέλη Κυκλοφορίας', date:v.tax_exp, icon:'📋', extra:''},
+        {lbl:'Επόμενο Service', date:v.svc_next, icon:'🔧', extra:v.svc_next_desc||''},
+        {lbl:'Άδεια Οδήγησης', date:v.license_exp, icon:'🪪', extra:''},
+        {lbl:'Παράβολο', date:v.paravolo_exp, icon:'📄', extra:v.paravolo_desc||''},
+      ].forEach(c => {
+        if (!c.date) return;
+        const days = daysUntil(c.date);
+        const col = days < 0 ? 'red' : days <= 30 ? 'amber' : 'green';
+        items.push({...c, vid:v.id, plate:v.plate, make:v.make, model:v.model, days, col});
+      });
     });
+    return items;
+  }
+
+  const allItems = getItems(appData.vehicles);
+  const activeFilter = window._remFilter || 'all';
+
+  // Build filter buttons
+  function urgClass(items) {
+    if (items.some(i=>i.days!==null&&i.days<0)) return 'red';
+    if (items.some(i=>i.days!==null&&i.days<=30)) return 'amber';
+    return 'green';
+  }
+
+  let fhtml = `<button class="rem-filter-btn ${activeFilter==='all'?'active':''}" onclick="setRemFilter('all')">
+    📋 Όλα <span class="rem-count-badge ${urgClass(allItems)}">${allItems.length}</span>
+  </button>`;
+
+  appData.vehicles.forEach(v => {
+    const vi = getItems([v]);
+    const cls = urgClass(vi);
+    fhtml += `<button class="rem-filter-btn ${activeFilter===v.id?'active':''}" onclick="setRemFilter('${v.id}')">
+      <span class="rem-filter-plate">${v.plate}</span>
+      <span style="font-size:.72rem;color:var(--text3)">${v.make}</span>
+      ${vi.length ? `<span class="rem-count-badge ${cls}">${vi.length}</span>` : ''}
+    </button>`;
+  });
+  filterEl.innerHTML = fhtml;
+
+  // Filter items
+  const items = activeFilter === 'all' ? allItems : allItems.filter(i=>i.vid===activeFilter);
+  const orderMap = {red:0, amber:1, green:2};
+  items.sort((a,b) => {
+    const oa = orderMap[a.col]??3, ob = orderMap[b.col]??3;
+    return oa !== ob ? oa - ob : (a.days??9999) - (b.days??9999);
   });
 
-  // Sort: red first (most urgent = smallest days), then yellow, then green
-  const order = {red:0, yellow:1, green:2, nil:3};
-  items.sort((a,b)=> {
-    if(order[a.colorKey]!==order[b.colorKey]) return order[a.colorKey]-order[b.colorKey];
-    return a.days-b.days;
-  });
+  if (!items.length) {
+    listEl.innerHTML = '<div class="empty">Δεν υπάρχουν υπενθυμίσεις.<br>Συμπλήρωσε ημερομηνίες στα οχήματα.</div>';
+    return;
+  }
 
-  if(!items.length){list.innerHTML='<div class="empty">Δεν υπάρχουν υπενθυμίσεις.<br>Συμπλήρωσε ημερομηνίες στα οχήματα.</div>';return;}
+  const groups = [
+    {key:'red',   label:'🔴 Ληγμένα — Άμεση Ενέργεια', color:'var(--red)'},
+    {key:'amber', label:'🟡 Λήγουν εντός 30 ημερών',    color:'var(--amber)'},
+    {key:'green', label:'🟢 Εντάξει',                    color:'var(--green)'},
+  ];
 
-  // Group by color
-  const groups = [{key:'red',label:'🔴 Ληγμένα / Επείγοντα',color:'var(--red)'},{key:'yellow',label:'🟡 Λήγουν σε 1 μήνα',color:'var(--amber)'},{key:'green',label:'🟢 OK — άνω των 2 μηνών',color:'var(--green)'}];
-  let html='';
-  groups.forEach(g=>{
-    const gItems=items.filter(i=>i.colorKey===g.key);
-    if(!gItems.length) return;
-    html+=`<div style="font-family:'Outfit',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${g.color};margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">${g.label}</div>`;
-    html+=gItems.map(it=>{
-      const c=statusColor(it.days);
-      const dTxt=it.days<0?`Έληξε πριν ${Math.abs(it.days)} μέρες`:it.days===0?'Λήγει σήμερα!':`Απομένουν ${it.days} μέρες`;
+  let html = '';
+  groups.forEach(g => {
+    const gi = items.filter(i=>i.col===g.key);
+    if (!gi.length) return;
+    html += `<div class="rem-group-title" style="color:${g.color}">${g.label} <span style="background:rgba(255,255,255,.06);border-radius:10px;padding:1px 8px;font-size:.7rem">${gi.length}</span></div>`;
+    html += gi.map(it => {
+      const c = it.col==='red'?'var(--red)':it.col==='amber'?'var(--amber)':'var(--green)';
+      const dTxt = it.days<0 ? `Έληξε ${Math.abs(it.days)} μέρες πριν` :
+                   it.days===0 ? 'Λήγει ΣΗΜΕΡΑ!' :
+                   it.days===1 ? 'Αύριο!' :
+                   it.days<=7  ? `Σε ${it.days} μέρες ⚡` :
+                                 `Σε ${it.days} μέρες`;
+      const plateTag = activeFilter==='all' ? `<span style="font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:1.5px;background:var(--bg2);border:1px solid var(--border);padding:1px 7px;border-radius:4px;color:var(--text3)">${it.plate}</span>` : '';
       return `<div class="rem-item" style="border-left:3px solid ${c};margin-bottom:8px">
         <div class="rem-bar" style="background:${c}"></div>
         <div class="rem-info">
-          <div class="rem-title">${it.icon} ${it.label}</div>
-          <div class="rem-sub">${it.plate} — ${it.make} ${it.model}${it.extra?` · <em>${it.extra}</em>`:''}</div>
+          <div class="rem-title" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${it.icon} ${it.lbl} ${plateTag}</div>
+          <div class="rem-sub">${it.make} ${it.model}${it.extra?' · '+it.extra:''}</div>
         </div>
         <div class="rem-right">
           <div class="rem-date" style="color:${c}">${fmtDate(it.date)}</div>
-          <div class="rem-days" style="color:${c}">${dTxt}</div>
+          <div class="rem-days" style="color:${c};font-size:.72rem">${dTxt}</div>
         </div>
       </div>`;
     }).join('');
   });
-  list.innerHTML=html||'<div class="empty">Δεν υπάρχουν υπενθυμίσεις.</div>';
+  listEl.innerHTML = html;
+}
+
+function setRemFilter(id) {
+  window._remFilter = id;
+  renderReminders();
 }
 
 // ══════════════════════════════════════════════════════

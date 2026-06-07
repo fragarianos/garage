@@ -2,541 +2,302 @@
 <html lang="el">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Garage — Φραγκάκης</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>GARAGE</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="msal-browser.min.js"></script>
+<script src="msal-browser.min.js"><\/script>
 <style>
-:root {
-  --bg: #080a0f;
-  --bg2: #0d1018;
-  --surface: #12151e;
-  --surface2: #181c28;
-  --border: #1e2333;
-  --border2: #252a3a;
-  --gold: #c9a84c;
-  --gold2: #e8c97a;
-  --blue: #3d6cff;
-  --green: #2dce89;
-  --red: #f44336;
-  --amber: #ff9800;
-  --text: #e8eaf2;
-  --text2: #9499b0;
-  --text3: #5a5f78;
-  --r: 14px;
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Outfit', sans-serif;
-  font-size: 15px;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* ── NOISE TEXTURE OVERLAY ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 0; opacity: 0.4;
-}
-
-/* ── LOGIN SCREEN ── */
-#loginScreen {
-  position: fixed; inset: 0;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  background: var(--bg);
-  z-index: 1000;
-  gap: 0;
-}
-.login-logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(3rem, 8vw, 6rem);
-  letter-spacing: 8px;
-  color: var(--text);
-  line-height: 1;
-  margin-bottom: 6px;
-}
-.login-logo span { color: var(--gold); }
-.login-subtitle {
-  font-size: 0.8rem; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--text3); margin-bottom: 60px;
-}
-.login-card {
-  background: var(--surface);
-  border: 1px solid var(--border2);
-  border-radius: 20px;
-  padding: 36px 40px;
-  width: min(420px, 90vw);
-  text-align: center;
-}
-.login-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
-.login-card p { color: var(--text2); font-size: 0.88rem; margin-bottom: 28px; line-height: 1.6; }
-.ms-btn {
-  display: flex; align-items: center; justify-content: center; gap: 12px;
-  width: 100%; padding: 14px 24px;
-  background: #0078d4; color: #fff; border: none; border-radius: 10px;
-  font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 600;
-  cursor: pointer; transition: background .2s;
-}
-.ms-btn:hover { background: #106ebe; }
-.ms-btn svg { width: 20px; height: 20px; }
-.login-note { margin-top: 20px; font-size: 0.75rem; color: var(--text3); line-height: 1.5; }
-
-/* ── APP SHELL ── */
-#appShell { display: none; min-height: 100vh; }
-
-/* ── TOPBAR ── */
-.topbar {
-  height: 64px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 28px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(8,10,15,0.95);
-  backdrop-filter: blur(20px);
-  position: sticky; top: 0; z-index: 100;
-}
-.topbar-logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.6rem; letter-spacing: 4px; color: var(--text);
-}
-.topbar-logo span { color: var(--gold); }
-.topbar-right { display: flex; align-items: center; gap: 16px; }
-.user-chip {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--surface); border: 1px solid var(--border2);
-  border-radius: 30px; padding: 6px 14px 6px 8px;
-  font-size: 0.82rem; color: var(--text2);
-}
-.user-avatar {
-  width: 26px; height: 26px; border-radius: 50%;
-  background: var(--gold); color: var(--bg);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 0.72rem; flex-shrink: 0;
-}
-.sync-indicator {
-  font-size: 0.72rem; color: var(--text3);
-  display: flex; align-items: center; gap: 5px;
-}
-.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
-.sync-dot.syncing { animation: pulse 1s infinite; background: var(--amber); }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-.logout-btn {
-  background: none; border: 1px solid var(--border2); color: var(--text3);
-  font-family: 'Outfit', sans-serif; font-size: 0.78rem;
-  padding: 6px 14px; border-radius: 8px; cursor: pointer; transition: all .2s;
-}
-.logout-btn:hover { border-color: var(--red); color: var(--red); }
-
-/* ── NAV ── */
-.nav {
-  display: flex; gap: 2px;
-  padding: 0 28px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg2);
-  overflow-x: auto;
-}
-.nav-btn {
-  background: none; border: none; cursor: pointer;
-  color: var(--text3); font-family: 'Outfit', sans-serif;
-  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.3px;
-  padding: 14px 18px;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  transition: all .2s; white-space: nowrap;
-  display: flex; align-items: center; gap: 7px;
-}
-.nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
-.nav-btn:hover:not(.active) { color: var(--text); }
-
-/* ── MAIN ── */
-main { padding: 32px 28px; max-width: 1280px; position: relative; z-index: 1; }
-.page { display: none; animation: fadeIn .25s ease; }
-.page.active { display: block; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-
-/* ── PAGE HEADER ── */
-.page-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
-.page-hdr h1 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 2px; color: var(--text); }
-.page-hdr h1 span { color: var(--gold); }
-
-/* ── VEHICLES GRID ── */
-.v-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px; margin-bottom: 28px; }
-
-.vcard {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s, border-color .25s;
-  position: relative;
-}
-.vcard::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, var(--gold), transparent);
-  opacity: 0; transition: opacity .25s;
-}
-.vcard:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.5); border-color: var(--border2); }
-.vcard:hover::before { opacity: 1; }
-.vcard.active { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(201,168,76,0.3), 0 20px 60px rgba(0,0,0,0.5); }
-.vcard.active::before { opacity: 1; }
-
-.vcard-top {
-  padding: 20px 20px 0;
-  display: flex; justify-content: space-between; align-items: flex-start;
-}
-.plate-badge {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.6rem; letter-spacing: 3px;
-  color: var(--text);
-  background: var(--bg);
-  border: 1px solid var(--border2);
-  border-radius: 8px;
-  padding: 4px 14px;
-  line-height: 1.3;
-}
-.type-pill {
-  font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px;
-  text-transform: uppercase; padding: 4px 10px; border-radius: 20px;
-}
-.pill-car { background: rgba(61,108,255,0.12); color: #6b8fff; border: 1px solid rgba(61,108,255,0.25); }
-.pill-moto { background: rgba(201,168,76,0.12); color: var(--gold2); border: 1px solid rgba(201,168,76,0.25); }
-
-.vcard-mid { padding: 14px 20px 10px; }
-.vcard-make { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.5px; }
-.vcard-model { font-size: 0.85rem; color: var(--text2); margin-top: 2px; }
-.vcard-owner { font-size: 0.78rem; color: var(--text3); margin-top: 8px; display: flex; align-items: center; gap: 6px; }
-.vcard-owner::before { content:''; width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0; }
-
-.vcard-chips { padding: 0 20px 14px; display: flex; flex-wrap: wrap; gap: 6px; }
-.chip {
-  font-size: 0.7rem; font-weight: 600; padding: 3px 9px; border-radius: 20px;
-  display: flex; align-items: center; gap: 4px; letter-spacing: 0.3px;
-}
-.chip-ok { background: rgba(45,206,137,0.08); color: var(--green); border: 1px solid rgba(45,206,137,0.2); }
-.chip-warn { background: rgba(255,152,0,0.08); color: var(--amber); border: 1px solid rgba(255,152,0,0.25); }
-.chip-bad { background: rgba(244,67,54,0.08); color: var(--red); border: 1px solid rgba(244,67,54,0.2); }
-.chip-nil { background: rgba(90,95,120,0.1); color: var(--text3); border: 1px solid var(--border); }
-
-.vcard-bot {
-  border-top: 1px solid var(--border);
-  padding: 12px 20px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.vcard-km { font-size: 0.8rem; color: var(--text3); }
-.vcard-km strong { color: var(--text2); font-weight: 600; }
-.edit-btn {
-  background: none; border: 1px solid var(--border2); color: var(--text3);
-  font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 600;
-  padding: 5px 14px; border-radius: 7px; cursor: pointer; transition: all .2s;
-}
-.edit-btn:hover { border-color: var(--gold); color: var(--gold); }
-
-.add-vcard {
-  background: none; border: 2px dashed var(--border);
-  border-radius: var(--r); min-height: 200px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 10px; color: var(--text3); cursor: pointer; transition: all .2s;
-  font-family: 'Outfit', sans-serif; font-size: 0.85rem; font-weight: 600;
-}
-.add-vcard:hover { border-color: var(--gold); color: var(--gold); }
-.add-vcard .plus { font-size: 2.2rem; font-weight: 300; }
-
-/* ── DETAIL PANEL ── */
-.detail-panel {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 28px;
-  display: none; margin-top: 4px;
-}
-.detail-panel.open { display: block; animation: fadeIn .25s ease; }
-
-.dp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px; margin-bottom: 32px; }
-.dp-section {}
-.dp-title {
-  font-size: 0.68rem; font-weight: 700; letter-spacing: 2.5px;
-  text-transform: uppercase; color: var(--gold);
-  margin-bottom: 14px; padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-.dp-row { margin-bottom: 10px; }
-.dp-label { font-size: 0.72rem; color: var(--text3); margin-bottom: 3px; }
-.dp-val { font-size: 0.9rem; color: var(--text); font-weight: 500; }
-.dp-val.empty { color: var(--text3); font-style: italic; font-weight: 400; }
-
-/* ── SERVICE HISTORY ── */
-.svc-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-.svc-row {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 12px 16px;
-  display: grid; grid-template-columns: 120px 1fr auto auto auto;
-  gap: 12px; align-items: center;
-}
-.svc-date { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 1px; color: var(--gold); }
-.svc-desc { font-size: 0.88rem; }
-.svc-km { font-size: 0.78rem; color: var(--text3); }
-.svc-cost { font-size: 0.88rem; color: var(--green); font-weight: 600; white-space: nowrap; }
-.x-btn { background:none;border:none;cursor:pointer;color:var(--text3);font-size:1rem;padding:2px 6px;border-radius:4px;transition:color .2s; }
-.x-btn:hover { color: var(--red); }
-
-.svc-form {
-  background: var(--bg2); border: 1px dashed var(--border2);
-  border-radius: 12px; padding: 18px; margin-top: 8px;
-}
-.svc-form-title { font-size: 0.78rem; font-weight: 700; color: var(--text2); margin-bottom: 14px; letter-spacing: 0.5px; }
-.fg3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.fg2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.fl { display: flex; flex-direction: column; gap: 4px; }
-.fl label { font-size: 0.72rem; color: var(--text3); }
-input.fi, select.fi, textarea.fi {
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: 8px; color: var(--text);
-  font-family: 'Outfit', sans-serif; font-size: 0.88rem;
-  padding: 9px 12px; width: 100%; transition: border-color .2s;
-}
-input.fi:focus, select.fi:focus, textarea.fi:focus { outline: none; border-color: var(--gold); }
-input.fi::placeholder, textarea.fi::placeholder { color: var(--text3); }
-select.fi option { background: #12151e; }
-
-.add-svc-btn {
-  margin-top: 12px; background: rgba(45,206,137,0.1); color: var(--green);
-  border: 1px solid rgba(45,206,137,0.25); font-family: 'Outfit', sans-serif;
-  font-weight: 700; font-size: 0.8rem; padding: 9px 20px; border-radius: 8px;
-  cursor: pointer; transition: all .2s;
-}
-.add-svc-btn:hover { background: rgba(45,206,137,0.2); }
-
-/* ── REMINDERS ── */
-.rem-list { display: flex; flex-direction: column; gap: 10px; }
-.rem-item {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 12px; padding: 16px 20px;
-  display: flex; align-items: center; gap: 16px;
-  transition: border-color .2s;
-}
-.rem-item:hover { border-color: var(--border2); }
-.rem-bar { width: 3px; height: 40px; border-radius: 3px; flex-shrink: 0; }
-.rem-info { flex: 1; }
-.rem-title { font-weight: 600; font-size: 0.92rem; margin-bottom: 3px; }
-.rem-sub { font-size: 0.78rem; color: var(--text3); }
-.rem-right { text-align: right; }
-.rem-date { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 1px; }
-.rem-days { font-size: 0.72rem; margin-top: 2px; }
-
-/* ── EXPENSES ── */
-.stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
-.stat-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 12px; padding: 16px 18px;
-}
-.stat-label { font-size: 0.72rem; color: var(--text3); margin-bottom: 6px; letter-spacing: 0.5px; }
-.stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 1px; }
-.stat-val.gold { color: var(--gold); }
-
-.list-item {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; padding: 13px 18px;
-  display: flex; align-items: center; gap: 14px;
-  margin-bottom: 8px; transition: border-color .2s;
-}
-.list-item:hover { border-color: var(--border2); }
-.li-info { flex: 1; }
-.li-cat { font-size: 0.72rem; color: var(--text3); margin-bottom: 2px; }
-.li-desc { font-size: 0.9rem; font-weight: 500; }
-.li-plate {
-  font-size: 0.72rem; background: var(--bg2); border: 1px solid var(--border);
-  padding: 3px 9px; border-radius: 5px; letter-spacing: 1.5px; color: var(--text2);
-  font-family: 'Bebas Neue', sans-serif;
-}
-.li-amount { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 1px; color: var(--gold2); }
-
-/* ── MODAL ── */
-.overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-  z-index: 500; display: none; align-items: center; justify-content: center;
-  padding: 20px; backdrop-filter: blur(4px);
-}
-.overlay.open { display: flex; }
-.modal {
-  background: var(--surface); border: 1px solid var(--border2);
-  border-radius: 20px; padding: 32px; width: 100%; max-width: 580px;
-  max-height: 90vh; overflow-y: auto;
-}
-.modal-h { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 2px; margin-bottom: 24px; }
-.modal-h span { color: var(--gold); }
-.modal-section { font-size: 0.68rem; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
-.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
-.btn-sec { background:none;border:1px solid var(--border2);color:var(--text3);font-family:'Outfit',sans-serif;font-size:0.85rem;padding:9px 20px;border-radius:8px;cursor:pointer;transition:all .2s; }
-.btn-sec:hover { border-color:var(--text);color:var(--text); }
-.btn-pri { background:var(--gold);color:var(--bg);border:none;font-family:'Outfit',sans-serif;font-weight:700;font-size:0.88rem;padding:9px 24px;border-radius:8px;cursor:pointer;transition:opacity .2s; }
-.btn-pri:hover { opacity:.85; }
-
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 24px; right: 24px;
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: 10px; padding: 12px 20px;
-  font-size: 0.85rem; color: var(--text);
-  z-index: 999; transform: translateY(80px); opacity: 0;
-  transition: all .3s cubic-bezier(.34,1.56,.64,1);
-  display: flex; align-items: center; gap: 10px;
-}
-.toast.show { transform: translateY(0); opacity: 1; }
-.toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
-
-/* ── EMPTY ── */
-.empty { text-align: center; padding: 48px; color: var(--text3); font-size: 0.9rem; }
-
-/* ── RESPONSIVE ── */
-@media (max-width:640px) {
-  .topbar { padding: 0 16px; }
-  main { padding: 20px 16px; }
-  .nav { padding: 0 16px; }
-  .svc-row { grid-template-columns: 1fr auto; }
-  .svc-km, .svc-cost { display: none; }
-  .fg3 { grid-template-columns: 1fr 1fr; }
-}
+:root{--bg:#080a0f;--bg2:#0d1018;--surface:#12151e;--surface2:#181c28;--border:#1e2333;--border2:#252a3a;--gold:#c9a84c;--gold2:#e8c97a;--blue:#3d6cff;--green:#2dce89;--red:#f44336;--amber:#ff9800;--text:#e8eaf2;--text2:#9499b0;--text3:#5a5f78;--r:14px;--nav-h:60px;--top-h:52px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;min-height:100%;overflow-x:hidden;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 80px)}
+#loginScreen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);z-index:2000;padding:24px}
+.login-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,12vw,6rem);letter-spacing:8px;line-height:1;margin-bottom:4px;text-align:center}
+.login-logo span{color:var(--gold)}
+.login-sub{font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:var(--text3);margin-bottom:48px;text-align:center}
+.login-card{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:28px 24px;width:100%;max-width:380px;text-align:center}
+.login-card h2{font-size:1.1rem;font-weight:600;margin-bottom:8px}
+.login-card p{color:var(--text2);font-size:.85rem;margin-bottom:24px;line-height:1.65}
+.ms-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;background:#0078d4;color:#fff;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;-webkit-appearance:none}
+.ms-btn svg{width:20px;height:20px;flex-shrink:0}
+.login-note{margin-top:16px;font-size:.72rem;color:var(--text3);line-height:1.6}
+#appShell{display:none}
+.topbar{height:var(--top-h);display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--border);background:rgba(8,10,15,.97);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100}
+.topbar-logo{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;letter-spacing:4px}
+.topbar-logo span{color:var(--gold)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.sync-dot.syncing{animation:pulse 1s infinite;background:var(--amber)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.user-chip{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border2);border-radius:30px;padding:5px 10px 5px 5px}
+.user-avatar{width:26px;height:26px;border-radius:50%;background:var(--gold);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.68rem;flex-shrink:0}
+.user-name{font-size:.78rem;color:var(--text2)}
+.logout-btn{background:none;border:1px solid var(--border2);color:var(--text3);font-family:'Outfit',sans-serif;font-size:.72rem;padding:5px 10px;border-radius:7px;cursor:pointer;-webkit-appearance:none}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);background:rgba(8,10,15,.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:stretch;z-index:100}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:none;cursor:pointer;color:var(--text3);font-family:'Outfit',sans-serif;font-size:.6rem;font-weight:600;letter-spacing:.5px;padding:8px 4px;-webkit-appearance:none;-webkit-tap-highlight-color:transparent}
+.nav-item.active{color:var(--gold)}
+.nav-icon{font-size:1.3rem;line-height:1;display:block}
+.nav-badge{position:absolute;top:-3px;right:-5px;background:var(--red);color:#fff;font-size:.55rem;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px}
+.nav-icon-wrap{position:relative;display:inline-block}
+main{padding:16px;max-width:720px;margin:0 auto}
+.page{display:none;animation:fadeIn .22s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:8px}
+.page-hdr h1{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px}
+.page-hdr h1 span{color:var(--gold)}
+.v-grid{display:flex;flex-direction:column;gap:14px;margin-bottom:20px}
+@media(min-width:620px){.v-grid{display:grid;grid-template-columns:repeat(2,1fr)}}
+.vcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;position:relative;transition:border-color .25s}
+.vcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0;transition:opacity .25s}
+.vcard.expanded::before{opacity:1}
+.vcard.expanded{border-color:rgba(201,168,76,.5)}
+.vcard-header{padding:16px 16px 12px;display:flex;justify-content:space-between;align-items:flex-start}
+.plate-badge{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:3px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:4px 12px;line-height:1.3}
+.type-pill{font-size:.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:20px}
+.pill-car{background:rgba(61,108,255,.12);color:#6b8fff;border:1px solid rgba(61,108,255,.25)}
+.pill-moto{background:rgba(201,168,76,.12);color:var(--gold2);border:1px solid rgba(201,168,76,.25)}
+.vcard-body{padding:0 16px 12px}
+.vcard-make{font-size:1.08rem;font-weight:700;margin-bottom:2px}
+.vcard-meta{font-size:.8rem;color:var(--text2);margin-bottom:8px}
+.vcard-owner{font-size:.75rem;color:var(--text3);display:flex;align-items:center;gap:5px}
+.vcard-owner::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.vcard-chips{padding:0 16px 10px;display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:.67rem;font-weight:600;padding:3px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.chip-ok{background:rgba(45,206,137,.08);color:var(--green);border:1px solid rgba(45,206,137,.2)}
+.chip-warn{background:rgba(255,152,0,.08);color:var(--amber);border:1px solid rgba(255,152,0,.25)}
+.chip-bad{background:rgba(244,67,54,.08);color:var(--red);border:1px solid rgba(244,67,54,.2)}
+.chip-nil{background:rgba(90,95,120,.1);color:var(--text3);border:1px solid var(--border)}
+.vcard-footer{border-top:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;gap:8px}
+.vcard-km{font-size:.78rem;color:var(--text3);flex:1}
+.vcard-km strong{color:var(--text2)}
+.btn-view,.btn-edit{font-family:'Outfit',sans-serif;font-weight:600;font-size:.75rem;padding:7px 14px;border-radius:8px;cursor:pointer;border:none;-webkit-appearance:none;-webkit-tap-highlight-color:transparent}
+.btn-view{background:var(--gold);color:var(--bg)}
+.btn-edit{background:none;border:1px solid var(--border2);color:var(--text2)}
+.vcard-detail{background:var(--bg2);border-top:1px solid var(--border);display:none}
+.vcard-detail.open{display:block}
+.detail-tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.detail-tabs::-webkit-scrollbar{display:none}
+.detail-tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;padding:12px 16px;cursor:pointer;white-space:nowrap;margin-bottom:-1px;-webkit-tap-highlight-color:transparent}
+.detail-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.detail-panel{display:none;padding:16px}
+.detail-panel.active{display:block}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 13px}
+.info-card.full{grid-column:1/-1}
+.info-card.hl{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.25)}
+.info-label{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.info-val{font-size:.9rem;font-weight:500;word-break:break-all;line-height:1.4}
+.info-val.empty{color:var(--text3);font-style:italic;font-weight:400;font-size:.82rem}
+.info-section-title{grid-column:1/-1;font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);padding:10px 0 5px;border-bottom:1px solid var(--border)}
+.status-bar{display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface)}
+.status-item{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 8px;min-width:64px;flex:1}
+.status-icon{font-size:.95rem}
+.status-label{font-size:.58rem;color:var(--text3);letter-spacing:.3px;text-align:center;text-transform:uppercase}
+.status-days{font-family:'Bebas Neue',sans-serif;font-size:.88rem;letter-spacing:1px;text-align:center}
+.svc-timeline{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.svc-item{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:9px;padding:12px 14px;position:relative}
+.svc-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.svc-date{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;color:var(--gold)}
+.svc-cost-km{display:flex;gap:8px;align-items:center}
+.svc-cost{font-size:.85rem;color:var(--green);font-weight:600}
+.svc-km-val{font-size:.75rem;color:var(--text3)}
+.svc-desc{font-size:.84rem;color:var(--text);line-height:1.5}
+.svc-tags-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.svc-tag{background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:4px;font-size:.65rem;padding:2px 7px;color:var(--text2)}
+.svc-del{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;color:var(--text3);font-size:.85rem;padding:3px 6px;border-radius:4px;-webkit-appearance:none}
+.svc-del:hover{color:var(--red)}
+.svc-empty{text-align:center;padding:24px;color:var(--text3);font-size:.85rem}
+.svc-add-form{background:var(--surface);border:1px dashed var(--border2);border-radius:10px;padding:14px;margin-top:4px}
+.svc-add-title{font-size:.7rem;font-weight:700;color:var(--text2);margin-bottom:12px;letter-spacing:.5px;text-transform:uppercase}
+.common-tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px}
+.ctag{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;color:var(--text3);font-size:.72rem;padding:4px 10px;cursor:pointer;-webkit-appearance:none;-webkit-tap-highlight-color:transparent;transition:all .15s}
+.ctag.sel{background:rgba(201,168,76,.15);border-color:var(--gold);color:var(--gold2)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.form-row-1{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:8px}
+.fl{display:flex;flex-direction:column;gap:4px}
+.fl label{font-size:.68rem;color:var(--text3)}
+.full-col{grid-column:1/-1}
+input.fi,select.fi,textarea.fi{background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;padding:10px 12px;width:100%;-webkit-appearance:none;outline:none;transition:border-color .2s}
+input.fi:focus,select.fi:focus,textarea.fi:focus{border-color:var(--gold)}
+input.fi::placeholder,textarea.fi::placeholder{color:var(--text3)}
+select.fi option{background:#12151e}
+textarea.fi{resize:vertical;min-height:80px}
+.btn-add-svc{margin-top:10px;background:rgba(45,206,137,.1);color:var(--green);border:1px solid rgba(45,206,137,.25);font-family:'Outfit',sans-serif;font-weight:700;font-size:.82rem;padding:10px;border-radius:9px;cursor:pointer;-webkit-appearance:none;width:100%}
+.add-vcard{background:none;border:2px dashed var(--border);border-radius:var(--r);min-height:80px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--text3);cursor:pointer;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;width:100%;-webkit-appearance:none;-webkit-tap-highlight-color:transparent}
+.add-vcard:hover,.add-vcard:active{border-color:var(--gold);color:var(--gold)}
+.rem-filter{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-bottom:16px}
+.rem-filter::-webkit-scrollbar{display:none}
+.rem-filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:20px;color:var(--text3);font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;padding:7px 13px;cursor:pointer;white-space:nowrap;-webkit-appearance:none;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.rem-filter-btn.active{background:rgba(201,168,76,.12);border-color:var(--gold);color:var(--gold)}
+.rem-filter-plate{font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:1.5px}
+.rem-count{background:rgba(255,255,255,.08);border-radius:10px;font-size:.65rem;padding:1px 6px;font-weight:700}
+.rem-count.red{background:rgba(244,67,54,.2);color:var(--red)}
+.rem-count.amber{background:rgba(255,152,0,.2);color:var(--amber)}
+.rem-count.green{background:rgba(45,206,137,.1);color:var(--green)}
+.rem-group-label{display:flex;align-items:center;gap:8px;font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.rem-group-cnt{background:rgba(255,255,255,.06);border-radius:10px;padding:1px 8px;font-size:.7rem}
+.rem-item{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.rem-bar{width:3px;border-radius:3px;align-self:stretch;flex-shrink:0;min-height:36px}
+.rem-content{flex:1;min-width:0}
+.rem-top{display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap}
+.rem-icon{font-size:.95rem}
+.rem-label{font-weight:600;font-size:.88rem}
+.rem-plate-tag{font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:1.5px;background:var(--bg2);border:1px solid var(--border);padding:1px 7px;border-radius:4px;color:var(--text3)}
+.rem-sub{font-size:.75rem;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rem-right{text-align:right;flex-shrink:0}
+.rem-date-val{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:1px}
+.rem-days-val{font-size:.68rem;margin-top:2px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:18px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 14px}
+.stat-label{font-size:.68rem;color:var(--text3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px}
+.stat-val.gold{color:var(--gold)}
+.stat-sub{font-size:.7rem;color:var(--text3);margin-top:2px}
+.item-list{display:flex;flex-direction:column;gap:8px}
+.list-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.li-left{flex:1;min-width:0}
+.li-cat{font-size:.7rem;color:var(--text3);margin-bottom:2px}
+.li-desc{font-size:.88rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li-plate-tag{font-family:'Bebas Neue',sans-serif;font-size:.75rem;letter-spacing:1.5px;background:var(--bg2);border:1px solid var(--border);padding:1px 7px;border-radius:4px;color:var(--text2);flex-shrink:0}
+.li-amount{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:1px;color:var(--gold2);white-space:nowrap;flex-shrink:0}
+.x-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:1rem;padding:3px 6px;border-radius:4px;flex-shrink:0;-webkit-appearance:none;-webkit-tap-highlight-color:transparent}
+.x-btn:hover{color:var(--red)}
+.fab{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 14px);right:18px;width:54px;height:54px;background:linear-gradient(135deg,var(--gold),#a8862a);color:var(--bg);border:none;border-radius:50%;font-size:1.6rem;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,.4);z-index:90;-webkit-appearance:none;-webkit-tap-highlight-color:transparent;display:none;align-items:center;justify-content:center;line-height:1}
+.fab.visible{display:flex}
+.fab:active{transform:scale(.93)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.overlay.open{display:flex}
+@media(min-width:600px){.overlay{align-items:center;padding:20px}}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:20px 20px 0 0;padding:20px 18px 36px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal-drag{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 18px}
+@media(min-width:600px){.modal{border-radius:20px;padding:28px 24px;max-height:88vh}}
+.modal-h{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;margin-bottom:20px}
+.modal-h span{color:var(--gold)}
+.modal-sec{font-size:.65rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:22px;padding-top:14px;border-top:1px solid var(--border)}
+.btn-sec{background:none;border:1px solid var(--border2);color:var(--text3);font-family:'Outfit',sans-serif;font-size:.88rem;padding:10px 20px;border-radius:9px;cursor:pointer;-webkit-appearance:none}
+.btn-pri{background:var(--gold);color:var(--bg);border:none;font-family:'Outfit',sans-serif;font-weight:700;font-size:.9rem;padding:10px 22px;border-radius:9px;cursor:pointer;-webkit-appearance:none}
+.toast{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px) + 72px);left:50%;transform:translateX(-50%) translateY(30px);background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:9px 18px;font-size:.82rem;z-index:999;opacity:0;transition:all .28s;pointer-events:none;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:.88rem;line-height:1.9}
+.empty-icon{font-size:2rem;display:block;margin-bottom:8px}
+@media(max-width:380px){.form-row,.form-row-3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- ══ LOGIN ══ -->
 <div id="loginScreen">
   <div class="login-logo">GAR<span>A</span>GE</div>
-  <div class="login-subtitle">Διαχείριση Οχημάτων</div>
+  <div class="login-sub">Διαχείριση Οχημάτων</div>
   <div class="login-card">
     <h2>Καλωσόρισες</h2>
-    <p>Σύνδεσε το Microsoft 365 φοιτητικό σου για να αποθηκεύεις τα δεδομένα σου στο OneDrive.</p>
+    <p>Σύνδεσε το Microsoft 365 φοιτητικό σου.<br>Τα δεδομένα αποθηκεύονται στο OneDrive σου.</p>
     <button class="ms-btn" onclick="signIn()">
-      <svg viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
-        <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
-        <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
-        <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
-      </svg>
+      <svg viewBox="0 0 21 21" fill="none"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
       Σύνδεση με Microsoft 365
     </button>
-    <div class="login-note">Τα δεδομένα αποθηκεύονται στο OneDrive σου σε αρχείο JSON.<br>Καμία τρίτη εταιρεία δεν έχει πρόσβαση.</div>
+    <div class="login-note">Κανείς άλλος δεν έχει πρόσβαση στα δεδομένα σου.</div>
   </div>
 </div>
 
-<!-- ══ APP ══ -->
 <div id="appShell">
   <div class="topbar">
     <div class="topbar-logo">GAR<span>A</span>GE</div>
     <div class="topbar-right">
-      <div class="sync-indicator">
-        <div class="sync-dot" id="syncDot"></div>
-        <span id="syncLabel">Συγχρονισμένο</span>
-      </div>
+      <div class="sync-dot" id="syncDot"></div>
       <div class="user-chip">
         <div class="user-avatar" id="userAvatar">ΦΚ</div>
-        <span id="userName">Φραγκάκης</span>
+        <span class="user-name" id="userName">Φραγκάκης</span>
       </div>
-      <button class="logout-btn" onclick="signOut()">Έξοδος</button>
+      <button class="logout-btn" onclick="signOut()">↩</button>
     </div>
   </div>
-
-  <div class="nav">
-    <button class="nav-btn active" onclick="showPage('vehicles',this)">🚗 Οχήματα</button>
-    <button class="nav-btn" onclick="showPage('reminders',this)">🔔 Υπενθυμίσεις</button>
-    <button class="nav-btn" onclick="showPage('expenses',this)">💶 Έξοδα</button>
-    <button class="nav-btn" onclick="showPage('fuel',this)">⛽ Καύσιμα</button>
-  </div>
-
   <main>
-    <!-- VEHICLES -->
     <div class="page active" id="page-vehicles">
-      <div class="page-hdr">
-        <h1>ΤΑ <span>ΟΧΗΜΑΤΑ</span> ΜΟΥ</h1>
-      </div>
+      <div class="page-hdr"><h1>ΤΑ <span>ΟΧΗΜΑΤΑ</span></h1></div>
       <div class="v-grid" id="vGrid"></div>
-      <div class="detail-panel" id="detailPanel"></div>
     </div>
-
-    <!-- REMINDERS -->
     <div class="page" id="page-reminders">
-      <div class="page-hdr"><h1>ΥΠΕΝΘΥ<span>ΜΙΣΕΙΣ</span></h1></div>
-      <div class="rem-list" id="remList"></div>
+      <div class="page-hdr"><h1>ΕΙΔΟΠΟΙ<span>ΗΣΕΙΣ</span></h1></div>
+      <div class="rem-filter" id="remFilter"></div>
+      <div id="remList"></div>
     </div>
-
-    <!-- EXPENSES -->
     <div class="page" id="page-expenses">
-      <div class="page-hdr">
-        <h1>ΕΞΟ<span>ΔΑ</span></h1>
-        <button class="edit-btn" style="font-size:0.85rem;padding:8px 18px;border-color:var(--gold);color:var(--gold)" onclick="openModal('modalExp')">+ Νέο Έξοδο</button>
-      </div>
-      <div class="stats-row" id="expStats"></div>
-      <div id="expList"></div>
+      <div class="page-hdr"><h1>ΕΞΟ<span>ΔΑ</span></h1></div>
+      <div class="stats-grid" id="expStats"></div>
+      <div class="item-list" id="expList"></div>
     </div>
-
-    <!-- FUEL -->
     <div class="page" id="page-fuel">
-      <div class="page-hdr">
-        <h1>ΚΑΥΣΙ<span>ΜΑ</span></h1>
-        <button class="edit-btn" style="font-size:0.85rem;padding:8px 18px;border-color:var(--gold);color:var(--gold)" onclick="openModal('modalFuel')">+ Ανεφοδιασμός</button>
-      </div>
-      <div id="fuelList"></div>
+      <div class="page-hdr"><h1>ΚΑΥΣΙ<span>ΜΑ</span></h1></div>
+      <div id="fuelContent"></div>
     </div>
   </main>
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="showPage('vehicles',this)"><span class="nav-icon">🚗</span>ΟΧΗΜΑΤΑ</button>
+    <button class="nav-item" onclick="showPage('reminders',this)" id="navRem">
+      <span class="nav-icon-wrap"><span class="nav-icon">🔔</span><span class="nav-badge" id="remBadge" style="display:none">!</span></span>ΕΙΔΟΠΟΙΗΣΕΙΣ
+    </button>
+    <button class="nav-item" onclick="showPage('expenses',this)"><span class="nav-icon">💶</span>ΕΞΟΔΑ</button>
+    <button class="nav-item" onclick="showPage('fuel',this)"><span class="nav-icon">⛽</span>ΚΑΥΣΙΜΑ</button>
+  </nav>
+  <button class="fab visible" id="fabBtn" onclick="fabAction()">＋</button>
 </div>
 
-<!-- ══ MODALS ══ -->
-
-<!-- Vehicle Modal -->
 <div class="overlay" id="modalVehicle">
   <div class="modal">
-    <div class="modal-h" id="modalVTitle">ΝΕΟ <span>ΟΧΗΜΑ</span></div>
-    <div class="fg2">
-      <div class="fl"><label>Πινακίδα *</label><input class="fi" id="nv_plate" placeholder="ΑΑΑ1234" style="text-transform:uppercase;font-family:'Bebas Neue';letter-spacing:2px;font-size:1.1rem"></div>
-      <div class="fl"><label>Τύπος</label><select class="fi" id="nv_type"><option value="car">🚗 Αυτοκίνητο</option><option value="moto">🏍 Μηχανή/Μοτο</option><option value="truck">🚐 Βαν/Φορτηγό</option></select></div>
+    <div class="modal-drag"></div>
+    <div class="modal-h" id="mVTitle">ΝΕΟ <span>ΟΧΗΜΑ</span></div>
+    <div class="modal-sec">Βασικά Στοιχεία</div>
+    <div class="form-row">
+      <div class="fl"><label>Πινακίδα *</label><input class="fi" id="nv_plate" placeholder="ΑΑΑ1234" style="font-family:'Bebas Neue';letter-spacing:2px;font-size:1.1rem;text-transform:uppercase"></div>
+      <div class="fl"><label>Τύπος</label><select class="fi" id="nv_type"><option value="car">🚗 Αυτοκίνητο</option><option value="moto">🏍 Μηχανή</option><option value="truck">🚐 Βαν</option></select></div>
       <div class="fl"><label>Μάρκα *</label><input class="fi" id="nv_make" placeholder="NISSAN"></div>
       <div class="fl"><label>Μοντέλο *</label><input class="fi" id="nv_model" placeholder="ALMERA"></div>
       <div class="fl"><label>Χρονολογία</label><input class="fi" id="nv_year" type="number" placeholder="2005"></div>
       <div class="fl"><label>Χρώμα</label><input class="fi" id="nv_color" placeholder="ΜΑΥΡΟ"></div>
-      <div class="fl"><label>Αρ. Πλαισίου (VIN)</label><input class="fi" id="nv_vin" style="font-family:monospace;font-size:0.8rem" placeholder="17 χαρακτήρες"></div>
       <div class="fl"><label>Καύσιμο</label><select class="fi" id="nv_fuel"><option>Βενζίνη</option><option>Diesel</option><option>LPG</option><option>Ηλεκτρικό</option><option>Υβριδικό</option></select></div>
       <div class="fl"><label>Κυβισμός (cc)</label><input class="fi" id="nv_cc" type="number" placeholder="1600"></div>
-      <div class="fl"><label>Ιδιοκτήτης</label><input class="fi" id="nv_owner" placeholder="Ονοματεπώνυμο"></div>
-      <div class="fl"><label>Χιλιόμετρα</label><input class="fi" id="nv_km" type="number" placeholder="95000"></div>
-      <div class="fl"><label>1η Άδεια Κυκλοφορίας</label><input class="fi" id="nv_regdate" type="date"></div>
     </div>
-    <div class="modal-section">Ασφάλεια</div>
-    <div class="fg2">
-      <div class="fl"><label>Ασφαλιστική</label><input class="fi" id="nv_ins_co" placeholder="INTERAMERICAN"></div>
+    <div class="form-row-1"><div class="fl"><label>Αριθμός Πλαισίου (VIN)</label><input class="fi" id="nv_vin" style="font-family:monospace;font-size:.82rem" placeholder="17 χαρακτήρες"></div></div>
+    <div class="form-row">
+      <div class="fl"><label>Ιδιοκτήτης</label><input class="fi" id="nv_owner" placeholder="Ονοματεπώνυμο"></div>
+      <div class="fl"><label>1η Άδεια Κυκλοφορίας</label><input class="fi" id="nv_regdate" type="date"></div>
+      <div class="fl"><label>Τρέχοντα Χιλιόμετρα</label><input class="fi" id="nv_km" type="number" placeholder="95000"></div>
+    </div>
+    <div class="modal-sec">🛡️ Ασφάλεια</div>
+    <div class="form-row">
+      <div class="fl"><label>Ασφαλιστική Εταιρεία</label><input class="fi" id="nv_ins_co" placeholder="INTERAMERICAN"></div>
       <div class="fl"><label>Αρ. Ασφαλιστηρίου</label><input class="fi" id="nv_ins_num"></div>
       <div class="fl"><label>Λήξη Ασφάλειας</label><input class="fi" id="nv_ins_exp" type="date"></div>
-      <div class="fl"><label>Κόστος Ασφάλειας (€)</label><input class="fi" id="nv_ins_cost" type="number"></div>
+      <div class="fl"><label>Ετήσιο Κόστος (€)</label><input class="fi" id="nv_ins_cost" type="number"></div>
     </div>
-    <div class="modal-section">ΚΤΕΟ & Τέλη</div>
-    <div class="fg2">
+    <div class="modal-sec">🔍 ΚΤΕΟ & Τέλη</div>
+    <div class="form-row">
       <div class="fl"><label>Τελευταίο ΚΤΕΟ</label><input class="fi" id="nv_kteo" type="date"></div>
       <div class="fl"><label>Επόμενο ΚΤΕΟ</label><input class="fi" id="nv_kteo_next" type="date"></div>
       <div class="fl"><label>Τέλη Κυκλοφορίας (€)</label><input class="fi" id="nv_tax" type="number"></div>
       <div class="fl"><label>Λήξη Τελών</label><input class="fi" id="nv_tax_exp" type="date"></div>
     </div>
-    <div class="modal-section">Παράβολο / Άλλες Λήξεις</div>
-    <div class="fg2">
+    <div class="modal-sec">📄 Παράβολο / Άλλα</div>
+    <div class="form-row">
       <div class="fl"><label>Άδεια Οδήγησης — Λήξη</label><input class="fi" id="nv_license_exp" type="date"></div>
       <div class="fl"><label>Παράβολο — Λήξη</label><input class="fi" id="nv_paravolo_exp" type="date"></div>
-      <div class="fl" style="grid-column:1/-1"><label>Παράβολο — Περιγραφή</label><input class="fi" id="nv_paravolo_desc" placeholder="π.χ. Ανανέωση άδειας οδήγησης"></div>
     </div>
-    <div class="modal-section">Service</div>
-    <div class="fg2">
+    <div class="form-row-1"><div class="fl"><label>Παράβολο — Περιγραφή</label><input class="fi" id="nv_paravolo_desc" placeholder="π.χ. Ανανέωση άδειας οδήγησης"></div></div>
+    <div class="modal-sec">🔧 Service</div>
+    <div class="form-row">
       <div class="fl"><label>Τελευταίο Service</label><input class="fi" id="nv_svc_last" type="date"></div>
       <div class="fl"><label>Χλμ Τελευταίου</label><input class="fi" id="nv_svc_last_km" type="number"></div>
       <div class="fl"><label>Επόμενο Service</label><input class="fi" id="nv_svc_next" type="date"></div>
       <div class="fl"><label>Χλμ Επόμενου</label><input class="fi" id="nv_svc_next_km" type="number"></div>
-      <div class="fl" style="grid-column:1/-1"><label>Τι περιλαμβάνει το επόμενο service</label><input class="fi" id="nv_svc_next_desc" placeholder="π.χ. Αλλαγή λαδιών, φίλτρων, μπουζί, ιμάντας..."></div>
     </div>
-    <div class="modal-section">Σημειώσεις</div>
-    <textarea class="fi" id="nv_notes" rows="3" placeholder="Ελεύθερο κείμενο..."></textarea>
+    <div class="form-row-1"><div class="fl"><label>Τι περιλαμβάνει το επόμενο service</label><input class="fi" id="nv_svc_next_desc" placeholder="π.χ. Αλλαγή λαδιών, φίλτρων, μπουζί, ιμάντας..."></div></div>
+    <div class="modal-sec">📝 Σημειώσεις</div>
+    <textarea class="fi" id="nv_notes" rows="3" placeholder="Οτιδήποτε θέλεις να θυμάσαι..."></textarea>
     <div class="modal-footer">
       <button class="btn-sec" onclick="closeModal('modalVehicle')">Ακύρωση</button>
       <button class="btn-pri" onclick="saveVehicle()">Αποθήκευση</button>
@@ -544,21 +305,17 @@ select.fi option { background: #12151e; }
   </div>
 </div>
 
-<!-- Expense Modal -->
 <div class="overlay" id="modalExp">
   <div class="modal">
+    <div class="modal-drag"></div>
     <div class="modal-h">ΝΕΟ <span>ΕΞΟΔΟ</span></div>
-    <div class="fg2">
+    <div class="form-row">
       <div class="fl"><label>Όχημα *</label><select class="fi" id="exp_v"></select></div>
-      <div class="fl"><label>Κατηγορία *</label>
-        <select class="fi" id="exp_cat">
-          <option>Ασφάλεια</option><option>ΚΤΕΟ</option><option>Τέλη Κυκλοφορίας</option>
-          <option>Service / Συντήρηση</option><option>Επισκευή</option><option>Ελαστικά</option>
-          <option>Καύσιμα</option><option>Πάρκινγκ</option><option>Πρόστιμο</option><option>Άλλο</option>
-        </select>
-      </div>
-      <div class="fl" style="grid-column:1/-1"><label>Περιγραφή</label><input class="fi" id="exp_desc" placeholder="π.χ. Αλλαγή λαδιών"></div>
-      <div class="fl"><label>Ποσό (€) *</label><input class="fi" id="exp_amt" type="number" step="0.01"></div>
+      <div class="fl"><label>Κατηγορία *</label><select class="fi" id="exp_cat"><option>Ασφάλεια</option><option>ΚΤΕΟ</option><option>Τέλη Κυκλοφορίας</option><option>Service / Συντήρηση</option><option>Επισκευή</option><option>Ελαστικά</option><option>Καύσιμα</option><option>Πάρκινγκ</option><option>Πρόστιμο</option><option>Παράβολο</option><option>Άλλο</option></select></div>
+    </div>
+    <div class="form-row-1"><div class="fl"><label>Περιγραφή</label><input class="fi" id="exp_desc" placeholder="π.χ. Αλλαγή λαδιών"></div></div>
+    <div class="form-row">
+      <div class="fl"><label>Ποσό (€) *</label><input class="fi" id="exp_amt" type="number" step="0.01" placeholder="0.00"></div>
       <div class="fl"><label>Ημερομηνία *</label><input class="fi" id="exp_date" type="date"></div>
       <div class="fl"><label>Χιλιόμετρα</label><input class="fi" id="exp_km" type="number"></div>
     </div>
@@ -569,19 +326,19 @@ select.fi option { background: #12151e; }
   </div>
 </div>
 
-<!-- Fuel Modal -->
 <div class="overlay" id="modalFuel">
   <div class="modal">
+    <div class="modal-drag"></div>
     <div class="modal-h">ΑΝΕΦΟΔΙΑ<span>ΣΜΟΣ</span></div>
-    <div class="fg2">
+    <div class="form-row">
       <div class="fl"><label>Όχημα *</label><select class="fi" id="fuel_v"></select></div>
       <div class="fl"><label>Ημερομηνία *</label><input class="fi" id="fuel_date" type="date"></div>
-      <div class="fl"><label>Λίτρα</label><input class="fi" id="fuel_lt" type="number" step="0.01"></div>
-      <div class="fl"><label>Κόστος (€) *</label><input class="fi" id="fuel_cost" type="number" step="0.01"></div>
-      <div class="fl"><label>Τιμή/Λίτρο (€)</label><input class="fi" id="fuel_price" type="number" step="0.001"></div>
+      <div class="fl"><label>Λίτρα</label><input class="fi" id="fuel_lt" type="number" step="0.01" placeholder="40.50"></div>
+      <div class="fl"><label>Κόστος (€) *</label><input class="fi" id="fuel_cost" type="number" step="0.01" placeholder="68.50"></div>
+      <div class="fl"><label>Τιμή/Λίτρο (€)</label><input class="fi" id="fuel_price" type="number" step="0.001" placeholder="1.695"></div>
       <div class="fl"><label>Χιλιόμετρα</label><input class="fi" id="fuel_km" type="number"></div>
-      <div class="fl" style="grid-column:1/-1"><label>Πρατήριο</label><input class="fi" id="fuel_station" placeholder="π.χ. Shell Αγ. Νικόλαος"></div>
     </div>
+    <div class="form-row-1"><div class="fl"><label>Πρατήριο</label><input class="fi" id="fuel_station" placeholder="π.χ. Shell Αγ. Νικόλαος"></div></div>
     <div class="modal-footer">
       <button class="btn-sec" onclick="closeModal('modalFuel')">Ακύρωση</button>
       <button class="btn-pri" onclick="saveFuel()">Αποθήκευση</button>
@@ -589,497 +346,178 @@ select.fi option { background: #12151e; }
   </div>
 </div>
 
-<!-- Toast -->
-<div class="toast" id="toast"><div class="toast-dot" id="toastDot"></div><span id="toastMsg"></span></div>
+<div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════════════════
-//  MSAL CONFIG
-// ══════════════════════════════════════════════════════
-const msalConfig = {
-  auth: {
-    clientId: 'd2d56ac0-53cd-4de1-afb6-0e89c9be4e8e',
-    authority: 'https://login.microsoftonline.com/common',
-    redirectUri: 'https://fragarianos.github.io/garage',
-  },
-  cache: { cacheLocation: 'localStorage', storeAuthStateInCookie: false }
-};
-const scopes = ['Files.ReadWrite', 'User.Read'];
-const msalInstance = new msal.PublicClientApplication(msalConfig);
-const FILE_PATH = '/me/drive/root:/garage_ochimata.json:/content';
+const msalConfig={auth:{clientId:'d2d56ac0-53cd-4de1-afb6-0e89c9be4e8e',authority:'https://login.microsoftonline.com/common',redirectUri:'https://fragarianos.github.io/garage'},cache:{cacheLocation:'localStorage',storeAuthStateInCookie:false}};
+const SCOPES=['Files.ReadWrite','User.Read'];
+const msalInstance=new msal.PublicClientApplication(msalConfig);
+const OD_PATH='/me/drive/root:/garage_ochimata.json:/content';
+let appData={vehicles:mkDefaults(),expenses:[],fuel:[]};
+let editVid=null,curPage='vehicles',remFilter='all';
+const COMMON_TAGS=['Αλλαγή λαδιών','Φίλτρο αέρα','Φίλτρο λαδιού','Μπουζί','Φίλτρο καυσίμου','Φρένα εμπρός','Φρένα πίσω','Ελαστικά','Ιμάντας διανομής','Νερό ψυγείου','Υγρά φρένων','Τακάκια','Γενικός έλεγχος','ΚΤΕΟ'];
 
-let token = null;
-let appData = { vehicles: defaultVehicles(), expenses: [], fuel: [] };
-let selectedVid = null;
-let editingVid = null;
+async function signIn(){try{const r=await msalInstance.loginPopup({scopes:SCOPES});await afterLogin(r.account)}catch(e){toast('Σφάλμα: '+(e.message||e),'err')}}
+async function afterLogin(acc){msalInstance.setActiveAccount(acc);const nm=acc.name||acc.username||'Χρήστης';const in2=nm.split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();document.getElementById('userAvatar').textContent=in2;document.getElementById('userName').textContent=nm.split(' ')[0];document.getElementById('loginScreen').style.display='none';document.getElementById('appShell').style.display='block';await loadOD();renderVehicles();updateBadge()}
+async function getToken(){const acc=msalInstance.getActiveAccount();if(!acc)return null;try{const r=await msalInstance.acquireTokenSilent({scopes:SCOPES,account:acc});return r.accessToken}catch{const r=await msalInstance.acquireTokenPopup({scopes:SCOPES});return r.accessToken}}
+function signOut(){msalInstance.logoutPopup();document.getElementById('loginScreen').style.display='flex';document.getElementById('appShell').style.display='none'}
+async function loadOD(){setSyncing(true);try{const t=await getToken();const r=await fetch('https://graph.microsoft.com/v1.0'+OD_PATH,{headers:{Authorization:'Bearer '+t}});if(r.ok){const d=await r.json();if(d?.vehicles){appData=d;if(!appData.expenses)appData.expenses=[];if(!appData.fuel)appData.fuel=[];appData.vehicles.forEach(v=>{if(!v.services)v.services=[];['license_exp','paravolo_exp','paravolo_desc','svc_next_desc'].forEach(f=>{if(v[f]===undefined)v[f]=''})})}}}catch(e){}setSyncing(false)}
+async function saveOD(){setSyncing(true,true);try{const t=await getToken();await fetch('https://graph.microsoft.com/v1.0'+OD_PATH,{method:'PUT',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify(appData)});setSyncing(false);toast('Αποθηκεύτηκε ✓')}catch(e){setSyncing(false);toast('Σφάλμα αποθήκευσης','err')}}
+function setSyncing(on){const d=document.getElementById('syncDot');on?d.classList.add('syncing'):d.classList.remove('syncing')}
 
-// ══════════════════════════════════════════════════════
-//  AUTH
-// ══════════════════════════════════════════════════════
-async function signIn() {
-  try {
-    await msalInstance.handleRedirectPromise();
-    const result = await msalInstance.loginPopup({ scopes });
-    await afterLogin(result.account);
-  } catch(e) {
-    console.error(e);
-    toast('Σφάλμα σύνδεσης: ' + e.message, 'error');
-  }
-}
+function mkDefaults(){const b={km:'',regdate:'',ins_co:'',ins_num:'',ins_exp:'',ins_cost:'',kteo:'',kteo_next:'',tax:'',tax_exp:'',license_exp:'',paravolo_exp:'',paravolo_desc:'',svc_last:'',svc_last_km:'',svc_next:'',svc_next_km:'',svc_next_desc:'',notes:'',services:[]};return[{id:'v1',plate:'ΑΝΡ3848',type:'car',make:'MITSUBISHI',model:'ASX',year:'',color:'ΓΚΡΙ',vin:'JMBXJGA7WFZD09160',fuel:'Βενζίνη',cc:'',owner:'ΠΛΑΤΗ ΠΕΛΑΓΙΑ',...JSON.parse(JSON.stringify(b))},{id:'v2',plate:'ΑΝΗ4951',type:'car',make:'NISSAN',model:'ALMERA',year:'',color:'ΜΑΥΡΟ',vin:'SJNFAAN16U2600759',fuel:'Βενζίνη',cc:'',owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ',...JSON.parse(JSON.stringify(b))},{id:'v3',plate:'ΤΤΕ0304',type:'moto',make:'VOGE',model:'SR16 200',year:'',color:'ΓΚΡΙ',vin:'LLCVTKF03SC000181',fuel:'Βενζίνη',cc:'200',owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ',...JSON.parse(JSON.stringify(b))}]}
 
-async function afterLogin(account) {
-  msalInstance.setActiveAccount(account);
-  const name = account.name || account.username;
-  const initials = name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-  document.getElementById('userAvatar').textContent = initials;
-  document.getElementById('userName').textContent = name.split(' ')[0];
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('appShell').style.display = 'block';
-  await loadFromOneDrive();
-  renderVehicles();
-}
+const fd=d=>{if(!d)return'—';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`};
+const du=d=>{if(!d)return null;return Math.ceil((new Date(d)-new Date())/86400000)};
+const nf=n=>n?Number(n).toLocaleString('el-GR'):'—';
+function chip(days,lbl){if(days===null)return`<span class="chip chip-nil">— ${lbl}</span>`;if(days<0)return`<span class="chip chip-bad">✕ ${lbl} έληξε</span>`;if(days<=30)return`<span class="chip chip-warn">⚠ ${lbl} ${days}μ.</span>`;return`<span class="chip chip-ok">✓ ${lbl}</span>`}
+function rcolor(days){if(days===null)return{css:'var(--text3)',k:'none'};if(days<0)return{css:'var(--red)',k:'red'};if(days<=30)return{css:'var(--amber)',k:'amber'};return{css:'var(--green)',k:'green'}}
+let toastT;
+function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.style.borderColor=type==='err'?'var(--red)':'var(--border2)';t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3200)}
 
-async function getToken() {
-  const account = msalInstance.getActiveAccount();
-  if (!account) return null;
-  try {
-    const r = await msalInstance.acquireTokenSilent({ scopes, account });
-    return r.accessToken;
-  } catch {
-    const r = await msalInstance.acquireTokenPopup({ scopes });
-    return r.accessToken;
-  }
-}
-
-function signOut() {
-  msalInstance.logoutPopup();
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('appShell').style.display = 'none';
-}
-
-// ══════════════════════════════════════════════════════
-//  ONEDRIVE
-// ══════════════════════════════════════════════════════
-async function loadFromOneDrive() {
-  setSyncing(true);
-  try {
-    const t = await getToken();
-    const res = await fetch('https://graph.microsoft.com/v1.0' + FILE_PATH, {
-      headers: { Authorization: 'Bearer ' + t }
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.vehicles) appData = data;
-    }
-  } catch(e) { /* first run — file doesn't exist yet */ }
-  setSyncing(false);
-}
-
-async function saveToOneDrive() {
-  setSyncing(true, true);
-  try {
-    const t = await getToken();
-    await fetch('https://graph.microsoft.com/v1.0' + FILE_PATH, {
-      method: 'PUT',
-      headers: { Authorization: 'Bearer ' + t, 'Content-Type': 'application/json' },
-      body: JSON.stringify(appData)
-    });
-    setSyncing(false);
-    toast('Αποθηκεύτηκε στο OneDrive ✓');
-  } catch(e) {
-    setSyncing(false);
-    toast('Σφάλμα αποθήκευσης', 'error');
-  }
-}
-
-function setSyncing(loading, saving=false) {
-  const dot = document.getElementById('syncDot');
-  const lbl = document.getElementById('syncLabel');
-  if (loading) {
-    dot.classList.add('syncing');
-    lbl.textContent = saving ? 'Αποθήκευση...' : 'Φόρτωση...';
-  } else {
-    dot.classList.remove('syncing');
-    lbl.textContent = 'Συγχρονισμένο';
-  }
-}
-
-// ══════════════════════════════════════════════════════
-//  DEFAULT DATA
-// ══════════════════════════════════════════════════════
-function defaultVehicles() {
-  return [
-    { id:'v1', plate:'ΑΝΡ3848', type:'car', make:'MITSUBISHI', model:'ASX', year:'', color:'ΓΚΡΙ', vin:'JMBXJGA7WFZD09160', fuel:'Βενζίνη', cc:'', owner:'ΠΛΑΤΗ ΠΕΛΑΓΙΑ', km:'', regdate:'', ins_co:'', ins_num:'', ins_exp:'', ins_cost:'', kteo:'', kteo_next:'', tax:'', tax_exp:'', svc_last:'', svc_last_km:'', svc_next:'', svc_next_km:'', svc_next_desc:'', license_exp:'', paravolo_exp:'', paravolo_desc:'', notes:'', services:[] },
-    { id:'v2', plate:'ΑΝΗ4951', type:'car', make:'NISSAN', model:'ALMERA', year:'', color:'ΜΑΥΡΟ', vin:'SJNFAAN16U2600759', fuel:'Βενζίνη', cc:'', owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ', km:'', regdate:'', ins_co:'', ins_num:'', ins_exp:'', ins_cost:'', kteo:'', kteo_next:'', tax:'', tax_exp:'', svc_last:'', svc_last_km:'', svc_next:'', svc_next_km:'', svc_next_desc:'', license_exp:'', paravolo_exp:'', paravolo_desc:'', notes:'', services:[] },
-    { id:'v3', plate:'ΤΤΕ0304', type:'moto', make:'VOGE', model:'SR16 200', year:'', color:'ΓΚΡΙ', vin:'LLCVTKF03SC000181', fuel:'Βενζίνη', cc:'200', owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ', km:'', regdate:'', ins_co:'', ins_num:'', ins_exp:'', ins_cost:'', kteo:'', kteo_next:'', tax:'', tax_exp:'', svc_last:'', svc_last_km:'', svc_next:'', svc_next_km:'', notes:'', services:[] }
-  ];
-}
-
-// ══════════════════════════════════════════════════════
-//  UTILS
-// ══════════════════════════════════════════════════════
-const fmtDate = d => { if(!d) return '—'; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y}`; };
-const daysUntil = d => { if(!d) return null; return Math.ceil((new Date(d)-new Date())/86400000); };
-
-function chipHtml(days, label) {
-  if (days===null) return `<span class="chip chip-nil">— ${label}</span>`;
-  if (days<0) return `<span class="chip chip-bad">✕ ${label} έληξε</span>`;
-  if (days<=30) return `<span class="chip chip-bad">⚠ ${label} σε ${days}μ.</span>`;
-  if (days<=90) return `<span class="chip chip-warn">⏰ ${label} σε ${days}μ.</span>`;
-  return `<span class="chip chip-ok">✓ ${label}</span>`;
-}
-
-function statusColor(days) {
-  if (days===null) return 'var(--text3)';
-  if (days<0||days<=30) return 'var(--red)';
-  if (days<=90) return 'var(--amber)';
-  return 'var(--green)';
-}
-
-function toast(msg, type='ok') {
-  const t = document.getElementById('toast');
-  const d = document.getElementById('toastDot');
-  document.getElementById('toastMsg').textContent = msg;
-  d.style.background = type==='error' ? 'var(--red)' : 'var(--green)';
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 3000);
-}
-
-// ══════════════════════════════════════════════════════
-//  RENDER VEHICLES
-// ══════════════════════════════════════════════════════
-function renderVehicles() {
-  const grid = document.getElementById('vGrid');
-  grid.innerHTML = '';
-  appData.vehicles.forEach(v => {
-    const dI=daysUntil(v.ins_exp), dK=daysUntil(v.kteo_next), dT=daysUntil(v.tax_exp), dS=daysUntil(v.svc_next);
-    const el = document.createElement('div');
-    el.className = 'vcard' + (selectedVid===v.id?' active':'');
-    el.onclick = ()=>selectV(v.id);
-    el.innerHTML = `
-      <div class="vcard-top">
-        <div class="plate-badge">${v.plate}</div>
-        <span class="type-pill ${v.type==='moto'?'pill-moto':'pill-car'}">${v.type==='moto'?'🏍 Μηχανή':'🚗 Αυτ/το'}</span>
-      </div>
-      <div class="vcard-mid">
-        <div class="vcard-make">${v.make}</div>
-        <div class="vcard-model">${v.model}${v.year?' · '+v.year:''}${v.color?' · '+v.color:''}</div>
-        <div class="vcard-owner">${v.owner||'—'}</div>
-      </div>
-      <div class="vcard-chips">
-        ${chipHtml(dI,'Ασφάλεια')}${chipHtml(dK,'ΚΤΕΟ')}${chipHtml(dT,'Τέλη')}${dS!==null?chipHtml(dS,'Service'):''}
-      </div>
-      <div class="vcard-bot">
-        <div class="vcard-km">Χλμ: <strong>${v.km?Number(v.km).toLocaleString('el-GR'):'—'}</strong></div>
-        <button class="edit-btn" onclick="event.stopPropagation();openEditV('${v.id}')">Επεξεργασία</button>
-      </div>
-    `;
-    grid.appendChild(el);
-  });
-  const add = document.createElement('button');
-  add.className = 'add-vcard';
-  add.onclick = openAddV;
-  add.innerHTML = '<span class="plus">+</span><span>Νέο Όχημα</span>';
-  grid.appendChild(add);
-}
-
-function selectV(id) {
-  selectedVid = selectedVid===id ? null : id;
-  renderVehicles();
-  renderDetail();
-}
-
-// ══════════════════════════════════════════════════════
-//  DETAIL PANEL
-// ══════════════════════════════════════════════════════
-function renderDetail() {
-  const p = document.getElementById('detailPanel');
-  if (!selectedVid) { p.className='detail-panel'; return; }
-  const v = appData.vehicles.find(x=>x.id===selectedVid);
-  if (!v) { p.className='detail-panel'; return; }
-  p.className = 'detail-panel open';
-
-  const fr = (label, val) => `<div class="dp-row"><div class="dp-label">${label}</div><div class="dp-val ${!val?'empty':''}">${val||'—'}</div></div>`;
-
-  const svcRows = (v.services||[]).map((s,i)=>`
-    <div class="svc-row">
-      <div class="svc-date">${fmtDate(s.date)}</div>
-      <div class="svc-desc">${s.desc}</div>
-      <div class="svc-km">${s.km?Number(s.km).toLocaleString('el-GR')+' χλμ':''}</div>
-      <div class="svc-cost">${s.cost?'€'+Number(s.cost).toFixed(2):''}</div>
-      <button class="x-btn" onclick="delSvc('${v.id}',${i})">✕</button>
-    </div>`).join('');
-
-  p.innerHTML = `
-    <div class="dp-grid">
-      <div class="dp-section">
-        <div class="dp-title">Στοιχεία Οχήματος</div>
-        ${fr('Πινακίδα',v.plate)}${fr('Αρ. Πλαισίου',v.vin)}
-        ${fr('Μάρκα / Μοντέλο',v.make+' '+v.model)}${fr('Χρονολογία',v.year)}
-        ${fr('Χρώμα',v.color)}${fr('Καύσιμο',v.fuel)}
-        ${fr('Κυβισμός',v.cc?v.cc+' cc':'')}${fr('Ιδιοκτήτης',v.owner)}
-        ${fr('1η Άδ. Κυκλοφορίας',fmtDate(v.regdate))}${fr('Χιλιόμετρα',v.km?Number(v.km).toLocaleString('el-GR')+' χλμ':'')}
-      </div>
-      <div class="dp-section">
-        <div class="dp-title">Ασφάλεια</div>
-        ${fr('Ασφαλιστική',v.ins_co)}${fr('Αρ. Ασφαλιστηρίου',v.ins_num)}
-        ${fr('Λήξη',fmtDate(v.ins_exp))}${fr('Κόστος',v.ins_cost?'€'+v.ins_cost:'')}
-        <div class="dp-title" style="margin-top:20px">ΚΤΕΟ & Τέλη</div>
-        ${fr('Τελευταίο ΚΤΕΟ',fmtDate(v.kteo))}${fr('Επόμενο ΚΤΕΟ',fmtDate(v.kteo_next))}
-        ${fr('Τέλη Κυκλοφορίας',v.tax?'€'+v.tax:'')}${fr('Λήξη Τελών',fmtDate(v.tax_exp))}
-        ${fr('Άδεια Οδήγησης — Λήξη',fmtDate(v.license_exp))}${fr('Παράβολο — Λήξη',fmtDate(v.paravolo_exp))}
-        ${v.paravolo_desc?fr('Παράβολο — Περιγραφή',v.paravolo_desc):''}
-      </div>
-      <div class="dp-section">
-        <div class="dp-title">Service</div>
-        ${fr('Τελευταίο',fmtDate(v.svc_last))}${fr('Χλμ Τελευταίου',v.svc_last_km?Number(v.svc_last_km).toLocaleString('el-GR')+' χλμ':'')}
-        ${fr('Επόμενο',fmtDate(v.svc_next))}${fr('Χλμ Επόμενου',v.svc_next_km?Number(v.svc_next_km).toLocaleString('el-GR')+' χλμ':'')}
-        ${v.svc_next_desc?fr('Εργασίες επόμενου service',v.svc_next_desc):''}
-        ${v.notes?`<div class="dp-title" style="margin-top:20px">Σημειώσεις</div><div style="font-size:0.85rem;color:var(--text2);line-height:1.7">${v.notes}</div>`:''}
-      </div>
-    </div>
-    <div class="dp-title">Ιστορικό Service</div>
-    <div class="svc-list">${svcRows||'<div class="empty">Δεν υπάρχουν εγγραφές service.</div>'}</div>
-    <div class="svc-form">
-      <div class="svc-form-title">ΠΡΟΣΘΗΚΗ ΕΓΓΡΑΦΗΣ SERVICE</div>
-      <div class="fg3">
-        <div class="fl"><label>Ημερομηνία</label><input class="fi" id="s_date" type="date"></div>
-        <div class="fl"><label>Χιλιόμετρα</label><input class="fi" id="s_km" type="number"></div>
-        <div class="fl"><label>Κόστος (€)</label><input class="fi" id="s_cost" type="number"></div>
-      </div>
-      <div class="fl" style="margin-top:10px"><label>Περιγραφή εργασίας *</label>
-        <input class="fi" id="s_desc" placeholder="π.χ. Αλλαγή λαδιών, φίλτρων, μπουζί...">
-      </div>
-      <button class="add-svc-btn" onclick="addSvc('${v.id}')">✓ Καταχώρηση</button>
-    </div>
-  `;
-}
-
-function addSvc(vid) {
-  const v = appData.vehicles.find(x=>x.id===vid);
-  const desc = document.getElementById('s_desc').value.trim();
-  if (!desc) { toast('Συμπλήρωσε περιγραφή','error'); return; }
-  if (!v.services) v.services=[];
-  v.services.unshift({ date:document.getElementById('s_date').value, km:document.getElementById('s_km').value, cost:document.getElementById('s_cost').value, desc });
-  saveToOneDrive();
-  renderDetail();
-}
-
-function delSvc(vid,i) {
-  if (!confirm('Διαγραφή εγγραφής;')) return;
-  appData.vehicles.find(x=>x.id===vid).services.splice(i,1);
-  saveToOneDrive();
-  renderDetail();
-}
-
-// ══════════════════════════════════════════════════════
-//  VEHICLE MODAL
-// ══════════════════════════════════════════════════════
-const vFields = ['plate','type','make','model','year','color','vin','fuel','cc','owner','km','regdate','ins_co','ins_num','ins_exp','ins_cost','kteo','kteo_next','tax','tax_exp','license_exp','paravolo_exp','paravolo_desc','svc_last','svc_last_km','svc_next','svc_next_km','svc_next_desc','notes'];
-
-function openAddV() {
-  editingVid=null;
-  vFields.forEach(f=>{ const e=document.getElementById('nv_'+f); if(e) e.value=''; });
-  document.getElementById('nv_type').value='car';
-  document.getElementById('nv_fuel').value='Βενζίνη';
-  document.getElementById('modalVTitle').innerHTML='ΝΕΟ <span>ΟΧΗΜΑ</span>';
-  openModal('modalVehicle');
-}
-
-function openEditV(vid) {
-  editingVid=vid;
-  const v=appData.vehicles.find(x=>x.id===vid);
-  vFields.forEach(f=>{ const e=document.getElementById('nv_'+f); if(e) e.value=v[f]||''; });
-  document.getElementById('modalVTitle').innerHTML=`ΕΠΕΞΕΡΓΑΣΙΑ: <span>${v.plate}</span>`;
-  openModal('modalVehicle');
-}
-
-function saveVehicle() {
-  const plate = document.getElementById('nv_plate').value.trim().toUpperCase();
-  if (!plate) { toast('Η πινακίδα είναι υποχρεωτική','error'); return; }
-  const obj = { plate };
-  vFields.filter(f=>f!=='plate').forEach(f=>{ obj[f]=document.getElementById('nv_'+f)?.value||''; });
-  if (editingVid) {
-    const idx=appData.vehicles.findIndex(x=>x.id===editingVid);
-    obj.id=editingVid; obj.services=appData.vehicles[idx].services||[];
-    appData.vehicles[idx]=obj;
-  } else {
-    obj.id='v'+Date.now(); obj.services=[];
-    appData.vehicles.push(obj);
-  }
-  saveToOneDrive();
-  closeModal('modalVehicle');
-  renderVehicles();
-  if (selectedVid===editingVid) renderDetail();
-}
-
-// ══════════════════════════════════════════════════════
-//  REMINDERS
-// ══════════════════════════════════════════════════════
-function remColor(days) {
-  if (days===null) return 'nil';
-  if (days<0) return 'red';
-  if (days<=30) return 'yellow';
-  return 'green';
-}
-
-function renderReminders() {
-  const list=document.getElementById('remList');
-  const items=[];
+function renderVehicles(){
+  const g=document.getElementById('vGrid');g.innerHTML='';
   appData.vehicles.forEach(v=>{
-    const checks=[
-      {label:'Ασφάλεια', date:v.ins_exp, icon:'🛡️', extra:''},
-      {label:'ΚΤΕΟ', date:v.kteo_next, icon:'🔍', extra:''},
-      {label:'Τέλη Κυκλοφορίας', date:v.tax_exp, icon:'📋', extra:''},
-      {label:'Επόμενο Service', date:v.svc_next, icon:'🔧', extra:v.svc_next_desc||''},
-      {label:'Άδεια Οδήγησης', date:v.license_exp, icon:'🪪', extra:''},
-      {label:'Παράβολο', date:v.paravolo_exp, icon:'📄', extra:v.paravolo_desc||''},
-    ];
-    checks.forEach(c=>{
-      if(!c.date) return;
-      const days=daysUntil(c.date);
-      items.push({plate:v.plate,make:v.make,model:v.model,label:c.label,date:c.date,days,icon:c.icon,extra:c.extra,colorKey:remColor(days)});
-    });
+    const di=du(v.ins_exp),dk=du(v.kteo_next),dt=du(v.tax_exp),ds=du(v.svc_next),dl=du(v.license_exp),dp=du(v.paravolo_exp);
+    const el=document.createElement('div');el.className='vcard';el.id='vc-'+v.id;
+    el.innerHTML=`<div class="vcard-header"><div class="plate-badge">${v.plate}</div><span class="type-pill ${v.type==='moto'?'pill-moto':'pill-car'}">${v.type==='moto'?'🏍 Μηχανή':'🚗 Αυτ/το'}</span></div>
+    <div class="vcard-body"><div class="vcard-make">${v.make} <span style="font-weight:400;color:var(--text2)">${v.model}</span></div>
+    <div class="vcard-meta">${[v.year,v.color,v.fuel,v.cc?v.cc+'cc':''].filter(Boolean).join(' · ')}</div>
+    <div class="vcard-owner">${v.owner||'—'}</div></div>
+    <div class="vcard-chips">${chip(di,'Ασφάλεια')}${chip(dk,'ΚΤΕΟ')}${chip(dt,'Τέλη')}${ds!==null?chip(ds,'Service'):''}${dl!==null?chip(dl,'Άδεια'):''}${dp!==null?chip(dp,'Παράβολο'):''}</div>
+    <div class="vcard-footer"><div class="vcard-km">Χλμ: <strong>${v.km?nf(v.km):'—'}</strong></div>
+    <button class="btn-view" id="bv-${v.id}" onclick="toggleD('${v.id}')">👁 Προβολή</button>
+    <button class="btn-edit" onclick="openEditV('${v.id}')">✏️</button></div>
+    <div class="vcard-detail" id="vd-${v.id}">${buildDetail(v)}</div>`;
+    g.appendChild(el);
   });
+  const ab=document.createElement('button');ab.className='add-vcard';ab.onclick=openAddV;ab.innerHTML='<span style="font-size:1.4rem">+</span> Νέο Όχημα';g.appendChild(ab);
+  updateBadge();
+}
 
-  // Sort: red first (most urgent = smallest days), then yellow, then green
-  const order = {red:0, yellow:1, green:2, nil:3};
-  items.sort((a,b)=> {
-    if(order[a.colorKey]!==order[b.colorKey]) return order[a.colorKey]-order[b.colorKey];
-    return a.days-b.days;
-  });
+function toggleD(vid){
+  const panel=document.getElementById('vd-'+vid);const card=document.getElementById('vc-'+vid);const btn=document.getElementById('bv-'+vid);
+  const wasOpen=panel.classList.contains('open');
+  document.querySelectorAll('.vcard-detail.open').forEach(p=>{p.classList.remove('open');p.closest('.vcard').classList.remove('expanded')});
+  document.querySelectorAll('.btn-view').forEach(b=>b.innerHTML='👁 Προβολή');
+  if(!wasOpen){panel.classList.add('open');card.classList.add('expanded');if(btn)btn.innerHTML='✕ Κλείσιμο';card.scrollIntoView({behavior:'smooth',block:'nearest'})}
+}
 
-  if(!items.length){list.innerHTML='<div class="empty">Δεν υπάρχουν υπενθυμίσεις.<br>Συμπλήρωσε ημερομηνίες στα οχήματα.</div>';return;}
+function ic(lbl,val,full){const h=val&&val!=='—';return`<div class="info-card${full?' full':''}">${lbl?`<div class="info-label">${lbl}</div>`:''}<div class="info-val${h?'':' empty'}">${h?val:'—'}</div></div>`}
 
-  // Group by color
-  const groups = [{key:'red',label:'🔴 Ληγμένα / Επείγοντα',color:'var(--red)'},{key:'yellow',label:'🟡 Λήγουν σε 1 μήνα',color:'var(--amber)'},{key:'green',label:'🟢 OK — άνω των 2 μηνών',color:'var(--green)'}];
+function buildDetail(v){
+  const svcs=v.services||[];
+  const statItems=[{icon:'🛡️',lbl:'ΑΣΦΑΛΕΙΑ',days:du(v.ins_exp)},{icon:'🔍',lbl:'ΚΤΕΟ',days:du(v.kteo_next)},{icon:'📋',lbl:'ΤΕΛΗ',days:du(v.tax_exp)},{icon:'🔧',lbl:'SERVICE',days:du(v.svc_next)}].filter(s=>s.days!==null);
+  const sbar=statItems.length?`<div class="status-bar">${statItems.map(s=>{const c=rcolor(s.days);const txt=s.days<0?`${Math.abs(s.days)}μ πριν`:s.days===0?'ΣΗΜΕΡΑ':s.days<=7?`${s.days}μ ⚡`:`${s.days}μ`;return`<div class="status-item"><span class="status-icon">${s.icon}</span><span class="status-label">${s.lbl}</span><span class="status-days" style="color:${c.css}">${txt}</span></div>`}).join('')}</div>`:''
+  const svcRows=svcs.length?svcs.map((s,i)=>`<div class="svc-item"><button class="svc-del" onclick="delSvc('${v.id}',${i})">✕</button><div class="svc-item-header"><span class="svc-date">${fd(s.date)}</span><div class="svc-cost-km">${s.km?`<span class="svc-km-val">📍 ${nf(s.km)} χλμ</span>`:''} ${s.cost?`<span class="svc-cost">€${Number(s.cost).toFixed(2)}</span>`:''}</div></div><div class="svc-desc">${s.desc}</div>${s.tags&&s.tags.length?`<div class="svc-tags-row">${s.tags.map(t=>`<span class="svc-tag">${t}</span>`).join('')}</div>`:''}</div>`).join(''):`<div class="svc-empty">🔧 Δεν υπάρχουν εγγραφές service ακόμα.</div>`;
+  const ctagsHtml=COMMON_TAGS.map(t=>`<button class="ctag" onclick="toggleCTag(this,'${v.id}','${t}')">${t}</button>`).join('');
+  return`${sbar}<div class="detail-tabs"><button class="detail-tab active" onclick="swTab(this,'ti-${v.id}')">📋 Στοιχεία</button><button class="detail-tab" onclick="swTab(this,'tl-${v.id}')">🛡️ Ασφάλεια/ΚΤΕΟ</button><button class="detail-tab" onclick="swTab(this,'ts-${v.id}')">🔧 Service (${svcs.length})</button></div>
+  <div class="detail-panel active" id="ti-${v.id}"><div class="info-grid">
+    <div class="info-section-title">Ταυτότητα</div>
+    ${ic('Πινακίδα',v.plate)}${ic('Τύπος',v.type==='car'?'Αυτοκίνητο':v.type==='moto'?'Μηχανή':'Βαν')}
+    ${ic('Μάρκα',v.make)}${ic('Μοντέλο',v.model)}${ic('Χρονολογία',v.year)}${ic('Χρώμα',v.color)}${ic('Καύσιμο',v.fuel)}${ic('Κυβισμός',v.cc?v.cc+' cc':'')}
+    ${ic('Αρ. Πλαισίου (VIN)',v.vin,true)}
+    <div class="info-section-title">Ιδιοκτησία</div>
+    ${ic('Ιδιοκτήτης',v.owner,true)}${ic('1η Άδεια',fd(v.regdate))}${ic('Χιλιόμετρα',v.km?nf(v.km)+' χλμ':'')}
+    ${v.notes?`<div class="info-card full"><div class="info-label">Σημειώσεις</div><div class="info-val" style="white-space:pre-wrap;font-size:.84rem;line-height:1.6">${v.notes}</div></div>`:''}
+  </div></div>
+  <div class="detail-panel" id="tl-${v.id}"><div class="info-grid">
+    <div class="info-section-title">🛡️ Ασφάλεια</div>
+    <div class="info-card full hl"><div class="info-label">Ασφαλιστική</div><div class="info-val">${v.ins_co||'—'}${v.ins_num?' · #'+v.ins_num:''}</div></div>
+    ${ic('Λήξη Ασφάλειας',fd(v.ins_exp))}${ic('Ετήσιο Κόστος',v.ins_cost?'€'+v.ins_cost:'')}
+    <div class="info-section-title">🔍 ΚΤΕΟ</div>
+    ${ic('Τελευταίο ΚΤΕΟ',fd(v.kteo))}${ic('Επόμενο ΚΤΕΟ',fd(v.kteo_next))}
+    <div class="info-section-title">📋 Τέλη Κυκλοφορίας</div>
+    ${ic('Ποσό',v.tax?'€'+v.tax:'')}${ic('Λήξη/Πληρωμή',fd(v.tax_exp))}
+    <div class="info-section-title">📄 Παράβολο / Άλλα</div>
+    ${ic('Άδεια Οδήγησης — Λήξη',fd(v.license_exp))}${ic('Παράβολο — Λήξη',fd(v.paravolo_exp))}
+    ${v.paravolo_desc?ic('Παράβολο — Περιγραφή',v.paravolo_desc,true):''}
+  </div></div>
+  <div class="detail-panel" id="ts-${v.id}"><div class="info-grid" style="margin-bottom:14px">
+    <div class="info-section-title">Επόμενο Service</div>
+    ${ic('Ημερομηνία',fd(v.svc_next))}${ic('Χλμ Επόμενου',v.svc_next_km?nf(v.svc_next_km)+' χλμ':'')}
+    ${v.svc_next_desc?`<div class="info-card full hl"><div class="info-label">Εργασίες επόμενου service</div><div class="info-val" style="line-height:1.6;font-size:.84rem">${v.svc_next_desc}</div></div>`:''}
+    <div class="info-section-title">Τελευταίο Service</div>
+    ${ic('Ημερομηνία',fd(v.svc_last))}${ic('Χλμ Τελευταίου',v.svc_last_km?nf(v.svc_last_km)+' χλμ':'')}
+  </div>
+  <div style="font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px">📅 Ιστορικό (${svcs.length} εγγραφές)</div>
+  <div class="svc-timeline">${svcRows}</div>
+  <div class="svc-add-form">
+    <div class="svc-add-title">➕ Νέα Εγγραφή</div>
+    <div class="form-row-3">
+      <div class="fl"><label>Ημερομηνία</label><input class="fi" id="sf_d_${v.id}" type="date"></div>
+      <div class="fl"><label>Χλμ</label><input class="fi" id="sf_k_${v.id}" type="number" placeholder="χλμ"></div>
+      <div class="fl"><label>Κόστος (€)</label><input class="fi" id="sf_c_${v.id}" type="number" placeholder="€"></div>
+    </div>
+    <div class="fl" style="margin-bottom:8px"><label>Περιγραφή *</label><input class="fi" id="sf_desc_${v.id}" placeholder="π.χ. Αλλαγή λαδιών, φίλτρων..."></div>
+    <div class="fl"><label>Γρήγορη επιλογή εργασιών</label><div class="common-tags" id="ctags_${v.id}">${ctagsHtml}</div></div>
+    <button class="btn-add-svc" onclick="addSvc('${v.id}')">✓ Καταχώρηση</button>
+  </div></div>`
+}
+
+function swTab(btn,tid){const d=btn.closest('.vcard-detail');d.querySelectorAll('.detail-tab').forEach(b=>b.classList.remove('active'));d.querySelectorAll('.detail-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById(tid)?.classList.add('active')}
+
+function toggleCTag(btn,vid,tag){btn.classList.toggle('sel');const sels=Array.from(document.querySelectorAll(`#ctags_${vid} .ctag.sel`)).map(b=>b.textContent);document.getElementById('sf_desc_'+vid).value=sels.join(', ')}
+
+function addSvc(vid){
+  const v=appData.vehicles.find(x=>x.id===vid);if(!v)return;
+  const desc=document.getElementById('sf_desc_'+vid)?.value.trim();
+  if(!desc){toast('Συμπλήρωσε περιγραφή','err');return}
+  const tags=Array.from(document.querySelectorAll(`#ctags_${vid} .ctag.sel`)).map(b=>b.textContent);
+  const km=document.getElementById('sf_k_'+vid)?.value;
+  if(!v.services)v.services=[];
+  v.services.unshift({date:document.getElementById('sf_d_'+vid)?.value,km,cost:document.getElementById('sf_c_'+vid)?.value,desc,tags});
+  if(km&&(!v.km||Number(km)>Number(v.km)))v.km=km;
+  saveOD();renderVehicles();
+  setTimeout(()=>{const p=document.getElementById('vd-'+vid);const c=document.getElementById('vc-'+vid);if(p&&!p.classList.contains('open')){p.classList.add('open');c.classList.add('expanded')}const t=document.querySelector(`#vd-${vid} .detail-tab:nth-child(3)`);if(t)t.click();toast('Εγγραφή καταχωρήθηκε ✓')},80)
+}
+
+function delSvc(vid,i){if(!confirm('Διαγραφή εγγραφής;'))return;const v=appData.vehicles.find(x=>x.id===vid);v.services.splice(i,1);saveOD();renderVehicles();setTimeout(()=>{const p=document.getElementById('vd-'+vid);const c=document.getElementById('vc-'+vid);if(p){p.classList.add('open');c.classList.add('expanded')}const t=document.querySelector(`#vd-${vid} .detail-tab:nth-child(3)`);if(t)t.click()},80)}
+
+const VF=['plate','type','make','model','year','color','vin','fuel','cc','owner','km','regdate','ins_co','ins_num','ins_exp','ins_cost','kteo','kteo_next','tax','tax_exp','license_exp','paravolo_exp','paravolo_desc','svc_last','svc_last_km','svc_next','svc_next_km','svc_next_desc','notes'];
+function openAddV(){editVid=null;VF.forEach(f=>{const e=document.getElementById('nv_'+f);if(e)e.value=''});document.getElementById('nv_type').value='car';document.getElementById('nv_fuel').value='Βενζίνη';document.getElementById('mVTitle').innerHTML='ΝΕΟ <span>ΟΧΗΜΑ</span>';openModal('modalVehicle')}
+function openEditV(vid){editVid=vid;const v=appData.vehicles.find(x=>x.id===vid);if(!v)return;VF.forEach(f=>{const e=document.getElementById('nv_'+f);if(e)e.value=v[f]||''});document.getElementById('mVTitle').innerHTML=`ΕΠΕΞΕΡΓΑΣΙΑ: <span>${v.plate}</span>`;openModal('modalVehicle')}
+function saveVehicle(){const plate=document.getElementById('nv_plate').value.trim().toUpperCase();if(!plate){toast('Η πινακίδα είναι υποχρεωτική','err');return}const o={plate};VF.filter(f=>f!=='plate').forEach(f=>{o[f]=document.getElementById('nv_'+f)?.value||''});if(editVid){const i=appData.vehicles.findIndex(x=>x.id===editVid);if(i>=0){o.id=editVid;o.services=appData.vehicles[i].services||[];appData.vehicles[i]=o}}else{o.id='v'+Date.now();o.services=[];appData.vehicles.push(o)}saveOD();closeModal('modalVehicle');renderVehicles();updateBadge()}
+
+function allRemItems(vlist){const items=[];vlist.forEach(v=>{[{lbl:'Ασφάλεια',date:v.ins_exp,icon:'🛡️',extra:v.ins_co},{lbl:'ΚΤΕΟ',date:v.kteo_next,icon:'🔍',extra:''},{lbl:'Τέλη Κυκλοφορίας',date:v.tax_exp,icon:'📋',extra:v.tax?'€'+v.tax:''},{lbl:'Επόμενο Service',date:v.svc_next,icon:'🔧',extra:v.svc_next_desc||''},{lbl:'Άδεια Οδήγησης',date:v.license_exp,icon:'🪪',extra:''},{lbl:'Παράβολο',date:v.paravolo_exp,icon:'📄',extra:v.paravolo_desc||''}].forEach(c=>{if(!c.date)return;const days=du(c.date);items.push({...c,vid:v.id,plate:v.plate,make:v.make,model:v.model,days,col:rcolor(days)})})});return items}
+function updateBadge(){const items=allRemItems(appData.vehicles);const urg=items.filter(i=>i.days!==null&&i.days<=30);const b=document.getElementById('remBadge');if(urg.length){b.style.display='flex';b.textContent=urg.length>9?'9+':urg.length}else b.style.display='none'}
+
+function renderReminders(){
+  const fe=document.getElementById('remFilter'),le=document.getElementById('remList');
+  const allItems=allRemItems(appData.vehicles);
+  function countClass(items){if(items.some(i=>i.days!==null&&i.days<0))return'red';if(items.some(i=>i.days!==null&&i.days<=30))return'amber';return'green'}
+  let fhtml=`<button class="rem-filter-btn ${remFilter==='all'?'active':''}" onclick="setRF('all')">📋 Όλα <span class="rem-count ${countClass(allItems)}">${allItems.length}</span></button>`;
+  appData.vehicles.forEach(v=>{const vi=allRemItems([v]);const cc=countClass(vi);fhtml+=`<button class="rem-filter-btn ${remFilter===v.id?'active':''}" onclick="setRF('${v.id}')"><span class="rem-filter-plate">${v.plate}</span>${vi.length?`<span class="rem-count ${cc}">${vi.length}</span>`:''}</button>`});
+  fe.innerHTML=fhtml;
+  const items=(remFilter==='all'?allItems:allItems.filter(i=>i.vid===remFilter));
+  const order={red:0,amber:1,green:2,none:3};
+  items.sort((a,b)=>{const oa=order[a.col.k]??3,ob=order[b.col.k]??3;return oa!==ob?oa-ob:(a.days??9999)-(b.days??9999)});
+  if(!items.length){le.innerHTML=`<div class="empty"><span class="empty-icon">✅</span>Δεν υπάρχουν υπενθυμίσεις.<br>Συμπλήρωσε ημερομηνίες στα οχήματα.</div>`;return}
+  const groups=[{k:'red',lbl:'🔴 Ληγμένα — Άμεση Ενέργεια',css:'var(--red)'},{k:'amber',lbl:'🟡 Λήγουν εντός 30 ημερών',css:'var(--amber)'},{k:'green',lbl:'🟢 Εντάξει',css:'var(--green)'}];
   let html='';
-  groups.forEach(g=>{
-    const gItems=items.filter(i=>i.colorKey===g.key);
-    if(!gItems.length) return;
-    html+=`<div style="font-family:'Outfit',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${g.color};margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">${g.label}</div>`;
-    html+=gItems.map(it=>{
-      const c=statusColor(it.days);
-      const dTxt=it.days<0?`Έληξε πριν ${Math.abs(it.days)} μέρες`:it.days===0?'Λήγει σήμερα!':`Απομένουν ${it.days} μέρες`;
-      return `<div class="rem-item" style="border-left:3px solid ${c};margin-bottom:8px">
-        <div class="rem-bar" style="background:${c}"></div>
-        <div class="rem-info">
-          <div class="rem-title">${it.icon} ${it.label}</div>
-          <div class="rem-sub">${it.plate} — ${it.make} ${it.model}${it.extra?` · <em>${it.extra}</em>`:''}</div>
-        </div>
-        <div class="rem-right">
-          <div class="rem-date" style="color:${c}">${fmtDate(it.date)}</div>
-          <div class="rem-days" style="color:${c}">${dTxt}</div>
-        </div>
-      </div>`;
-    }).join('');
-  });
-  list.innerHTML=html||'<div class="empty">Δεν υπάρχουν υπενθυμίσεις.</div>';
+  groups.forEach(g=>{const gi=items.filter(i=>i.col.k===g.k);if(!gi.length)return;html+=`<div class="rem-group-label" style="color:${g.css}">${g.lbl}<span class="rem-group-cnt">${gi.length}</span></div>`;html+=gi.map(it=>{const c=it.col.css;const dt=it.days<0?`Έληξε ${Math.abs(it.days)}μ. πριν`:it.days===0?'ΣΗΜΕΡΑ!':it.days===1?'Αύριο!':it.days<=7?`${it.days}μ. ⚡`:`${it.days} μέρες`;return`<div class="rem-item" style="border-left:3px solid ${c}"><div class="rem-bar" style="background:${c}"></div><div class="rem-content"><div class="rem-top"><span class="rem-icon">${it.icon}</span><span class="rem-label">${it.lbl}</span><span class="rem-plate-tag">${it.plate}</span></div><div class="rem-sub">${it.make} ${it.model}${it.extra?' · '+it.extra:''}</div></div><div class="rem-right"><div class="rem-date-val" style="color:${c}">${fd(it.date)}</div><div class="rem-days-val" style="color:${c}">${dt}</div></div></div>`}).join('')});
+  le.innerHTML=html
 }
+function setRF(id){remFilter=id;renderReminders()}
 
-// ══════════════════════════════════════════════════════
-//  EXPENSES
-// ══════════════════════════════════════════════════════
-function fillVSelect(id) {
-  document.getElementById(id).innerHTML=appData.vehicles.map(v=>`<option value="${v.id}">${v.plate} — ${v.make} ${v.model}</option>`).join('');
-}
+function fillVSel(id){document.getElementById(id).innerHTML=appData.vehicles.map(v=>`<option value="${v.id}">${v.plate} — ${v.make} ${v.model}</option>`).join('')}
+function saveExpense(){const amt=document.getElementById('exp_amt').value;if(!amt){toast('Συμπλήρωσε ποσό','err');return}if(!appData.expenses)appData.expenses=[];appData.expenses.unshift({id:Date.now(),vehicle:document.getElementById('exp_v').value,cat:document.getElementById('exp_cat').value,desc:document.getElementById('exp_desc').value,amount:parseFloat(amt),date:document.getElementById('exp_date').value,km:document.getElementById('exp_km').value});saveOD();closeModal('modalExp');renderExpenses()}
+function renderExpenses(){const tots={};(appData.expenses||[]).forEach(e=>tots[e.vehicle]=(tots[e.vehicle]||0)+e.amount);const grand=Object.values(tots).reduce((a,b)=>a+b,0);document.getElementById('expStats').innerHTML=`<div class="stat-card"><div class="stat-label">ΣΥΝΟΛΟ</div><div class="stat-val gold">€${grand.toFixed(2)}</div><div class="stat-sub">${(appData.expenses||[]).length} εγγραφές</div></div>${appData.vehicles.map(v=>`<div class="stat-card"><div class="stat-label">${v.plate}</div><div class="stat-val">€${(tots[v.id]||0).toFixed(2)}</div><div class="stat-sub">${v.make}</div></div>`).join('')}`;if(!(appData.expenses||[]).length){document.getElementById('expList').innerHTML=`<div class="empty"><span class="empty-icon">💶</span>Δεν υπάρχουν έξοδα.</div>`;return}document.getElementById('expList').innerHTML=(appData.expenses||[]).map((e,i)=>{const v=appData.vehicles.find(x=>x.id===e.vehicle);return`<div class="list-item"><div class="li-left"><div class="li-cat">${e.cat} · ${fd(e.date)}${e.km?' · '+nf(e.km)+' χλμ':''}</div><div class="li-desc">${e.desc||e.cat}</div></div><span class="li-plate-tag">${v?v.plate:'—'}</span><span class="li-amount">€${e.amount.toFixed(2)}</span><button class="x-btn" onclick="delExp(${i})">✕</button></div>`}).join('')}
+function delExp(i){if(!confirm('Διαγραφή;'))return;appData.expenses.splice(i,1);saveOD();renderExpenses()}
 
-function openModal(id) {
-  if(id==='modalExp'){fillVSelect('exp_v');document.getElementById('exp_date').value=new Date().toISOString().split('T')[0];}
-  if(id==='modalFuel'){fillVSelect('fuel_v');document.getElementById('fuel_date').value=new Date().toISOString().split('T')[0];}
-  document.getElementById(id).classList.add('open');
-}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+function saveFuel(){const cost=document.getElementById('fuel_cost').value;if(!cost){toast('Συμπλήρωσε κόστος','err');return}if(!appData.fuel)appData.fuel=[];appData.fuel.unshift({id:Date.now(),vehicle:document.getElementById('fuel_v').value,date:document.getElementById('fuel_date').value,liters:document.getElementById('fuel_lt').value,cost:parseFloat(cost),price:document.getElementById('fuel_price').value,km:document.getElementById('fuel_km').value,station:document.getElementById('fuel_station').value});saveOD();closeModal('modalFuel');renderFuel()}
+function renderFuel(){const fuel=appData.fuel||[];if(!fuel.length){document.getElementById('fuelContent').innerHTML=`<div class="empty"><span class="empty-icon">⛽</span>Δεν υπάρχουν ανεφοδιασμοί.</div>`;return}const tc=fuel.reduce((a,f)=>a+f.cost,0);const tl=fuel.reduce((a,f)=>a+(parseFloat(f.liters)||0),0);document.getElementById('fuelContent').innerHTML=`<div class="stats-grid"><div class="stat-card"><div class="stat-label">ΚΟΣΤΟΣ</div><div class="stat-val gold">€${tc.toFixed(2)}</div></div><div class="stat-card"><div class="stat-label">ΛΙΤΡΑ</div><div class="stat-val">${tl.toFixed(1)}L</div></div><div class="stat-card"><div class="stat-label">ΕΓΓΡΑΦΕΣ</div><div class="stat-val">${fuel.length}</div></div></div><div class="item-list">${fuel.map((f,i)=>{const v=appData.vehicles.find(x=>x.id===f.vehicle);return`<div class="list-item"><div class="li-left"><div class="li-cat">⛽ ${fd(f.date)}${f.station?' · '+f.station:''}</div><div class="li-desc">${f.liters?f.liters+'L':''}${f.price?' · €'+f.price+'/L':''}${f.km?' · '+nf(f.km)+' χλμ':''}</div></div><span class="li-plate-tag">${v?v.plate:'—'}</span><span class="li-amount">€${f.cost.toFixed(2)}</span><button class="x-btn" onclick="delFuel(${i})">✕</button></div>`}).join('')}</div>`}
+function delFuel(i){if(!confirm('Διαγραφή;'))return;appData.fuel.splice(i,1);saveOD();renderFuel()}
 
-function saveExpense() {
-  const amt=document.getElementById('exp_amt').value;
-  if(!amt){toast('Συμπλήρωσε ποσό','error');return;}
-  appData.expenses.unshift({id:Date.now(),vehicle:document.getElementById('exp_v').value,cat:document.getElementById('exp_cat').value,desc:document.getElementById('exp_desc').value,amount:parseFloat(amt),date:document.getElementById('exp_date').value,km:document.getElementById('exp_km').value});
-  saveToOneDrive();
-  closeModal('modalExp');
-  renderExpenses();
-}
+function showPage(name,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));document.getElementById('page-'+name).classList.add('active');if(btn)btn.classList.add('active');curPage=name;const fab=document.getElementById('fabBtn');['vehicles','expenses','fuel'].includes(name)?fab.classList.add('visible'):fab.classList.remove('visible');if(name==='reminders')renderReminders();if(name==='expenses')renderExpenses();if(name==='fuel')renderFuel()}
 
-function renderExpenses() {
-  const totals={};
-  appData.expenses.forEach(e=>totals[e.vehicle]=(totals[e.vehicle]||0)+e.amount);
-  const grand=Object.values(totals).reduce((a,b)=>a+b,0);
-  document.getElementById('expStats').innerHTML=`
-    <div class="stat-card"><div class="stat-label">ΣΥΝΟΛΟ</div><div class="stat-val gold">€${grand.toFixed(2)}</div></div>
-    ${appData.vehicles.map(v=>`<div class="stat-card"><div class="stat-label">${v.plate}</div><div class="stat-val">€${(totals[v.id]||0).toFixed(2)}</div></div>`).join('')}`;
-  if(!appData.expenses.length){document.getElementById('expList').innerHTML='<div class="empty">Δεν υπάρχουν έξοδα.</div>';return;}
-  document.getElementById('expList').innerHTML=appData.expenses.map((e,i)=>{
-    const v=appData.vehicles.find(x=>x.id===e.vehicle);
-    return `<div class="list-item">
-      <div class="li-info"><div class="li-cat">${e.cat} · ${fmtDate(e.date)}</div><div class="li-desc">${e.desc||e.cat}</div></div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="li-plate">${v?v.plate:'—'}</span>
-        <span class="li-amount">€${e.amount.toFixed(2)}</span>
-        <button class="x-btn" onclick="delExp(${i})">✕</button>
-      </div>
-    </div>`;
-  }).join('');
-}
+function fabAction(){if(curPage==='vehicles'){openAddV()}else if(curPage==='expenses'){fillVSel('exp_v');document.getElementById('exp_date').value=new Date().toISOString().split('T')[0];['exp_desc','exp_amt','exp_km'].forEach(id=>document.getElementById(id).value='');openModal('modalExp')}else if(curPage==='fuel'){fillVSel('fuel_v');document.getElementById('fuel_date').value=new Date().toISOString().split('T')[0];['fuel_lt','fuel_cost','fuel_price','fuel_km','fuel_station'].forEach(id=>document.getElementById(id).value='');openModal('modalFuel')}}
 
-function delExp(i){if(!confirm('Διαγραφή;'))return;appData.expenses.splice(i,1);saveToOneDrive();renderExpenses();}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
 
-// ══════════════════════════════════════════════════════
-//  FUEL
-// ══════════════════════════════════════════════════════
-function saveFuel() {
-  const cost=document.getElementById('fuel_cost').value;
-  if(!cost){toast('Συμπλήρωσε κόστος','error');return;}
-  appData.fuel.unshift({id:Date.now(),vehicle:document.getElementById('fuel_v').value,date:document.getElementById('fuel_date').value,liters:document.getElementById('fuel_lt').value,cost:parseFloat(cost),price:document.getElementById('fuel_price').value,km:document.getElementById('fuel_km').value,station:document.getElementById('fuel_station').value});
-  saveToOneDrive();
-  closeModal('modalFuel');
-  renderFuel();
-}
-
-function renderFuel() {
-  if(!appData.fuel.length){document.getElementById('fuelList').innerHTML='<div class="empty">Δεν υπάρχουν ανεφοδιασμοί.</div>';return;}
-  document.getElementById('fuelList').innerHTML=appData.fuel.map((f,i)=>{
-    const v=appData.vehicles.find(x=>x.id===f.vehicle);
-    return `<div class="list-item">
-      <div class="li-info">
-        <div class="li-cat">⛽ ${fmtDate(f.date)}${f.station?' · '+f.station:''}</div>
-        <div class="li-desc">${f.liters?f.liters+'L':''}${f.price?' · €'+f.price+'/L':''}${f.km?' · '+Number(f.km).toLocaleString('el-GR')+' χλμ':''}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="li-plate">${v?v.plate:'—'}</span>
-        <span class="li-amount">€${f.cost.toFixed(2)}</span>
-        <button class="x-btn" onclick="delFuel(${i})">✕</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function delFuel(i){if(!confirm('Διαγραφή;'))return;appData.fuel.splice(i,1);saveToOneDrive();renderFuel();}
-
-// ══════════════════════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════════════════════
-function showPage(name, btn) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  if(btn) btn.classList.add('active');
-  if(name==='reminders') renderReminders();
-  if(name==='expenses') renderExpenses();
-  if(name==='fuel') renderFuel();
-}
-
-// ══════════════════════════════════════════════════════
-//  INIT — check if already logged in
-// ══════════════════════════════════════════════════════
-(async()=>{
-  await msalInstance.initialize();
-  await msalInstance.handleRedirectPromise();
-  const accounts = msalInstance.getAllAccounts();
-  if(accounts.length>0) {
-    await afterLogin(accounts[0]);
-  }
-})();
-</script>
+(async()=>{await msalInstance.initialize();await msalInstance.handleRedirectPromise();const accs=msalInstance.getAllAccounts();if(accs.length>0)await afterLogin(accs[0])})();
+<\/script>
 </body>
 </html>

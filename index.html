@@ -92,81 +92,98 @@ body::before {
 
 /* ── TOPBAR ── */
 .topbar {
-  height: 64px;
+  height: 52px;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 28px;
+  padding: 0 14px;
   border-bottom: 1px solid var(--border);
-  background: rgba(8,10,15,0.95);
+  background: rgba(8,10,15,0.97);
   backdrop-filter: blur(20px);
   position: sticky; top: 0; z-index: 100;
 }
 .topbar-logo {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.6rem; letter-spacing: 4px; color: var(--text);
+  font-size: 1.4rem; letter-spacing: 4px; color: var(--text);
+  flex-shrink: 0;
 }
 .topbar-logo span { color: var(--gold); }
-.topbar-right { display: flex; align-items: center; gap: 16px; }
+.topbar-right { display: flex; align-items: center; gap: 8px; overflow: hidden; }
 .user-chip {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: 6px;
   background: var(--surface); border: 1px solid var(--border2);
-  border-radius: 30px; padding: 6px 14px 6px 8px;
-  font-size: 0.82rem; color: var(--text2);
+  border-radius: 30px; padding: 5px 10px 5px 6px;
+  font-size: 0.78rem; color: var(--text2);
+  max-width: 140px; overflow: hidden;
 }
 .user-avatar {
-  width: 26px; height: 26px; border-radius: 50%;
+  width: 24px; height: 24px; border-radius: 50%;
   background: var(--gold); color: var(--bg);
   display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 0.72rem; flex-shrink: 0;
+  font-weight: 700; font-size: 0.68rem; flex-shrink: 0;
 }
+.user-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sync-indicator {
-  font-size: 0.72rem; color: var(--text3);
-  display: flex; align-items: center; gap: 5px;
+  font-size: 0.7rem; color: var(--text3);
+  display: flex; align-items: center; gap: 4px;
+  flex-shrink: 0;
 }
-.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
 .sync-dot.syncing { animation: pulse 1s infinite; background: var(--amber); }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.sync-label { display: none; }
+@media(min-width:500px) { .sync-label { display: inline; } }
 
 .logout-btn {
   background: none; border: 1px solid var(--border2); color: var(--text3);
-  font-family: 'Outfit', sans-serif; font-size: 0.78rem;
-  padding: 6px 14px; border-radius: 8px; cursor: pointer; transition: all .2s;
+  font-family: 'Outfit', sans-serif; font-size: 0.72rem;
+  padding: 5px 10px; border-radius: 8px; cursor: pointer; transition: all .2s;
+  flex-shrink: 0; white-space: nowrap;
 }
 .logout-btn:hover { border-color: var(--red); color: var(--red); }
 
 /* ── NAV ── */
 .nav {
-  display: flex; gap: 2px;
-  padding: 0 28px;
+  display: flex;
   border-bottom: 1px solid var(--border);
   background: var(--bg2);
-  overflow-x: auto;
+  overflow-x: hidden;
+  position: sticky;
+  top: 52px;
+  z-index: 99;
 }
 .nav-btn {
   background: none; border: none; cursor: pointer;
   color: var(--text3); font-family: 'Outfit', sans-serif;
-  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.3px;
-  padding: 14px 18px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2px;
+  padding: 12px 4px 10px;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
-  transition: all .2s; white-space: nowrap;
-  display: flex; align-items: center; gap: 7px;
+  transition: all .2s;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  flex: 1; white-space: nowrap;
 }
+.nav-btn .nav-emoji { font-size: 1.1rem; line-height: 1; }
 .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
 .nav-btn:hover:not(.active) { color: var(--text); }
+@media(min-width:480px) {
+  .nav-btn { flex-direction: row; gap: 6px; padding: 13px 16px; font-size: 0.82rem; }
+}
 
 /* ── MAIN ── */
-main { padding: 32px 28px; max-width: 1280px; position: relative; z-index: 1; }
+main { padding: 16px; max-width: 1280px; position: relative; z-index: 1; }
+@media(min-width:600px) { main { padding: 24px 28px; } }
 .page { display: none; animation: fadeIn .25s ease; }
 .page.active { display: block; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
 
 /* ── PAGE HEADER ── */
-.page-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
-.page-hdr h1 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 2px; color: var(--text); }
+.page-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+.page-hdr h1 { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 2px; color: var(--text); }
 .page-hdr h1 span { color: var(--gold); }
+@media(min-width:480px) { .page-hdr h1 { font-size: 2rem; } .page-hdr { margin-bottom: 24px; } }
 
 /* ── VEHICLES GRID ── */
-.v-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px; margin-bottom: 28px; }
+.v-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 20px; }
+@media(min-width:640px) { .v-grid { grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 18px; margin-bottom: 28px; } }
 
 .vcard {
   background: var(--surface);
@@ -227,8 +244,8 @@ main { padding: 32px 28px; max-width: 1280px; position: relative; z-index: 1; }
 
 .vcard-bot {
   border-top: 1px solid var(--border);
-  padding: 12px 20px;
-  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
 }
 .vcard-km { font-size: 0.8rem; color: var(--text3); }
 .vcard-km strong { color: var(--text2); font-weight: 600; }
@@ -257,7 +274,8 @@ main { padding: 32px 28px; max-width: 1280px; position: relative; z-index: 1; }
 }
 .detail-panel.open { display: block; animation: fadeIn .25s ease; }
 
-.dp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px; margin-bottom: 32px; }
+.dp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+@media(min-width:600px) { .dp-grid { grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 24px; margin-bottom: 28px; } }
 .dp-section {}
 .dp-title {
   font-size: 0.68rem; font-weight: 700; letter-spacing: 2.5px;
@@ -274,9 +292,14 @@ main { padding: 32px 28px; max-width: 1280px; position: relative; z-index: 1; }
 .svc-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
 .svc-row {
   background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 12px 16px;
-  display: grid; grid-template-columns: 120px 1fr auto auto auto;
-  gap: 12px; align-items: center;
+  border-radius: 10px; padding: 12px 14px;
+  display: grid; grid-template-columns: auto 1fr auto;
+  gap: 8px; align-items: center;
+}
+.svc-km { display: none; }
+@media(min-width:500px) { 
+  .svc-row { grid-template-columns: 100px 1fr auto auto auto; }
+  .svc-km { display: block; }
 }
 .svc-date { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 1px; color: var(--gold); }
 .svc-desc { font-size: 0.88rem; }
@@ -290,8 +313,10 @@ main { padding: 32px 28px; max-width: 1280px; position: relative; z-index: 1; }
   border-radius: 12px; padding: 18px; margin-top: 8px;
 }
 .svc-form-title { font-size: 0.78rem; font-weight: 700; color: var(--text2); margin-bottom: 14px; letter-spacing: 0.5px; }
-.fg3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.fg2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.fg3 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fg2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media(min-width:480px) { .fg3 { grid-template-columns: repeat(3, 1fr); gap: 10px; } }
+@media(min-width:400px) { .fg2 { gap: 10px; } }
 .fl { display: flex; flex-direction: column; gap: 4px; }
 .fl label { font-size: 0.72rem; color: var(--text3); }
 input.fi, select.fi, textarea.fi {
@@ -343,7 +368,8 @@ select.fi option { background: #12151e; }
 .rem-days { font-size: 0.72rem; margin-top: 2px; }
 
 /* ── EXPENSES ── */
-.stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 18px; }
+@media(min-width:400px) { .stats-row { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); } }
 .stat-card {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 12px; padding: 16px 18px;
@@ -372,14 +398,18 @@ select.fi option { background: #12151e; }
 /* ── MODAL ── */
 .overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-  z-index: 500; display: none; align-items: center; justify-content: center;
-  padding: 20px; backdrop-filter: blur(4px);
+  z-index: 500; display: none; align-items: flex-end; justify-content: center;
+  backdrop-filter: blur(4px);
 }
 .overlay.open { display: flex; }
 .modal {
   background: var(--surface); border: 1px solid var(--border2);
-  border-radius: 20px; padding: 32px; width: 100%; max-width: 580px;
-  max-height: 90vh; overflow-y: auto;
+  border-radius: 20px 20px 0 0; padding: 20px 16px 32px; width: 100%; max-width: 600px;
+  max-height: 92vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+}
+@media(min-width:600px) {
+  .overlay { align-items: center; padding: 20px; }
+  .modal { border-radius: 20px; padding: 32px; max-height: 88vh; }
 }
 .modal-h { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 2px; margin-bottom: 24px; }
 .modal-h span { color: var(--gold); }
@@ -423,13 +453,11 @@ select.fi option { background: #12151e; }
 .empty { text-align: center; padding: 48px; color: var(--text3); font-size: 0.9rem; }
 
 /* ── RESPONSIVE ── */
-@media (max-width:640px) {
-  .topbar { padding: 0 16px; }
-  main { padding: 20px 16px; }
-  .nav { padding: 0 16px; }
-  .svc-row { grid-template-columns: 1fr auto; }
-  .svc-km, .svc-cost { display: none; }
-  .fg3 { grid-template-columns: 1fr 1fr; }
+/* Additional mobile fixes */
+@media (max-width:380px) {
+  .vcard-km { flex: 100%; }
+  .plate-badge { font-size: 1.3rem; }
+  .chip { font-size: 0.62rem; padding: 2px 7px; }
 }
 </style>
 </head>
@@ -462,21 +490,21 @@ select.fi option { background: #12151e; }
     <div class="topbar-right">
       <div class="sync-indicator">
         <div class="sync-dot" id="syncDot"></div>
-        <span id="syncLabel">Συγχρονισμένο</span>
+        <span class="sync-label" id="syncLabel">Συγχρονισμένο</span>
       </div>
       <div class="user-chip">
         <div class="user-avatar" id="userAvatar">ΦΚ</div>
-        <span id="userName">Φραγκάκης</span>
+        <span class="user-name" id="userName">Φραγκάκης</span>
       </div>
-      <button class="logout-btn" onclick="signOut()">Έξοδος</button>
+      <button class="logout-btn" onclick="signOut()">↩</button>
     </div>
   </div>
 
   <div class="nav">
-    <button class="nav-btn active" onclick="showPage('vehicles',this)">🚗 Οχήματα</button>
-    <button class="nav-btn" onclick="showPage('reminders',this)">🔔 Υπενθυμίσεις</button>
-    <button class="nav-btn" onclick="showPage('expenses',this)">💶 Έξοδα</button>
-    <button class="nav-btn" onclick="showPage('fuel',this)">⛽ Καύσιμα</button>
+    <button class="nav-btn active" onclick="showPage('vehicles',this)"><span class="nav-emoji">🚗</span>Οχήματα</button>
+    <button class="nav-btn" onclick="showPage('reminders',this)"><span class="nav-emoji">🔔</span>Υπενθυμίσεις</button>
+    <button class="nav-btn" onclick="showPage('expenses',this)"><span class="nav-emoji">💶</span>Έξοδα</button>
+    <button class="nav-btn" onclick="showPage('fuel',this)"><span class="nav-emoji">⛽</span>Καύσιμα</button>
   </div>
 
   <main>

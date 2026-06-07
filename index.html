@@ -311,6 +311,9 @@ select.fi option { background: #12151e; }
   cursor: pointer; transition: all .2s;
 }
 .add-svc-btn:hover { background: rgba(45,206,137,0.2); }
+.dp-tab-btn { background: none; border: none; border-bottom: 2px solid transparent; color: var(--text3); font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 600; padding: 10px 16px; cursor: pointer; margin-bottom: -1px; transition: all .2s; }
+.dp-tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+.dp-tab-btn:hover:not(.active) { color: var(--text); }
 
 /* ── REMINDERS ── */
 .rem-filter-wrap { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 16px; scrollbar-width: none; }
@@ -399,6 +402,22 @@ select.fi option { background: #12151e; }
 }
 .toast.show { transform: translateY(0); opacity: 1; }
 .toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+
+
+/* ── PAYMENTS TAB ── */
+.pay-timeline { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.pay-item { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--blue); border-radius: 10px; padding: 12px 16px; position: relative; }
+.pay-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.pay-date { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 1px; color: var(--blue); }
+.pay-amount { font-size: 0.9rem; color: var(--green); font-weight: 700; }
+.pay-cat { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); margin-bottom: 3px; }
+.pay-desc { font-size: 0.85rem; color: var(--text2); }
+.pay-exp { font-size: 0.75rem; color: var(--amber); margin-top: 4px; }
+.pay-del { position: absolute; top: 10px; right: 10px; background: none; border: none; cursor: pointer; color: var(--text3); font-size: 0.85rem; padding: 2px 5px; border-radius: 4px; }
+.pay-del:hover { color: var(--red); }
+.pay-form { background: var(--bg2); border: 1px dashed var(--border2); border-radius: 12px; padding: 16px; margin-top: 8px; }
+.pay-form-title { font-size: 0.75rem; font-weight: 700; color: var(--text2); margin-bottom: 12px; letter-spacing: 0.5px; }
+.pay-empty { text-align: center; padding: 24px; color: var(--text3); font-size: 0.85rem; }
 
 /* ── EMPTY ── */
 .empty { text-align: center; padding: 48px; color: var(--text3); font-size: 0.9rem; }
@@ -734,7 +753,7 @@ function defaultVehicles() {
       services:[
         {date:'2025-12-01', km:'94363', cost:'', desc:'Τακτικό Service', tags:['Γενικός έλεγχος']},
         {date:'2025-10-31', km:'', cost:'', desc:'ΚΤΕΟ Περιοδικός — Επιτυχής', tags:['ΚΤΕΟ']}
-      ]
+      ], payments:[]
     },
     {
       id:'v2', plate:'ΑΝΗ4951', type:'car', make:'NISSAN', model:'ALMERA',
@@ -750,7 +769,7 @@ function defaultVehicles() {
       services:[
         {date:'2025-12-01', km:'268293', cost:'', desc:'Τακτικό Service', tags:['Γενικός έλεγχος']},
         {date:'2025-05-19', km:'268293', cost:'', desc:'ΚΤΕΟ Περιοδικός — Δευτερεύουσες Ελλείψεις', tags:['ΚΤΕΟ']}
-      ]
+      ], payments:[]
     },
     {
       id:'v3', plate:'ΤΤΕ0304', type:'moto', make:'VOGE', model:'SR16 200',
@@ -765,7 +784,7 @@ function defaultVehicles() {
       notes:'Μεταβίβαση 03/06/2026. Κατασκευαστής: VOGE/LONCIN. Φορολογήσιμη ισχύς: 2. Επιβάτες: 2. ΑΦΜ: 110385729.',
       services:[
         {date:'2025-12-01', km:'', cost:'', desc:'Τακτικό Service', tags:['Γενικός έλεγχος']}
-      ]
+      ], payments:[]
     }
   ];
 }
@@ -800,6 +819,57 @@ function toast(msg, type='ok') {
   setTimeout(()=>t.classList.remove('show'), 3000);
 }
 
+
+
+// ══════════════════════════════════════════════════════
+//  PAYMENTS
+// ══════════════════════════════════════════════════════
+function switchDpTab(vid, tab) {
+  const svcDiv = document.getElementById('dp-svc-' + vid);
+  const payDiv = document.getElementById('dp-pay-' + vid);
+  const svcBtn = document.getElementById('tab-svc-' + vid);
+  const payBtn = document.getElementById('tab-pay-' + vid);
+  if (tab === 'svc') {
+    svcDiv.style.display = 'block'; payDiv.style.display = 'none';
+    svcBtn.classList.add('active'); payBtn.classList.remove('active');
+  } else {
+    svcDiv.style.display = 'none'; payDiv.style.display = 'block';
+    svcBtn.classList.remove('active'); payBtn.classList.add('active');
+  }
+}
+
+function addPayment(vid) {
+  const v = appData.vehicles.find(x=>x.id===vid);
+  if (!v) return;
+  const cat = document.getElementById('p_cat_'+vid)?.value;
+  const date = document.getElementById('p_date_'+vid)?.value;
+  const amount = document.getElementById('p_amount_'+vid)?.value;
+  const exp_date = document.getElementById('p_exp_'+vid)?.value;
+  const desc = document.getElementById('p_desc_'+vid)?.value;
+  if (!date) { toast('Συμπλήρωσε ημερομηνία πληρωμής', 'error'); return; }
+  if (!v.payments) v.payments = [];
+  v.payments.unshift({ cat, date, amount, exp_date, desc });
+  // Auto-update expiry date on vehicle if relevant
+  if (cat === 'Ασφάλεια' && exp_date) v.ins_exp = exp_date;
+  if (cat === 'ΚΤΕΟ' && exp_date) v.kteo_next = exp_date;
+  if (cat === 'Τέλη Κυκλοφορίας' && exp_date) v.tax_exp = exp_date;
+  saveToOneDrive();
+  renderVehicles();
+  selectedVid = vid;
+  renderDetail();
+  switchDpTab(vid, 'pay');
+  toast('Πληρωμή καταχωρήθηκε ✓');
+}
+
+function delPayment(vid, idx) {
+  if (!confirm('Διαγραφή πληρωμής;')) return;
+  const v = appData.vehicles.find(x=>x.id===vid);
+  if (!v) return;
+  v.payments.splice(idx, 1);
+  saveToOneDrive();
+  renderDetail();
+  switchDpTab(vid, 'pay');
+}
 
 // ══════════════════════════════════════════════════════
 //  DELETE VEHICLE
@@ -924,7 +994,62 @@ function renderDetail() {
       </div>
       <button class="add-svc-btn" onclick="addSvc('${v.id}')">✓ Καταχώρηση</button>
     </div>
+    </div>
+
+    <!-- PAYMENTS TAB CONTENT -->
+    <div id="dp-pay-${v.id}" style="display:none">
+      <div class="dp-title">Ιστορικό Πληρωμών</div>
+      <div class="pay-timeline" id="paylist-${v.id}">
+        ${(()=>{
+          const pays = v.payments||[];
+          if(!pays.length) return '<div class="pay-empty">Δεν υπάρχουν εγγραφές πληρωμών.<br>Πρόσθεσε την πρώτη παρακάτω.</div>';
+          return pays.map((p,i)=>`
+            <div class="pay-item">
+              <button class="pay-del" onclick="delPayment('${v.id}',${i})">✕</button>
+              <div class="pay-cat">${p.cat||''}</div>
+              <div class="pay-item-header">
+                <span class="pay-date">${fmtDate(p.date)}</span>
+                <span class="pay-amount">${p.amount?'€'+Number(p.amount).toFixed(2):''}</span>
+              </div>
+              ${p.desc?`<div class="pay-desc">${p.desc}</div>`:''}
+              ${p.exp_date?`<div class="pay-exp">⏰ Ισχύει έως: ${fmtDate(p.exp_date)}</div>`:''}
+            </div>`).join('');
+        })()}
+      </div>
+      <div class="pay-form">
+        <div class="pay-form-title">➕ ΠΡΟΣΘΗΚΗ ΠΛΗΡΩΜΗΣ</div>
+        <div class="fg2">
+          <div class="fl"><label>Κατηγορία *</label>
+            <select class="fi" id="p_cat_${v.id}">
+              <option>Ασφάλεια</option>
+              <option>ΚΤΕΟ</option>
+              <option>Τέλη Κυκλοφορίας</option>
+              <option>Παράβολο</option>
+              <option>Πρόστιμο</option>
+              <option>Επισκευή</option>
+              <option>Ελαστικά</option>
+              <option>Άλλο</option>
+            </select>
+          </div>
+          <div class="fl"><label>Ημερομηνία Πληρωμής *</label><input class="fi" id="p_date_${v.id}" type="date"></div>
+          <div class="fl"><label>Ποσό (€)</label><input class="fi" id="p_amount_${v.id}" type="number" step="0.01" placeholder="0.00"></div>
+          <div class="fl"><label>Ισχύει έως (Λήξη)</label><input class="fi" id="p_exp_${v.id}" type="date"></div>
+        </div>
+        <div class="fl" style="margin-top:8px">
+          <label>Περιγραφή / Αρ. Συμβολαίου</label>
+          <input class="fi" id="p_desc_${v.id}" placeholder="π.χ. ΜΙΝΕΤΤΑ #2782228, ετήσια ανανέωση">
+        </div>
+        <button class="add-svc-btn" style="background:rgba(61,108,255,.1);color:#6b8fff;border-color:rgba(61,108,255,.3);margin-top:10px" onclick="addPayment('${v.id}')">✓ Καταχώρηση Πληρωμής</button>
+      </div>
+    </div>
   `;
+
+  // Add tabs at the start of svc/pay sections
+  const tabsHtml = `<div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:16px">
+    <button class="dp-tab-btn active" id="tab-svc-${v.id}" onclick="switchDpTab('${v.id}','svc')">🔧 Service</button>
+    <button class="dp-tab-btn" id="tab-pay-${v.id}" onclick="switchDpTab('${v.id}','pay')">💳 Πληρωμές (${(v.payments||[]).length})</button>
+  </div>`;
+  p.innerHTML = p.innerHTML.replace('<div class="dp-title">Ιστορικό Service</div>', tabsHtml + '<div id="dp-svc-${v.id}"><div class="dp-title">Ιστορικό Service</div>');
 }
 
 function addSvc(vid) {

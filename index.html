@@ -851,7 +851,6 @@ function getRemItems(vehicles){
   });
   return items;
 }
-function setRemFilter(id){window._remF=id;renderReminders();}
 
 // ══ DETAIL TABS ══
 function dpTab(vid,tab){
@@ -1236,46 +1235,89 @@ function remColor(days) {
 }
 
 function renderReminders() {
-  const fe=document.getElementById('remFilter');
-  const le=document.getElementById('remList');
-  const all=getRemItems(appData.vehicles);
-  function urgCls(items){if(items.some(i=>i.days<0))return'red';if(items.some(i=>i.days<=30))return'amber';return'green';}
-  let fh='<button class="rem-filter-btn '+(window._remF==='all'||!window._remF?'active':'')+'" onclick="setRemFilter('all')">📋 Όλα <span class="rem-cnt '+urgCls(all)+'">'+all.length+'</span></button>';
-  appData.vehicles.forEach(v=>{
-    const vi=getRemItems([v]);
-    fh+='<button class="rem-filter-btn '+(window._remF===v.id?'active':'')+'" onclick="setRemFilter(''+v.id+'')">'
-      +'<span class="rem-filter-plate">'+v.plate+'</span> '
-      +(vi.length?'<span class="rem-cnt '+urgCls(vi)+'">'+vi.length+'</span>':'')+'</button>';
-  });
-  if(fe)fe.innerHTML=fh;
-  const f=window._remF||'all';
-  const items=f==='all'?all:all.filter(i=>i.vid===f);
-  const ord={red:0,amber:1,green:2};
-  items.sort((a,b)=>(ord[a.col]??3)-(ord[b.col]??3)||(a.days??9999)-(b.days??9999));
-  if(!items.length){le.innerHTML='<div class="empty">Δεν υπάρχουν υπενθυμίσεις.</div>';return;}
-  const grp=[{k:'red',l:'🔴 Ληγμένα',c:'var(--red)'},{k:'amber',l:'🟡 Εντός 30 ημερών',c:'var(--amber)'},{k:'green',l:'🟢 Εντάξει',c:'var(--green)'}];
-  let html='';
-  grp.forEach(g=>{
-    const gi=items.filter(i=>i.col===g.k);if(!gi.length)return;
-    html+='<div style="font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:'+g.c+';margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">'+g.l+'</div>';
-    html+=gi.map(it=>{
-      const c=it.col==='red'?'var(--red)':it.col==='amber'?'var(--amber)':'var(--green)';
-      const dt=it.days<0?'Έληξε '+Math.abs(it.days)+'μ. πριν':it.days===0?'ΣΗΜΕΡΑ!':it.days<=5?'🚨 '+it.days+' μέρες':it.days<=7?it.days+'μ. ⚡':it.days+' μέρες';
-      const ptag=f==='all'?'<span style="font-family:Bebas Neue,sans-serif;font-size:.75rem;letter-spacing:1.5px;background:var(--bg2);border:1px solid var(--border);padding:1px 6px;border-radius:4px;color:var(--text3);margin-left:4px">'+it.plate+'</span>':'';
-      return '<div class="rem-item" style="border-left:3px solid '+c+';margin-bottom:8px">'
-        +'<div class="rem-bar" style="background:'+c+'"></div>'
-        +'<div class="rem-info"><div class="rem-title">'+it.icon+' '+it.lbl+ptag+'</div>'
-        +'<div class="rem-sub">'+it.make+' '+it.model+(it.extra?' · '+it.extra:'')+'</div></div>'
-        +'<div class="rem-right"><div class="rem-date" style="color:'+c+'">'+fmtDate(it.date)+'</div>'
-        +'<div class="rem-days" style="color:'+c+';font-size:.72rem">'+dt+'</div></div></div>';
+  const fe = document.getElementById('remFilter');
+  const le = document.getElementById('remList');
+  const all = getRemItems(appData.vehicles);
+  const f = window._remF || 'all';
+
+  function urgCls(items) {
+    if (items.some(i=>i.days<0)) return 'red';
+    if (items.some(i=>i.days<=30)) return 'amber';
+    return 'green';
+  }
+
+  // Build filter buttons using createElement to avoid quote issues
+  if (fe) {
+    fe.innerHTML = '';
+    const allBtn = document.createElement('button');
+    allBtn.className = 'rem-filter-btn' + (f==='all' ? ' active' : '');
+    allBtn.innerHTML = '📋 Όλα <span class="rem-cnt ' + urgCls(all) + '">' + all.length + '</span>';
+    allBtn.onclick = function(){ setRemFilter('all'); };
+    fe.appendChild(allBtn);
+
+    appData.vehicles.forEach(function(v) {
+      const vi = getRemItems([v]);
+      const btn = document.createElement('button');
+      btn.className = 'rem-filter-btn' + (f===v.id ? ' active' : '');
+      btn.innerHTML = '<span class="rem-filter-plate">' + v.plate + '</span> '
+        + (vi.length ? '<span class="rem-cnt ' + urgCls(vi) + '">' + vi.length + '</span>' : '');
+      btn.onclick = function(){ setRemFilter(v.id); };
+      fe.appendChild(btn);
+    });
+  }
+
+  // Filter & sort
+  const items = f==='all' ? all : all.filter(i=>i.vid===f);
+  const ord = {red:0, amber:1, green:2};
+  items.sort((a,b) => (ord[a.col]??3)-(ord[b.col]??3) || (a.days??9999)-(b.days??9999));
+
+  if (!items.length) {
+    le.innerHTML = '<div class="empty">Δεν υπάρχουν υπενθυμίσεις.<br>Συμπλήρωσε ημερομηνίες στα οχήματα.</div>';
+    return;
+  }
+
+  const groups = [
+    {k:'red',   l:'🔴 Ληγμένα — Άμεση Ενέργεια', c:'var(--red)'},
+    {k:'amber', l:'🟡 Λήγουν εντός 30 ημερών',    c:'var(--amber)'},
+    {k:'green', l:'🟢 Εντάξει',                    c:'var(--green)'},
+  ];
+  let html = '';
+  groups.forEach(g => {
+    const gi = items.filter(i=>i.col===g.k);
+    if (!gi.length) return;
+    html += '<div style="font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:' + g.c + ';margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">' + g.l + '</div>';
+    html += gi.map(it => {
+      const c = it.col==='red' ? 'var(--red)' : it.col==='amber' ? 'var(--amber)' : 'var(--green)';
+      const dt = it.days < 0 ? 'Έληξε ' + Math.abs(it.days) + ' μέρες πριν'
+               : it.days === 0 ? 'ΣΗΜΕΡΑ!'
+               : it.days <= 5  ? '🚨 ' + it.days + ' μέρες'
+               : it.days <= 7  ? it.days + ' μέρες ⚡'
+               : it.days + ' μέρες';
+      const ptag = f==='all'
+        ? '<span style="font-family:Bebas Neue,sans-serif;font-size:.75rem;letter-spacing:1.5px;background:var(--bg2);border:1px solid var(--border);padding:1px 6px;border-radius:4px;color:var(--text3);margin-left:4px">' + it.plate + '</span>'
+        : '';
+      return '<div class="rem-item" style="border-left:3px solid ' + c + ';margin-bottom:8px">'
+        + '<div class="rem-bar" style="background:' + c + '"></div>'
+        + '<div class="rem-info">'
+        +   '<div class="rem-title">' + it.icon + ' ' + it.lbl + ptag + '</div>'
+        +   '<div class="rem-sub">' + it.make + ' ' + it.model + (it.extra ? ' · ' + it.extra : '') + '</div>'
+        + '</div>'
+        + '<div class="rem-right">'
+        +   '<div class="rem-date" style="color:' + c + '">' + fmtDate(it.date) + '</div>'
+        +   '<div class="rem-days" style="color:' + c + ';font-size:.72rem">' + dt + '</div>'
+        + '</div>'
+        + '</div>';
     }).join('');
   });
-  le.innerHTML=html;
+  le.innerHTML = html;
 }
 
-// ══════════════════════════════════════════════════════
-//  EXPENSES
-// ══════════════════════════════════════════════════════
+function setRemFilter(id) {
+  window._remF = id;
+  renderReminders();
+}
+
+
 function fillVSelect(id) {
   document.getElementById(id).innerHTML=appData.vehicles.map(v=>`<option value="${v.id}">${v.plate} — ${v.make} ${v.model}</option>`).join('');
 }

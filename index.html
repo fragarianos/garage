@@ -26,7 +26,6 @@
   --r: 14px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { overflow-x: hidden; max-width: 100vw; }
 
 body {
   background: var(--bg);
@@ -93,101 +92,81 @@ body::before {
 
 /* ── TOPBAR ── */
 .topbar {
-  height: 52px;
+  height: 64px;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 12px;
+  padding: 0 28px;
   border-bottom: 1px solid var(--border);
-  background: rgba(8,10,15,0.97);
+  background: rgba(8,10,15,0.95);
   backdrop-filter: blur(20px);
   position: sticky; top: 0; z-index: 100;
-  width: 100%; min-width: 0;
 }
 .topbar-logo {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.4rem; letter-spacing: 4px; color: var(--text);
-  flex-shrink: 0;
+  font-size: 1.6rem; letter-spacing: 4px; color: var(--text);
 }
 .topbar-logo span { color: var(--gold); }
-.topbar-right { display: flex; align-items: center; gap: 6px; min-width: 0; flex-shrink: 0; }
+.topbar-right { display: flex; align-items: center; gap: 16px; }
 .user-chip {
-  display: flex; align-items: center; gap: 6px;
+  display: flex; align-items: center; gap: 8px;
   background: var(--surface); border: 1px solid var(--border2);
-  border-radius: 30px; padding: 5px 10px 5px 6px;
-  font-size: 0.78rem; color: var(--text2);
-  min-width: 0; flex-shrink: 1;
+  border-radius: 30px; padding: 6px 14px 6px 8px;
+  font-size: 0.82rem; color: var(--text2);
 }
 .user-avatar {
-  width: 24px; height: 24px; border-radius: 50%;
+  width: 26px; height: 26px; border-radius: 50%;
   background: var(--gold); color: var(--bg);
   display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 0.68rem; flex-shrink: 0;
+  font-weight: 700; font-size: 0.72rem; flex-shrink: 0;
 }
-.user-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-@media(max-width:420px) { .user-name { display: none; } .sync-indicator { display: none; } }
 .sync-indicator {
-  font-size: 0.7rem; color: var(--text3);
-  display: flex; align-items: center; gap: 4px;
-  flex-shrink: 0;
+  font-size: 0.72rem; color: var(--text3);
+  display: flex; align-items: center; gap: 5px;
 }
-.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
 .sync-dot.syncing { animation: pulse 1s infinite; background: var(--amber); }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-.sync-label { display: none; }
-@media(min-width:500px) { .sync-label { display: inline; } }
 
 .logout-btn {
   background: none; border: 1px solid var(--border2); color: var(--text3);
-  font-family: 'Outfit', sans-serif; font-size: 0.72rem;
-  padding: 5px 10px; border-radius: 8px; cursor: pointer; transition: all .2s;
-  flex-shrink: 0; white-space: nowrap;
+  font-family: 'Outfit', sans-serif; font-size: 0.78rem;
+  padding: 6px 14px; border-radius: 8px; cursor: pointer; transition: all .2s;
 }
 .logout-btn:hover { border-color: var(--red); color: var(--red); }
 
 /* ── NAV ── */
 .nav {
-  display: flex;
+  display: flex; gap: 2px;
+  padding: 0 28px;
   border-bottom: 1px solid var(--border);
   background: var(--bg2);
-  overflow: hidden;
-  position: sticky;
-  top: 52px;
-  z-index: 99;
-  width: 100%;
+  overflow-x: auto;
 }
 .nav-btn {
   background: none; border: none; cursor: pointer;
   color: var(--text3); font-family: 'Outfit', sans-serif;
-  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2px;
-  padding: 12px 4px 10px;
+  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.3px;
+  padding: 14px 18px;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
-  transition: all .2s;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  flex: 1; white-space: nowrap;
+  transition: all .2s; white-space: nowrap;
+  display: flex; align-items: center; gap: 7px;
 }
-.nav-btn .nav-emoji { font-size: 1.1rem; line-height: 1; }
 .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
 .nav-btn:hover:not(.active) { color: var(--text); }
-@media(min-width:480px) {
-  .nav-btn { flex-direction: row; gap: 6px; padding: 13px 16px; font-size: 0.82rem; }
-}
 
 /* ── MAIN ── */
-main { padding: 16px; max-width: 1280px; position: relative; z-index: 1; }
-@media(min-width:600px) { main { padding: 24px 28px; } }
+main { padding: 32px 28px; max-width: 1280px; position: relative; z-index: 1; }
 .page { display: none; animation: fadeIn .25s ease; }
 .page.active { display: block; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
 
 /* ── PAGE HEADER ── */
-.page-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
-.page-hdr h1 { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 2px; color: var(--text); }
+.page-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.page-hdr h1 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 2px; color: var(--text); }
 .page-hdr h1 span { color: var(--gold); }
-@media(min-width:480px) { .page-hdr h1 { font-size: 2rem; } .page-hdr { margin-bottom: 24px; } }
 
 /* ── VEHICLES GRID ── */
-.v-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; width: 100%; }
-@media(min-width:640px) { .v-grid { grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 18px; margin-bottom: 28px; } }
+.v-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px; margin-bottom: 28px; }
 
 .vcard {
   background: var(--surface);
@@ -248,8 +227,8 @@ main { padding: 16px; max-width: 1280px; position: relative; z-index: 1; }
 
 .vcard-bot {
   border-top: 1px solid var(--border);
-  padding: 10px 14px;
-  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  padding: 12px 20px;
+  display: flex; align-items: center; justify-content: space-between;
 }
 .vcard-km { font-size: 0.8rem; color: var(--text3); }
 .vcard-km strong { color: var(--text2); font-weight: 600; }
@@ -273,14 +252,12 @@ main { padding: 16px; max-width: 1280px; position: relative; z-index: 1; }
 /* ── DETAIL PANEL ── */
 .detail-panel {
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 16px;
+  border-radius: var(--r); padding: 28px;
   display: none; margin-top: 4px;
-  overflow-x: hidden;
 }
 .detail-panel.open { display: block; animation: fadeIn .25s ease; }
 
-.dp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; width: 100%; }
-@media(min-width:600px) { .dp-grid { grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 24px; margin-bottom: 28px; } }
+.dp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px; margin-bottom: 32px; }
 .dp-section {}
 .dp-title {
   font-size: 0.68rem; font-weight: 700; letter-spacing: 2.5px;
@@ -297,14 +274,9 @@ main { padding: 16px; max-width: 1280px; position: relative; z-index: 1; }
 .svc-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
 .svc-row {
   background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 10px; padding: 12px 14px;
-  display: grid; grid-template-columns: auto 1fr auto;
-  gap: 8px; align-items: center;
-}
-.svc-km { display: none; }
-@media(min-width:500px) { 
-  .svc-row { grid-template-columns: 100px 1fr auto auto auto; }
-  .svc-km { display: block; }
+  border-radius: 10px; padding: 12px 16px;
+  display: grid; grid-template-columns: 120px 1fr auto auto auto;
+  gap: 12px; align-items: center;
 }
 .svc-date { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 1px; color: var(--gold); }
 .svc-desc { font-size: 0.88rem; }
@@ -318,10 +290,8 @@ main { padding: 16px; max-width: 1280px; position: relative; z-index: 1; }
   border-radius: 12px; padding: 18px; margin-top: 8px;
 }
 .svc-form-title { font-size: 0.78rem; font-weight: 700; color: var(--text2); margin-bottom: 14px; letter-spacing: 0.5px; }
-.fg3 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.fg2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-@media(min-width:480px) { .fg3 { grid-template-columns: repeat(3, 1fr); gap: 10px; } }
-@media(min-width:400px) { .fg2 { gap: 10px; } }
+.fg3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.fg2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .fl { display: flex; flex-direction: column; gap: 4px; }
 .fl label { font-size: 0.72rem; color: var(--text3); }
 input.fi, select.fi, textarea.fi {
@@ -341,21 +311,8 @@ select.fi option { background: #12151e; }
   cursor: pointer; transition: all .2s;
 }
 .add-svc-btn:hover { background: rgba(45,206,137,0.2); }
-.dp-tab-btn { background: none; border: none; border-bottom: 2px solid transparent; color: var(--text3); font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 600; padding: 10px 16px; cursor: pointer; margin-bottom: -1px; transition: all .2s; }
-.dp-tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
-.dp-tab-btn:hover:not(.active) { color: var(--text); }
 
 /* ── REMINDERS ── */
-.rem-filter-wrap { display: flex; gap: 6px; overflow-x: auto; overflow-y: visible; padding-bottom: 8px; margin-bottom: 16px; scrollbar-width: none; max-width: 100%; }
-.rem-filter-wrap::-webkit-scrollbar { display: none; }
-.rem-filter-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; color: var(--text3); font-family: 'Outfit', sans-serif; font-size: 0.78rem; font-weight: 600; padding: 7px 14px; cursor: pointer; white-space: nowrap; transition: all .2s; display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.rem-filter-btn.active { background: rgba(201,168,76,.12); border-color: var(--gold); color: var(--gold); }
-.rem-filter-plate { font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; letter-spacing: 1.5px; }
-.rem-count-badge { font-size: 0.65rem; font-weight: 700; padding: 1px 7px; border-radius: 10px; }
-.rem-count-badge.red { background: rgba(244,67,54,.2); color: var(--red); }
-.rem-count-badge.amber { background: rgba(255,152,0,.2); color: var(--amber); }
-.rem-count-badge.green { background: rgba(45,206,137,.1); color: var(--green); }
-.rem-group-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin: 18px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
 .rem-list { display: flex; flex-direction: column; gap: 10px; }
 .rem-item {
   background: var(--surface); border: 1px solid var(--border);
@@ -373,8 +330,7 @@ select.fi option { background: #12151e; }
 .rem-days { font-size: 0.72rem; margin-top: 2px; }
 
 /* ── EXPENSES ── */
-.stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 18px; }
-@media(min-width:400px) { .stats-row { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); } }
+.stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
 .stat-card {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 12px; padding: 16px 18px;
@@ -403,18 +359,14 @@ select.fi option { background: #12151e; }
 /* ── MODAL ── */
 .overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-  z-index: 500; display: none; align-items: flex-end; justify-content: center;
-  backdrop-filter: blur(4px);
+  z-index: 500; display: none; align-items: center; justify-content: center;
+  padding: 20px; backdrop-filter: blur(4px);
 }
 .overlay.open { display: flex; }
 .modal {
   background: var(--surface); border: 1px solid var(--border2);
-  border-radius: 20px 20px 0 0; padding: 20px 16px 32px; width: 100%; max-width: 600px;
-  max-height: 92vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
-}
-@media(min-width:600px) {
-  .overlay { align-items: center; padding: 20px; }
-  .modal { border-radius: 20px; padding: 32px; max-height: 88vh; }
+  border-radius: 20px; padding: 32px; width: 100%; max-width: 580px;
+  max-height: 90vh; overflow-y: auto;
 }
 .modal-h { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 2px; margin-bottom: 24px; }
 .modal-h span { color: var(--gold); }
@@ -439,62 +391,80 @@ select.fi option { background: #12151e; }
 .toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
 
 
-
+/* ── MOBILE ── */
+html,body{overflow-x:hidden;max-width:100%}
+.nav{display:flex;overflow:hidden;position:sticky;top:52px;z-index:99}
+.nav-btn{flex:1;flex-direction:column;gap:2px;padding:9px 2px;font-size:.65rem}
+.nav-btn .ni{font-size:1rem;line-height:1;display:block}
+@media(min-width:480px){.nav-btn{flex-direction:row;gap:6px;padding:12px 14px;font-size:.82rem}}
+.v-grid{grid-template-columns:1fr}
+@media(min-width:640px){.v-grid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}}
+main{padding:14px}
+@media(min-width:600px){main{padding:24px 28px}}
+.detail-panel{padding:14px;overflow-x:hidden}
+.dp-grid{grid-template-columns:1fr 1fr}
+@media(min-width:560px){.dp-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}}
+.modal{border-radius:16px 16px 0 0;padding:18px 14px 32px;max-height:92vh}
+@media(min-width:560px){.modal{border-radius:20px;padding:32px;max-height:88vh}}
+.overlay{align-items:flex-end}
+@media(min-width:560px){.overlay{align-items:center;padding:20px}}
+@media(max-width:400px){#userName{display:none}.sync-indicator{display:none}}
+/* ── REM FILTER ── */
+.rem-filter-wrap{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;scrollbar-width:none}
+.rem-filter-wrap::-webkit-scrollbar{display:none}
+.rem-filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:20px;color:var(--text3);font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;padding:6px 12px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s;display:flex;align-items:center;gap:5px}
+.rem-filter-btn.active{background:rgba(201,168,76,.12);border-color:var(--gold);color:var(--gold)}
+.rem-filter-plate{font-family:'Bebas Neue',sans-serif;font-size:.88rem;letter-spacing:1.5px}
+.rem-cnt{font-size:.65rem;font-weight:700;padding:1px 6px;border-radius:10px}
+.rem-cnt.red{background:rgba(244,67,54,.2);color:var(--red)}
+.rem-cnt.amber{background:rgba(255,152,0,.2);color:var(--amber)}
+.rem-cnt.green{background:rgba(45,206,137,.1);color:var(--green)}
+/* ── DETAIL TABS ── */
+.dp-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:14px;overflow-x:auto;scrollbar-width:none}
+.dp-tabs::-webkit-scrollbar{display:none}
+.dp-tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;padding:9px 12px;cursor:pointer;margin-bottom:-1px;white-space:nowrap;transition:all .2s}
+.dp-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+/* ── PAYMENTS ── */
+.pay-item{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:10px;padding:12px 14px;position:relative;margin-bottom:8px}
+.pay-cat{font-size:.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
+.pay-hdr{display:flex;justify-content:space-between;align-items:center}
+.pay-date{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:1px;color:#6b8fff}
+.pay-amt{font-size:.88rem;color:var(--green);font-weight:600}
+.pay-desc{font-size:.8rem;color:var(--text2);margin-top:3px}
+.pay-exp{font-size:.72rem;color:var(--amber);margin-top:3px}
+.pay-del,.tire-del{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;color:var(--text3);font-size:.85rem;padding:2px 5px;border-radius:4px}
+.pay-del:hover,.tire-del:hover{color:var(--red)}
+.pay-empty{text-align:center;padding:20px;color:var(--text3);font-size:.85rem}
+.add-pay-btn{margin-top:10px;background:rgba(61,108,255,.1);color:#6b8fff;border:1px solid rgba(61,108,255,.3);font-family:'Outfit',sans-serif;font-weight:700;font-size:.82rem;padding:10px;border-radius:9px;cursor:pointer;width:100%}
 /* ── TIRES ── */
-.tire-current { background: rgba(201,168,76,.06); border: 1px solid rgba(201,168,76,.25); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
-.tire-current-label { font-size: .65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-.tire-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.tire-spec { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 9px 11px; }
-.tire-spec-label { font-size: .62rem; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px; }
-.tire-spec-val { font-size: .88rem; font-weight: 600; }
-.tire-spec-val.big { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 1px; color: var(--gold2); }
-.tire-warn { background: rgba(255,152,0,.08); border: 1px solid rgba(255,152,0,.3); border-radius: 8px; padding: 8px 12px; font-size: .8rem; color: var(--amber); margin-bottom: 10px; }
-.tire-danger { background: rgba(244,67,54,.08); border: 1px solid rgba(244,67,54,.3); border-radius: 8px; padding: 8px 12px; font-size: .8rem; color: var(--red); margin-bottom: 10px; }
-.tire-history { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-.tire-item { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid #888; border-radius: 9px; padding: 12px 14px; position: relative; }
-.tire-item.current { border-left-color: var(--gold); }
-.tire-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.tire-item-date { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 1px; color: var(--gold); }
-.tire-item-cost { font-size: .85rem; color: var(--green); font-weight: 600; }
-.tire-item-brand { font-size: .9rem; font-weight: 700; margin-bottom: 2px; }
-.tire-item-size { font-size: .8rem; color: var(--text2); margin-bottom: 4px; }
-.tire-item-km { font-size: .75rem; color: var(--text3); }
-.tire-item-age { font-size: .72rem; margin-top: 4px; }
-.tire-section-title { font-size: .68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin: 10px 0 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
-.tire-del { position: absolute; top: 10px; right: 10px; background: none; border: none; cursor: pointer; color: var(--text3); font-size: .85rem; padding: 2px 5px; border-radius: 4px; }
-.tire-del:hover { color: var(--red); }
-.tire-add-form { background: var(--bg2); border: 1px dashed var(--border2); border-radius: 10px; padding: 14px; margin-top: 8px; }
-.tire-add-title { font-size: .7rem; font-weight: 700; color: var(--text2); margin-bottom: 12px; letter-spacing: .5px; text-transform: uppercase; }
-.tire-add-btn { margin-top: 10px; background: rgba(201,168,76,.1); color: var(--gold); border: 1px solid rgba(201,168,76,.3); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: .82rem; padding: 10px; border-radius: 9px; cursor: pointer; width: 100%; }
-.tire-add-btn:hover { background: rgba(201,168,76,.2); }
-.tire-type-toggle { display: flex; gap: 6px; margin-bottom: 12px; }
-.tire-type-btn { flex: 1; background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; color: var(--text3); font-family: 'Outfit', sans-serif; font-size: .8rem; font-weight: 600; padding: 8px; cursor: pointer; text-align: center; transition: all .2s; }
-.tire-type-btn.active { background: rgba(201,168,76,.12); border-color: var(--gold); color: var(--gold); }
-
-/* ── PAYMENTS TAB ── */
-.pay-timeline { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-.pay-item { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--blue); border-radius: 10px; padding: 12px 16px; position: relative; }
-.pay-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-.pay-date { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 1px; color: var(--blue); }
-.pay-amount { font-size: 0.9rem; color: var(--green); font-weight: 700; }
-.pay-cat { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); margin-bottom: 3px; }
-.pay-desc { font-size: 0.85rem; color: var(--text2); }
-.pay-exp { font-size: 0.75rem; color: var(--amber); margin-top: 4px; }
-.pay-del { position: absolute; top: 10px; right: 10px; background: none; border: none; cursor: pointer; color: var(--text3); font-size: 0.85rem; padding: 2px 5px; border-radius: 4px; }
-.pay-del:hover { color: var(--red); }
-.pay-form { background: var(--bg2); border: 1px dashed var(--border2); border-radius: 12px; padding: 16px; margin-top: 8px; }
-.pay-form-title { font-size: 0.75rem; font-weight: 700; color: var(--text2); margin-bottom: 12px; letter-spacing: 0.5px; }
-.pay-empty { text-align: center; padding: 24px; color: var(--text3); font-size: 0.85rem; }
+.tire-current{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.25);border-radius:10px;padding:12px;margin-bottom:12px}
+.tire-cur-title{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.tire-specs{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.tire-spec{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:8px 10px}
+.tire-spec-l{font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.tire-spec-v{font-size:.85rem;font-weight:600}
+.tire-spec-v.big{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:1px;color:var(--gold2)}
+.tire-sec-title{font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6b8fff;margin:10px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.tire-warn{background:rgba(255,152,0,.08);border:1px solid rgba(255,152,0,.3);border-radius:8px;padding:8px 12px;font-size:.8rem;color:var(--amber);margin-bottom:8px}
+.tire-danger{background:rgba(244,67,54,.08);border:1px solid rgba(244,67,54,.3);border-radius:8px;padding:8px 12px;font-size:.8rem;color:var(--red);margin-bottom:8px}
+.tire-hist-item{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--text3);border-radius:9px;padding:11px 13px;margin-bottom:8px;position:relative}
+.tire-hist-item.cur{border-left-color:var(--gold)}
+.tire-hist-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.tire-hist-date{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:1px;color:var(--gold)}
+.tire-hist-cost{font-size:.85rem;color:var(--green);font-weight:600}
+.add-tire-btn{margin-top:10px;background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.3);font-family:'Outfit',sans-serif;font-weight:700;font-size:.82rem;padding:10px;border-radius:9px;cursor:pointer;width:100%}
 
 /* ── EMPTY ── */
 .empty { text-align: center; padding: 48px; color: var(--text3); font-size: 0.9rem; }
 
 /* ── RESPONSIVE ── */
-/* Additional mobile fixes */
-@media (max-width:380px) {
-  .vcard-km { flex: 100%; }
-  .plate-badge { font-size: 1.3rem; }
-  .chip { font-size: 0.62rem; padding: 2px 7px; }
+@media (max-width:640px) {
+  .topbar { padding: 0 16px; }
+  main { padding: 20px 16px; }
+  .nav { padding: 0 16px; }
+  .svc-row { grid-template-columns: 1fr auto; }
+  .svc-km, .svc-cost { display: none; }
+  .fg3 { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -527,21 +497,21 @@ select.fi option { background: #12151e; }
     <div class="topbar-right">
       <div class="sync-indicator">
         <div class="sync-dot" id="syncDot"></div>
-        <span class="sync-label" id="syncLabel">Συγχρονισμένο</span>
+        <span id="syncLabel">Συγχρονισμένο</span>
       </div>
       <div class="user-chip">
         <div class="user-avatar" id="userAvatar">ΦΚ</div>
-        <span class="user-name" id="userName">Φραγκάκης</span>
+        <span id="userName">Φραγκάκης</span>
       </div>
       <button class="logout-btn" onclick="signOut()">↩</button>
     </div>
   </div>
 
   <div class="nav">
-    <button class="nav-btn active" onclick="showPage('vehicles',this)"><span class="nav-emoji">🚗</span>Οχήματα</button>
-    <button class="nav-btn" onclick="showPage('reminders',this)"><span class="nav-emoji">🔔</span>Υπενθυμίσεις</button>
-    <button class="nav-btn" onclick="showPage('expenses',this)"><span class="nav-emoji">💶</span>Έξοδα</button>
-    <button class="nav-btn" onclick="showPage('fuel',this)"><span class="nav-emoji">⛽</span>Καύσιμα</button>
+    <button class="nav-btn active" onclick="showPage('vehicles',this)"><span class="ni">🚗</span>Οχήματα</button>
+    <button class="nav-btn" onclick="showPage('reminders',this)"><span class="ni">🔔</span>Υπενθ.</button>
+    <button class="nav-btn" onclick="showPage('expenses',this)"><span class="ni">💶</span>Έξοδα</button>
+    <button class="nav-btn" onclick="showPage('fuel',this)"><span class="ni">⛽</span>Καύσιμα</button>
   </div>
 
   <main>
@@ -732,8 +702,7 @@ async function afterLogin(account) {
   document.getElementById('appShell').style.display = 'block';
   await loadFromOneDrive();
   renderVehicles();
-  requestNotificationPermission();
-  setTimeout(checkAndPlaySoundAlerts, 2000);
+  setTimeout(checkAndPlaySoundAlerts,2000);
 }
 
 async function getToken() {
@@ -806,53 +775,9 @@ function setSyncing(loading, saving=false) {
 // ══════════════════════════════════════════════════════
 function defaultVehicles() {
   return [
-    {
-      id:'v1', plate:'ΑΝΡ3848', type:'car', make:'MITSUBISHI', model:'ASX',
-      year:'2016', color:'ΓΚΡΙ', vin:'JMBXJGA7WFZD09160',
-      fuel:'Βενζίνη', cc:'1560', owner:'ΠΛΑΤΗ ΠΕΛΑΓΙΑ',
-      km:'94363', regdate:'2016-06-06',
-      ins_co:'ΙΝΤΕΡΣΑΛΟΝΙΚΑ Α.Ε.Γ.Α.', ins_num:'19016268831', ins_exp:'2026-11-03', ins_cost:'',
-      kteo:'2025-10-31', kteo_next:'2027-10-31',
-      tax:'', tax_exp:'2026-12-31',
-      license_exp:'', paravolo_exp:'', paravolo_desc:'',
-      svc_last:'2025-12-01', svc_last_km:'94363', svc_next:'2026-12-01', svc_next_km:'', svc_next_desc:'',
-      notes:'ΚΤΕΟ 31/10/2025 — Επιτυχής. Ασφάλεια ΙΝΤΕΡΣΑΛΟΝΙΚΑ #19016268831 έως 03/11/2026. Φορολογήσιμη ισχύς: 11. Επιβάτες: 5. ΑΦΜ: 146405988.',
-      services:[
-        {date:'2025-12-01', km:'94363', cost:'', desc:'Τακτικό Service', tags:['Γενικός έλεγχος']},
-        {date:'2025-10-31', km:'', cost:'', desc:'ΚΤΕΟ Περιοδικός — Επιτυχής', tags:['ΚΤΕΟ']}
-      ], payments:[], tires:[]
-    },
-    {
-      id:'v2', plate:'ΑΝΗ4951', type:'car', make:'NISSAN', model:'ALMERA',
-      year:'2005', color:'ΜΑΥΡΟ', vin:'SJNFAAN16U2600759',
-      fuel:'Βενζίνη', cc:'1497', owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ',
-      km:'268293', regdate:'2005-07-29',
-      ins_co:'ΜΙΝΕΤΤΑ Α.Α.Ε.', ins_num:'2782228', ins_exp:'2026-08-20', ins_cost:'',
-      kteo:'2025-05-19', kteo_next:'2027-05-19',
-      tax:'', tax_exp:'2026-12-31',
-      license_exp:'', paravolo_exp:'', paravolo_desc:'',
-      svc_last:'2025-12-01', svc_last_km:'268293', svc_next:'2026-12-01', svc_next_km:'', svc_next_desc:'',
-      notes:'ΚΤΕΟ 19/05/2025 — Δευτερεύουσες Ελλείψεις (268.293 χλμ). Αρ.Δελτίου: 2940048651. ΑΦΜ: 110385729.',
-      services:[
-        {date:'2025-12-01', km:'268293', cost:'', desc:'Τακτικό Service', tags:['Γενικός έλεγχος']},
-        {date:'2025-05-19', km:'268293', cost:'', desc:'ΚΤΕΟ Περιοδικός — Δευτερεύουσες Ελλείψεις', tags:['ΚΤΕΟ']}
-      ], payments:[], tires:[]
-    },
-    {
-      id:'v3', plate:'ΤΤΕ0304', type:'moto', make:'VOGE', model:'SR16 200',
-      year:'2025', color:'ΓΚΡΙ', vin:'LLCVTKF03SC000181',
-      fuel:'Βενζίνη', cc:'174', owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ',
-      km:'', regdate:'2025-10-10',
-      ins_co:'ΙΝΤΕΡΣΑΛΟΝΙΚΑ Α.Ε.Γ.Α.', ins_num:'19017333236', ins_exp:'2027-06-03', ins_cost:'',
-      kteo:'', kteo_next:'',
-      tax:'', tax_exp:'2026-12-31',
-      license_exp:'', paravolo_exp:'', paravolo_desc:'',
-      svc_last:'2025-12-01', svc_last_km:'', svc_next:'2026-12-01', svc_next_km:'', svc_next_desc:'',
-      notes:'Μεταβίβαση 03/06/2026. Κατασκευαστής: VOGE/LONCIN. Φορολογήσιμη ισχύς: 2. Επιβάτες: 2. ΑΦΜ: 110385729.',
-      services:[
-        {date:'2025-12-01', km:'', cost:'', desc:'Τακτικό Service', tags:['Γενικός έλεγχος']}
-      ], payments:[], tires:[]
-    }
+    { id:'v1',plate:'ΑΝΡ3848',type:'car',make:'MITSUBISHI',model:'ASX',year:'2016',color:'ΓΚΡΙ',vin:'JMBXJGA7WFZD09160',fuel:'Βενζίνη',cc:'1560',owner:'ΠΛΑΤΗ ΠΕΛΑΓΙΑ',km:'94363',regdate:'2016-06-06',ins_co:'ΙΝΤΕΡΣΑΛΟΝΙΚΑ Α.Ε.Γ.Α.',ins_num:'19016268831',ins_exp:'2026-11-03',ins_cost:'',kteo:'2025-10-31',kteo_next:'2027-10-31',tax:'',tax_exp:'2026-12-31',svc_last:'2025-12-01',svc_last_km:'94363',svc_next:'2026-12-01',svc_next_km:'',svc_next_desc:'',license_exp:'',paravolo_exp:'',paravolo_desc:'',notes:'ΚΤΕΟ 31/10/2025 Επιτυχής. ΑΦΜ:146405988.',services:[{date:'2025-12-01',km:'94363',cost:'',desc:'Τακτικό Service'},{date:'2025-10-31',km:'',cost:'',desc:'ΚΤΕΟ Επιτυχής'}],payments:[],tires:[] },
+    { id:'v2',plate:'ΑΝΗ4951',type:'car',make:'NISSAN',model:'ALMERA',year:'2005',color:'ΜΑΥΡΟ',vin:'SJNFAAN16U2600759',fuel:'Βενζίνη',cc:'1497',owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ',km:'268293',regdate:'2005-07-29',ins_co:'ΜΙΝΕΤΤΑ Α.Α.Ε.',ins_num:'2782228',ins_exp:'2026-08-20',ins_cost:'',kteo:'2025-05-19',kteo_next:'2027-05-19',tax:'',tax_exp:'2026-12-31',svc_last:'2025-12-01',svc_last_km:'268293',svc_next:'2026-12-01',svc_next_km:'',svc_next_desc:'',license_exp:'',paravolo_exp:'',paravolo_desc:'',notes:'ΚΤΕΟ 19/05/2025 Δευτ.Ελλείψεις. ΑΦΜ:110385729.',services:[{date:'2025-12-01',km:'268293',cost:'',desc:'Τακτικό Service'},{date:'2025-05-19',km:'268293',cost:'',desc:'ΚΤΕΟ Δευτ.Ελλείψεις'}],payments:[],tires:[] },
+    { id:'v3',plate:'ΤΤΕ0304',type:'moto',make:'VOGE',model:'SR16 200',year:'2025',color:'ΓΚΡΙ',vin:'LLCVTKF03SC000181',fuel:'Βενζίνη',cc:'174',owner:'ΦΡΑΓΚΑΚΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ',km:'',regdate:'2025-10-10',ins_co:'ΙΝΤΕΡΣΑΛΟΝΙΚΑ Α.Ε.Γ.Α.',ins_num:'19017333236',ins_exp:'2027-06-03',ins_cost:'',kteo:'',kteo_next:'',tax:'',tax_exp:'2026-12-31',svc_last:'2025-12-01',svc_last_km:'',svc_next:'2026-12-01',svc_next_km:'',svc_next_desc:'',license_exp:'',paravolo_exp:'',paravolo_desc:'',notes:'Μεταβίβαση 03/06/2026. ΑΦΜ:110385729.',services:[{date:'2025-12-01',km:'',cost:'',desc:'Τακτικό Service'}],payments:[],tires:[] }
   ];
 }
 
@@ -887,199 +812,233 @@ function toast(msg, type='ok') {
 }
 
 
-
-
-// ══════════════════════════════════════════════════════
-//  SOUND NOTIFICATION (5-day warning)
-// ══════════════════════════════════════════════════════
-let lastSoundTime = 0;
-
-function playAlertSound() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    
-    // Play 3 beeps
-    [0, 0.3, 0.6].forEach(delay => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.frequency.value = 880;
-      osc.type = 'sine';
-      gain.gain.setValueAtTime(0, ctx.currentTime + delay);
-      gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + delay + 0.05);
-      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + delay + 0.2);
-      osc.start(ctx.currentTime + delay);
-      osc.stop(ctx.currentTime + delay + 0.2);
-    });
-  } catch(e) {}
+// ══ DELETE VEHICLE ══
+function delVehicle(vid){
+  const v=appData.vehicles.find(x=>x.id===vid);if(!v)return;
+  if(!confirm('Διαγραφή '+v.plate+' — '+v.make+'?\nΘα διαγραφούν και τα έξοδα/καύσιμα.'))return;
+  appData.vehicles=appData.vehicles.filter(x=>x.id!==vid);
+  appData.expenses=(appData.expenses||[]).filter(e=>e.vehicle!==vid);
+  appData.fuel=(appData.fuel||[]).filter(f=>f.vehicle!==vid);
+  saveToOneDrive();renderVehicles();toast('Διαγράφηκε');
 }
 
-function checkAndPlaySoundAlerts() {
-  const now = Date.now();
-  if (now - lastSoundTime < 60000) return; // Max once per minute
-  
-  const urgentItems = [];
-  appData.vehicles.forEach(v => {
-    [
-      {lbl:'Ασφάλεια', date:v.ins_exp},
-      {lbl:'ΚΤΕΟ', date:v.kteo_next},
-      {lbl:'Τέλη Κυκλοφορίας', date:v.tax_exp},
-      {lbl:'Επόμενο Service', date:v.svc_next},
-      {lbl:'Άδεια Οδήγησης', date:v.license_exp},
-      {lbl:'Παράβολο', date:v.paravolo_exp},
-    ].forEach(c => {
-      if (!c.date) return;
-      const days = daysUntil(c.date);
-      if (days !== null && days >= 0 && days <= 5) {
-        urgentItems.push(`${v.plate}: ${c.lbl} σε ${days} μέρες!`);
-      }
+// ══ SOUND ══
+let _lastSound=0;
+function playAlertSound(){
+  try{const ctx=new(window.AudioContext||window.webkitAudioContext)();
+  [0,.3,.6].forEach(d=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;o.type='sine';g.gain.setValueAtTime(0,ctx.currentTime+d);g.gain.linearRampToValueAtTime(.3,ctx.currentTime+d+.05);g.gain.linearRampToValueAtTime(0,ctx.currentTime+d+.2);o.start(ctx.currentTime+d);o.stop(ctx.currentTime+d+.2)});}catch(e){}
+}
+function checkAndPlaySoundAlerts(){
+  const now=Date.now();if(now-_lastSound<60000)return;
+  const urgent=[];
+  appData.vehicles.forEach(v=>{
+    [{l:'Ασφάλεια',d:v.ins_exp},{l:'ΚΤΕΟ',d:v.kteo_next},{l:'Τέλη',d:v.tax_exp},{l:'Service',d:v.svc_next}].forEach(c=>{
+      if(!c.d)return;const days=daysUntil(c.d);if(days!==null&&days>=0&&days<=5)urgent.push(v.plate+': '+c.l);
     });
   });
-  
-  if (urgentItems.length > 0) {
-    lastSoundTime = now;
-    playAlertSound();
-    // Also show browser notification if permitted
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('⚠️ GARAGE — Επείγουσες Ειδοποιήσεις', {
-        body: urgentItems.join('\n'),
-        icon: '/garage/favicon.ico'
-      });
-    }
-  }
+  if(urgent.length){_lastSound=now;playAlertSound();}
 }
 
-function requestNotificationPermission() {
-  if ('Notification' in window && Notification.permission === 'default') {
-    Notification.requestPermission();
-  }
+// ══ REM HELPERS ══
+function getRemItems(vehicles){
+  const items=[];
+  vehicles.forEach(v=>{
+    [{lbl:'Ασφάλεια',date:v.ins_exp,icon:'🛡️',extra:v.ins_co||''},{lbl:'ΚΤΕΟ',date:v.kteo_next,icon:'🔍',extra:''},{lbl:'Τέλη Κυκλοφορίας',date:v.tax_exp,icon:'📋',extra:''},{lbl:'Επόμενο Service',date:v.svc_next,icon:'🔧',extra:v.svc_next_desc||''},{lbl:'Άδεια Οδήγησης',date:v.license_exp,icon:'🪪',extra:''},{lbl:'Παράβολο',date:v.paravolo_exp,icon:'📄',extra:v.paravolo_desc||''}].forEach(c=>{
+      if(!c.date)return;
+      const days=daysUntil(c.date);
+      items.push({...c,vid:v.id,plate:v.plate,make:v.make,model:v.model,days,col:days<0?'red':days<=30?'amber':'green'});
+    });
+  });
+  return items;
+}
+function setRemFilter(id){window._remF=id;renderReminders();}
+
+// ══ DETAIL TABS ══
+function dpTab(vid,tab){
+  ['svc','pay','tire'].forEach(t=>{
+    const d=document.getElementById('dp-'+t+'-'+vid);
+    const b=document.getElementById('dpt-'+t+'-'+vid);
+    if(d)d.style.display='none';
+    if(b)b.classList.remove('active');
+  });
+  const d=document.getElementById('dp-'+tab+'-'+vid);
+  const b=document.getElementById('dpt-'+tab+'-'+vid);
+  if(d)d.style.display='block';
+  if(b)b.classList.add('active');
 }
 
-
-// ══════════════════════════════════════════════════════
-//  TIRES
-// ══════════════════════════════════════════════════════
-function addTire(vid) {
-  const v = appData.vehicles.find(x=>x.id===vid);
-  if (!v) return;
-  const date = document.getElementById('tf_dt_'+vid)?.value;
-  if (!date) { toast('Συμπλήρωσε ημερομηνία τοποθέτησης','error'); return; }
-  if (!v.tires) v.tires = [];
-  const isMoto = v.type === 'moto';
-  let entry = {
-    date,
-    km_at: document.getElementById('tf_km_'+vid)?.value || v.km || '',
-    install_cost: document.getElementById('tf_ic_'+vid)?.value || '',
-    total_cost: document.getElementById('tf_tc_'+vid)?.value || '',
-    notes: document.getElementById('tf_nt_'+vid)?.value || '',
-  };
-  if (isMoto) {
-    entry.front_size  = document.getElementById('tf_fs_'+vid)?.value || '';
-    entry.front_brand = document.getElementById('tf_fb_'+vid)?.value || '';
-    entry.front_model = document.getElementById('tf_fm_'+vid)?.value || '';
-    entry.front_dot   = document.getElementById('tf_fd_'+vid)?.value || '';
-    entry.front_load  = document.getElementById('tf_fl_'+vid)?.value || '';
-    entry.front_speed = document.getElementById('tf_fsp_'+vid)?.value || '';
-    entry.front_cost  = document.getElementById('tf_fc_'+vid)?.value || '';
-    entry.rear_size   = document.getElementById('tf_rs_'+vid)?.value || '';
-    entry.rear_brand  = document.getElementById('tf_rb_'+vid)?.value || '';
-    entry.rear_model  = document.getElementById('tf_rm_'+vid)?.value || '';
-    entry.rear_dot    = document.getElementById('tf_rd_'+vid)?.value || '';
-    entry.rear_load   = document.getElementById('tf_rl_'+vid)?.value || '';
-    entry.rear_speed  = document.getElementById('tf_rsp_'+vid)?.value || '';
-    entry.rear_cost   = document.getElementById('tf_rc_'+vid)?.value || '';
+// ══ BUILD PAY TAB ══
+function buildPayTab(v){
+  const pays=v.payments||[];
+  let html='';
+  if(pays.length){
+    html+=pays.map((p,i)=>'<div class="pay-item"><button class="pay-del" onclick="delPayment(\''+v.id+'\','+i+')">✕</button>'
+      +'<div class="pay-cat">'+(p.cat||'')+'</div>'
+      +'<div class="pay-hdr"><span class="pay-date">'+fmtDate(p.date)+'</span><span class="pay-amt">'+(p.amount?'€'+Number(p.amount).toFixed(2):'')+'</span></div>'
+      +(p.desc?'<div class="pay-desc">'+p.desc+'</div>':'')
+      +(p.exp_date?'<div class="pay-exp">⏰ έως: '+fmtDate(p.exp_date)+'</div>':'')
+      +'</div>').join('');
   } else {
-    entry.size   = document.getElementById('tf_sz_'+vid)?.value || '';
-    entry.brand  = document.getElementById('tf_br_'+vid)?.value || '';
-    entry.model  = document.getElementById('tf_mo_'+vid)?.value || '';
-    entry.season = document.getElementById('tf_se_'+vid)?.value || '';
-    entry.dot    = document.getElementById('tf_do_'+vid)?.value || '';
-    entry.load   = document.getElementById('tf_lo_'+vid)?.value || '';
-    entry.speed  = document.getElementById('tf_sp_'+vid)?.value || '';
-    entry.purchase_cost = document.getElementById('tf_pc_'+vid)?.value || '';
+    html='<div class="pay-empty">Δεν υπάρχουν πληρωμές.</div>';
   }
-  v.tires.unshift(entry);
-  saveToOneDrive();
-  renderDetail();
-  switchDpTab(vid, 'tire');
-  toast('Ελαστικά καταχωρήθηκαν ✓');
+  html+='<div style="background:var(--bg2);border:1px dashed var(--border2);border-radius:10px;padding:14px;margin-top:8px">'
+    +'<div style="font-size:.72rem;font-weight:700;color:var(--text2);margin-bottom:10px;text-transform:uppercase">➕ Νέα Πληρωμή</div>'
+    +'<div class="fg2">'
+    +'<div class="fl"><label>Κατηγορία</label><select class="fi" id="p_cat_'+v.id+'"><option>Ασφάλεια</option><option>ΚΤΕΟ</option><option>Τέλη Κυκλοφορίας</option><option>Παράβολο</option><option>Πρόστιμο</option><option>Επισκευή</option><option>Άλλο</option></select></div>'
+    +'<div class="fl"><label>Ημερομηνία *</label><input class="fi" id="p_date_'+v.id+'" type="date"></div>'
+    +'<div class="fl"><label>Ποσό (€)</label><input class="fi" id="p_amt_'+v.id+'" type="number" step="0.01"></div>'
+    +'<div class="fl"><label>Ισχύει έως</label><input class="fi" id="p_exp_'+v.id+'" type="date"></div>'
+    +'</div>'
+    +'<div class="fl" style="margin-top:8px"><label>Περιγραφή</label><input class="fi" id="p_desc_'+v.id+'" placeholder="π.χ. ΜΙΝΕΤΤΑ #2782228"></div>'
+    +'<button class="add-pay-btn" onclick="addPayment(\''+v.id+'\')">✓ Καταχώρηση</button>'
+    +'</div>';
+  return html;
+}
+function addPayment(vid){
+  const v=appData.vehicles.find(x=>x.id===vid);if(!v)return;
+  const date=document.getElementById('p_date_'+vid)?.value;
+  if(!date){toast('Συμπλήρωσε ημερομηνία','error');return;}
+  if(!v.payments)v.payments=[];
+  const cat=document.getElementById('p_cat_'+vid)?.value;
+  const amount=document.getElementById('p_amt_'+vid)?.value;
+  const exp_date=document.getElementById('p_exp_'+vid)?.value;
+  const desc=document.getElementById('p_desc_'+vid)?.value;
+  v.payments.unshift({cat,date,amount,exp_date,desc});
+  if(cat==='Ασφάλεια'&&exp_date)v.ins_exp=exp_date;
+  if(cat==='ΚΤΕΟ'&&exp_date)v.kteo_next=exp_date;
+  if(cat==='Τέλη Κυκλοφορίας'&&exp_date)v.tax_exp=exp_date;
+  saveToOneDrive();renderVehicles();selectedVid=vid;renderDetail();dpTab(vid,'pay');toast('Πληρωμή καταχωρήθηκε ✓');
+}
+function delPayment(vid,i){
+  if(!confirm('Διαγραφή;'))return;
+  const v=appData.vehicles.find(x=>x.id===vid);if(!v)return;
+  v.payments.splice(i,1);saveToOneDrive();renderDetail();dpTab(vid,'pay');
 }
 
-function delTire(vid, idx) {
-  if (!confirm('Διαγραφή εγγραφής ελαστικών;')) return;
-  const v = appData.vehicles.find(x=>x.id===vid);
-  if (!v) return;
-  v.tires.splice(idx, 1);
-  saveToOneDrive();
-  renderDetail();
-  switchDpTab(vid, 'tire');
+// ══ BUILD TIRE TAB ══
+function dotAge(dot){if(!dot||dot.length<4)return null;return new Date().getFullYear()-(parseInt(dot.slice(-2))+2000);}
+function buildTireTab(v){
+  const tires=v.tires||[];
+  const isMoto=v.type==='moto';
+  let html='';
+  if(tires.length>0){
+    const cur=tires[0];
+    const age=dotAge(isMoto?cur.front_dot:cur.dot);
+    const kmD=(v.km&&cur.km_at)?Number(v.km)-Number(cur.km_at):null;
+    if(age!==null&&age>=6)html+='<div class="tire-danger">⛔ Ελαστικά '+age+' ετών! Άμεση αλλαγή.</div>';
+    else if(age!==null&&age>=4)html+='<div class="tire-warn">⚠️ Ελαστικά '+age+' ετών.</div>';
+    if(kmD!==null&&kmD>=40000)html+='<div class="tire-danger">⛔ '+Number(kmD).toLocaleString('el-GR')+' χλμ! Άμεση αλλαγή.</div>';
+    else if(kmD!==null&&kmD>=30000)html+='<div class="tire-warn">⚠️ '+Number(kmD).toLocaleString('el-GR')+' χλμ στα ελαστικά.</div>';
+    html+='<div class="tire-current"><div class="tire-cur-title">🛞 Τρέχοντα Ελαστικά</div>';
+    if(isMoto){
+      html+='<div class="tire-sec-title">Εμπρός</div><div class="tire-specs">';
+      if(cur.front_size)html+='<div class="tire-spec"><div class="tire-spec-l">Διάσταση</div><div class="tire-spec-v big">'+cur.front_size+'</div></div>';
+      if(cur.front_brand)html+='<div class="tire-spec"><div class="tire-spec-l">Μάρκα</div><div class="tire-spec-v">'+cur.front_brand+' '+(cur.front_model||'')+'</div></div>';
+      if(cur.front_dot)html+='<div class="tire-spec"><div class="tire-spec-l">DOT</div><div class="tire-spec-v">'+cur.front_dot+'</div></div>';
+      if(cur.front_cost)html+='<div class="tire-spec"><div class="tire-spec-l">Κόστος</div><div class="tire-spec-v">€'+cur.front_cost+'</div></div>';
+      html+='</div><div class="tire-sec-title">Πίσω</div><div class="tire-specs">';
+      if(cur.rear_size)html+='<div class="tire-spec"><div class="tire-spec-l">Διάσταση</div><div class="tire-spec-v big">'+cur.rear_size+'</div></div>';
+      if(cur.rear_brand)html+='<div class="tire-spec"><div class="tire-spec-l">Μάρκα</div><div class="tire-spec-v">'+cur.rear_brand+' '+(cur.rear_model||'')+'</div></div>';
+      if(cur.rear_dot)html+='<div class="tire-spec"><div class="tire-spec-l">DOT</div><div class="tire-spec-v">'+cur.rear_dot+'</div></div>';
+      if(cur.rear_cost)html+='<div class="tire-spec"><div class="tire-spec-l">Κόστος</div><div class="tire-spec-v">€'+cur.rear_cost+'</div></div>';
+      html+='</div>';
+    } else {
+      html+='<div class="tire-specs">';
+      if(cur.size)html+='<div class="tire-spec"><div class="tire-spec-l">Διάσταση</div><div class="tire-spec-v big">'+cur.size+'</div></div>';
+      if(cur.brand)html+='<div class="tire-spec"><div class="tire-spec-l">Μάρκα/Μοντέλο</div><div class="tire-spec-v">'+cur.brand+' '+(cur.model||'')+'</div></div>';
+      if(cur.season)html+='<div class="tire-spec"><div class="tire-spec-l">Τύπος</div><div class="tire-spec-v">'+cur.season+'</div></div>';
+      if(cur.dot)html+='<div class="tire-spec"><div class="tire-spec-l">DOT</div><div class="tire-spec-v">'+cur.dot+'</div></div>';
+      if(cur.load)html+='<div class="tire-spec"><div class="tire-spec-l">Φορτίο/Ταχύτητα</div><div class="tire-spec-v">'+cur.load+(cur.speed||'')+'</div></div>';
+      if(kmD!==null)html+='<div class="tire-spec"><div class="tire-spec-l">Χλμ ελαστικών</div><div class="tire-spec-v">'+Number(kmD).toLocaleString('el-GR')+'</div></div>';
+      html+='</div>';
+    }
+    if(cur.notes)html+='<div style="margin-top:8px;font-size:.82rem;color:var(--text2)">'+cur.notes+'</div>';
+    html+='</div>';
+    // history
+    html+='<div style="font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Ιστορικό</div>';
+    tires.forEach((t,i)=>{
+      const a=dotAge(isMoto?t.front_dot:t.dot);
+      const sz=isMoto?(t.front_size||'')+'/'+(t.rear_size||''):(t.size||'');
+      const br=isMoto?(t.front_brand||''):(t.brand||'');
+      html+='<div class="tire-hist-item'+(i===0?' cur':'')+'"><button class="tire-del" onclick="delTire(\''+v.id+'\','+i+')">✕</button>'
+        +'<div class="tire-hist-hdr"><span class="tire-hist-date">'+fmtDate(t.date)+'</span><span class="tire-hist-cost">'+(t.total_cost?'€'+t.total_cost:'')+'</span></div>'
+        +'<div style="font-size:.88rem;font-weight:700">'+br+'</div>'
+        +'<div style="font-size:.78rem;color:var(--text2)">'+sz+(t.season?' · '+t.season:'')+'</div>'
+        +'<div style="font-size:.72rem;color:var(--text3)">'+(t.km_at?'Τοποθ.: '+Number(t.km_at).toLocaleString('el-GR')+' χλμ':'')+'</div>'
+        +(a!==null?'<div style="font-size:.72rem;color:'+(a>=6?'var(--red)':a>=4?'var(--amber)':'var(--text3)')+'">Ηλικία: '+a+' έτη</div>':'')
+        +(i===0?'<span style="position:absolute;top:8px;left:12px;font-size:.6rem;background:rgba(201,168,76,.2);color:var(--gold);padding:1px 5px;border-radius:4px;font-weight:700">ΤΡΕΧΟΝΤΑ</span>':'')
+        +'</div>';
+    });
+  } else {
+    html='<div class="pay-empty">🛞 Δεν υπάρχουν εγγραφές ελαστικών.</div>';
+  }
+  // add form
+  html+='<div style="background:var(--bg2);border:1px dashed var(--border2);border-radius:10px;padding:14px;margin-top:8px">'
+    +'<div style="font-size:.72rem;font-weight:700;color:var(--text2);margin-bottom:10px;text-transform:uppercase">➕ Νέα Αλλαγή Ελαστικών</div>';
+  if(isMoto){
+    html+='<div class="tire-sec-title">Εμπρός</div><div class="fg2" style="margin-bottom:8px">'
+      +'<div class="fl"><label>Διάσταση εμπρός</label><input class="fi" id="tf_fs_'+v.id+'" placeholder="120/70-17"></div>'
+      +'<div class="fl"><label>Μάρκα εμπρός</label><input class="fi" id="tf_fb_'+v.id+'" placeholder="Michelin"></div>'
+      +'<div class="fl"><label>Μοντέλο εμπρός</label><input class="fi" id="tf_fm_'+v.id+'" placeholder="Road 6"></div>'
+      +'<div class="fl"><label>DOT εμπρός</label><input class="fi" id="tf_fd_'+v.id+'" placeholder="2424"></div>'
+      +'<div class="fl"><label>Κόστος εμπρός (€)</label><input class="fi" id="tf_fc_'+v.id+'" type="number" step="0.01"></div>'
+      +'</div>'
+      +'<div class="tire-sec-title">Πίσω</div><div class="fg2" style="margin-bottom:8px">'
+      +'<div class="fl"><label>Διάσταση πίσω</label><input class="fi" id="tf_rs_'+v.id+'" placeholder="160/60-17"></div>'
+      +'<div class="fl"><label>Μάρκα πίσω</label><input class="fi" id="tf_rb_'+v.id+'" placeholder="Michelin"></div>'
+      +'<div class="fl"><label>Μοντέλο πίσω</label><input class="fi" id="tf_rm_'+v.id+'" placeholder="Road 6"></div>'
+      +'<div class="fl"><label>DOT πίσω</label><input class="fi" id="tf_rd_'+v.id+'" placeholder="2424"></div>'
+      +'<div class="fl"><label>Κόστος πίσω (€)</label><input class="fi" id="tf_rc_'+v.id+'" type="number" step="0.01"></div>'
+      +'</div>';
+  } else {
+    html+='<div class="fg2" style="margin-bottom:8px">'
+      +'<div class="fl"><label>Διάσταση</label><input class="fi" id="tf_sz_'+v.id+'" placeholder="205/55 R16"></div>'
+      +'<div class="fl"><label>Μάρκα</label><input class="fi" id="tf_br_'+v.id+'" placeholder="Michelin"></div>'
+      +'<div class="fl"><label>Μοντέλο</label><input class="fi" id="tf_mo_'+v.id+'" placeholder="Primacy 4"></div>'
+      +'<div class="fl"><label>Τύπος</label><select class="fi" id="tf_se_'+v.id+'"><option>Θερινό</option><option>Χειμερινό</option><option>All Season</option></select></div>'
+      +'<div class="fl"><label>DOT (4 ψηφία)</label><input class="fi" id="tf_do_'+v.id+'" placeholder="2424"></div>'
+      +'<div class="fl"><label>Δείκτης φορτίου</label><input class="fi" id="tf_lo_'+v.id+'" placeholder="91"></div>'
+      +'<div class="fl"><label>Δείκτης ταχύτητας</label><input class="fi" id="tf_sp_'+v.id+'" placeholder="V"></div>'
+      +'<div class="fl"><label>Κόστος αγοράς (€)</label><input class="fi" id="tf_pc_'+v.id+'" type="number" step="0.01"></div>'
+      +'</div>';
+  }
+  html+='<div class="fg2" style="margin-bottom:8px">'
+    +'<div class="fl"><label>Ημερομηνία τοποθέτησης *</label><input class="fi" id="tf_dt_'+v.id+'" type="date"></div>'
+    +'<div class="fl"><label>Χλμ κατά τοποθέτηση</label><input class="fi" id="tf_km_'+v.id+'" type="number" placeholder="'+(v.km||'')+'"></div>'
+    +'<div class="fl"><label>Κόστος τοποθέτησης (€)</label><input class="fi" id="tf_ic_'+v.id+'" type="number" step="0.01"></div>'
+    +'<div class="fl"><label>Συνολικό κόστος (€)</label><input class="fi" id="tf_tc_'+v.id+'" type="number" step="0.01"></div>'
+    +'</div>'
+    +'<div class="fl" style="margin-bottom:10px"><label>Παρατηρήσεις</label><input class="fi" id="tf_nt_'+v.id+'" placeholder="π.χ. Ισορρόπηση included"></div>'
+    +'<button class="add-tire-btn" onclick="addTire(\''+v.id+'\')">✓ Καταχώρηση Ελαστικών</button>'
+    +'</div>';
+  return html;
 }
-
-// ══════════════════════════════════════════════════════
-//  PAYMENTS
-// ══════════════════════════════════════════════════════
-function switchDpTab(vid, tab) {
-  const svcDiv = document.getElementById('dp-svc-' + vid);
-  const payDiv = document.getElementById('dp-pay-' + vid);
-  const svcBtn = document.getElementById('tab-svc-' + vid);
-  const payBtn = document.getElementById('tab-pay-' + vid);
-  const tireDiv = document.getElementById('dp-tire-' + vid);
-  const tireBtn = document.getElementById('tab-tire-' + vid);
-  [svcDiv, payDiv, tireDiv].forEach(d => { if(d) d.style.display = 'none'; });
-  [svcBtn, payBtn, tireBtn].forEach(b => { if(b) b.classList.remove('active'); });
-  if (tab === 'svc') { if(svcDiv) svcDiv.style.display='block'; if(svcBtn) svcBtn.classList.add('active'); }
-  else if (tab === 'pay') { if(payDiv) payDiv.style.display='block'; if(payBtn) payBtn.classList.add('active'); }
-  else if (tab === 'tire') { if(tireDiv) tireDiv.style.display='block'; if(tireBtn) tireBtn.classList.add('active'); }
+function addTire(vid){
+  const v=appData.vehicles.find(x=>x.id===vid);if(!v)return;
+  const date=document.getElementById('tf_dt_'+vid)?.value;
+  if(!date){toast('Συμπλήρωσε ημερομηνία','error');return;}
+  if(!v.tires)v.tires=[];
+  const isMoto=v.type==='moto';
+  const e={date,km_at:document.getElementById('tf_km_'+vid)?.value||v.km||'',install_cost:document.getElementById('tf_ic_'+vid)?.value||'',total_cost:document.getElementById('tf_tc_'+vid)?.value||'',notes:document.getElementById('tf_nt_'+vid)?.value||''};
+  if(isMoto){
+    e.front_size=document.getElementById('tf_fs_'+vid)?.value||'';e.front_brand=document.getElementById('tf_fb_'+vid)?.value||'';
+    e.front_model=document.getElementById('tf_fm_'+vid)?.value||'';e.front_dot=document.getElementById('tf_fd_'+vid)?.value||'';
+    e.front_cost=document.getElementById('tf_fc_'+vid)?.value||'';
+    e.rear_size=document.getElementById('tf_rs_'+vid)?.value||'';e.rear_brand=document.getElementById('tf_rb_'+vid)?.value||'';
+    e.rear_model=document.getElementById('tf_rm_'+vid)?.value||'';e.rear_dot=document.getElementById('tf_rd_'+vid)?.value||'';
+    e.rear_cost=document.getElementById('tf_rc_'+vid)?.value||'';
+  } else {
+    e.size=document.getElementById('tf_sz_'+vid)?.value||'';e.brand=document.getElementById('tf_br_'+vid)?.value||'';
+    e.model=document.getElementById('tf_mo_'+vid)?.value||'';e.season=document.getElementById('tf_se_'+vid)?.value||'';
+    e.dot=document.getElementById('tf_do_'+vid)?.value||'';e.load=document.getElementById('tf_lo_'+vid)?.value||'';
+    e.speed=document.getElementById('tf_sp_'+vid)?.value||'';e.purchase_cost=document.getElementById('tf_pc_'+vid)?.value||'';
+  }
+  v.tires.unshift(e);saveToOneDrive();renderDetail();dpTab(vid,'tire');toast('Ελαστικά καταχωρήθηκαν ✓');
 }
-
-function addPayment(vid) {
-  const v = appData.vehicles.find(x=>x.id===vid);
-  if (!v) return;
-  const cat = document.getElementById('p_cat_'+vid)?.value;
-  const date = document.getElementById('p_date_'+vid)?.value;
-  const amount = document.getElementById('p_amount_'+vid)?.value;
-  const exp_date = document.getElementById('p_exp_'+vid)?.value;
-  const desc = document.getElementById('p_desc_'+vid)?.value;
-  if (!date) { toast('Συμπλήρωσε ημερομηνία πληρωμής', 'error'); return; }
-  if (!v.payments) v.payments = [];
-      if (!v.tires) v.tires = [];
-  v.payments.unshift({ cat, date, amount, exp_date, desc });
-  // Auto-update expiry date on vehicle if relevant
-  if (cat === 'Ασφάλεια' && exp_date) v.ins_exp = exp_date;
-  if (cat === 'ΚΤΕΟ' && exp_date) v.kteo_next = exp_date;
-  if (cat === 'Τέλη Κυκλοφορίας' && exp_date) v.tax_exp = exp_date;
-  saveToOneDrive();
-  renderVehicles();
-  selectedVid = vid;
-  renderDetail();
-  switchDpTab(vid, 'pay');
-  toast('Πληρωμή καταχωρήθηκε ✓');
-}
-
-function delPayment(vid, idx) {
-  if (!confirm('Διαγραφή πληρωμής;')) return;
-  const v = appData.vehicles.find(x=>x.id===vid);
-  if (!v) return;
-  v.payments.splice(idx, 1);
-  saveToOneDrive();
-  renderDetail();
-  switchDpTab(vid, 'pay');
-}
-
-// ══════════════════════════════════════════════════════
-//  DELETE VEHICLE
-// ══════════════════════════════════════════════════════
-function delVehicle(vid) {
-  const v = appData.vehicles.find(x=>x.id===vid);
-  if (!v) return;
-  if (!confirm('Διαγραφή οχήματος ' + v.plate + ' — ' + v.make + ' ' + v.model + ';\n\nΘα διαγραφούν επίσης τα σχετικά έξοδα και καύσιμα.')) return;
-  appData.vehicles = appData.vehicles.filter(x=>x.id!==vid);
-  appData.expenses = (appData.expenses||[]).filter(e=>e.vehicle!==vid);
-  appData.fuel = (appData.fuel||[]).filter(f=>f.vehicle!==vid);
-  saveToOneDrive();
-  renderVehicles();
-  toast('Το όχημα διαγράφηκε');
+function delTire(vid,i){
+  if(!confirm('Διαγραφή;'))return;
+  const v=appData.vehicles.find(x=>x.id===vid);if(!v)return;
+  v.tires.splice(i,1);saveToOneDrive();renderDetail();dpTab(vid,'tire');
 }
 
 // ══════════════════════════════════════════════════════
@@ -1108,8 +1067,8 @@ function renderVehicles() {
       </div>
       <div class="vcard-bot">
         <div class="vcard-km">Χλμ: <strong>${v.km?Number(v.km).toLocaleString('el-GR'):'—'}</strong></div>
-        <button class="edit-btn" onclick="event.stopPropagation();openEditV('${v.id}')">✏️ Επεξεργασία</button>
-        <button class="edit-btn" style="border-color:rgba(244,67,54,.35);color:var(--red);margin-left:4px" onclick="event.stopPropagation();delVehicle('${v.id}')">🗑️ Διαγραφή</button>
+        <button class="edit-btn" onclick="event.stopPropagation();openEditV('${v.id}')">✏️</button>
+        <button class="edit-btn" style="border-color:rgba(244,67,54,.3);color:var(--red)" onclick="event.stopPropagation();delVehicle('${v.id}')">🗑️</button>
       </div>
     `;
     grid.appendChild(el);
@@ -1190,200 +1149,22 @@ function renderDetail() {
       </div>
       <button class="add-svc-btn" onclick="addSvc('${v.id}')">✓ Καταχώρηση</button>
     </div>
-    </div>
-
-    <!-- PAYMENTS TAB CONTENT -->
-    <div id="dp-pay-${v.id}" style="display:none">
-      <div class="dp-title">Ιστορικό Πληρωμών</div>
-      <div class="pay-timeline" id="paylist-${v.id}">
-        ${(()=>{
-          const pays = v.payments||[];
-          if(!pays.length) return '<div class="pay-empty">Δεν υπάρχουν εγγραφές πληρωμών.<br>Πρόσθεσε την πρώτη παρακάτω.</div>';
-          return pays.map((p,i)=>`
-            <div class="pay-item">
-              <button class="pay-del" onclick="delPayment('${v.id}',${i})">✕</button>
-              <div class="pay-cat">${p.cat||''}</div>
-              <div class="pay-item-header">
-                <span class="pay-date">${fmtDate(p.date)}</span>
-                <span class="pay-amount">${p.amount?'€'+Number(p.amount).toFixed(2):''}</span>
-              </div>
-              ${p.desc?`<div class="pay-desc">${p.desc}</div>`:''}
-              ${p.exp_date?`<div class="pay-exp">⏰ Ισχύει έως: ${fmtDate(p.exp_date)}</div>`:''}
-            </div>`).join('');
-        })()}
-      </div>
-      <div class="pay-form">
-        <div class="pay-form-title">➕ ΠΡΟΣΘΗΚΗ ΠΛΗΡΩΜΗΣ</div>
-        <div class="fg2">
-          <div class="fl"><label>Κατηγορία *</label>
-            <select class="fi" id="p_cat_${v.id}">
-              <option>Ασφάλεια</option>
-              <option>ΚΤΕΟ</option>
-              <option>Τέλη Κυκλοφορίας</option>
-              <option>Παράβολο</option>
-              <option>Πρόστιμο</option>
-              <option>Επισκευή</option>
-              <option>Ελαστικά</option>
-              <option>Άλλο</option>
-            </select>
-          </div>
-          <div class="fl"><label>Ημερομηνία Πληρωμής *</label><input class="fi" id="p_date_${v.id}" type="date"></div>
-          <div class="fl"><label>Ποσό (€)</label><input class="fi" id="p_amount_${v.id}" type="number" step="0.01" placeholder="0.00"></div>
-          <div class="fl"><label>Ισχύει έως (Λήξη)</label><input class="fi" id="p_exp_${v.id}" type="date"></div>
-        </div>
-        <div class="fl" style="margin-top:8px">
-          <label>Περιγραφή / Αρ. Συμβολαίου</label>
-          <input class="fi" id="p_desc_${v.id}" placeholder="π.χ. ΜΙΝΕΤΤΑ #2782228, ετήσια ανανέωση">
-        </div>
-        <button class="add-svc-btn" style="background:rgba(61,108,255,.1);color:#6b8fff;border-color:rgba(61,108,255,.3);margin-top:10px" onclick="addPayment('${v.id}')">✓ Καταχώρηση Πληρωμής</button>
-      </div>
-    </div>
   `;
 
-  // Add tabs at the start of svc/pay sections
-  const tabsHtml = `<div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:16px">
-    <button class="dp-tab-btn active" id="tab-svc-${v.id}" onclick="switchDpTab('${v.id}','svc')">🔧 Service</button>
-    <button class="dp-tab-btn" id="tab-pay-${v.id}" onclick="switchDpTab('${v.id}','pay')">💳 Πληρωμές (${(v.payments||[]).length})</button>
-  </div>`;
+  // ── Inject tabs ──
+  const tabs = '<div class="dp-tabs">'
+    + '<button class="dp-tab active" id="dpt-svc-' + v.id + '" onclick="dpTab(\'' + v.id + '\',\'svc\')">🔧 Service</button>'
+    + '<button class="dp-tab" id="dpt-pay-' + v.id + '" onclick="dpTab(\'' + v.id + '\',\'pay\')">💳 Πληρωμές (' + (v.payments||[]).length + ')</button>'
+    + '<button class="dp-tab" id="dpt-tire-' + v.id + '" onclick="dpTab(\'' + v.id + '\',\'tire\')">🛞 Ελαστικά (' + (v.tires||[]).length + ')</button>'
+    + '</div>';
+  p.innerHTML = p.innerHTML.replace('<div class="dp-title">Ιστορικό Service</div>',
+    tabs + '<div id="dp-svc-' + v.id + '"><div class="dp-title">Ιστορικό Service</div>');
 
-      <!-- TIRES TAB -->
-      <div id="dp-tire-${v.id}" style="display:none">
-        ${(()=>{
-          const tires = v.tires||[];
-          const isMoto = v.type==='moto';
-          let html = '';
-
-          // Current tires warning
-          if(tires.length > 0) {
-            const cur = tires[0];
-            const dotYear = cur.dot ? parseInt(cur.dot.slice(-2)) + 2000 : null;
-            const dotAge = dotYear ? new Date().getFullYear() - dotYear : null;
-            const kmDriven = (v.km && cur.km_at) ? (Number(v.km) - Number(cur.km_at)) : null;
-
-            if(dotAge !== null && dotAge >= 6) {
-              html += `<div class="tire-danger">⛔ Τα ελαστικά είναι ${dotAge} ετών! Συστήνεται άμεση αλλαγή.</div>`;
-            } else if(dotAge !== null && dotAge >= 4) {
-              html += `<div class="tire-warn">⚠️ Τα ελαστικά είναι ${dotAge} ετών. Εξετάστε αλλαγή σύντομα.</div>`;
-            }
-            if(kmDriven !== null && kmDriven >= 40000) {
-              html += `<div class="tire-danger">⛔ Τα ελαστικά έχουν ${Number(kmDriven).toLocaleString('el-GR')} χλμ! Άμεση αλλαγή.</div>`;
-            } else if(kmDriven !== null && kmDriven >= 30000) {
-              html += `<div class="tire-warn">⚠️ Τα ελαστικά έχουν ${Number(kmDriven).toLocaleString('el-GR')} χλμ. Προγραμματίστε αλλαγή.</div>`;
-            }
-
-            // Current tires display
-            html += '<div class="tire-current"><div class="tire-current-label">🛞 Τρέχοντα Ελαστικά</div>';
-            if(isMoto) {
-              html += '<div class="tire-section-title">Εμπρός</div>';
-              html += '<div class="tire-specs">';
-              html += cur.front_size ? `<div class="tire-spec"><div class="tire-spec-label">Διάσταση</div><div class="tire-spec-val big">${cur.front_size}</div></div>` : '';
-              html += cur.front_brand ? `<div class="tire-spec"><div class="tire-spec-label">Μάρκα/Μοντέλο</div><div class="tire-spec-val">${cur.front_brand} ${cur.front_model||''}</div></div>` : '';
-              html += cur.front_dot ? `<div class="tire-spec"><div class="tire-spec-label">DOT</div><div class="tire-spec-val">${cur.front_dot}</div></div>` : '';
-              html += cur.front_cost ? `<div class="tire-spec"><div class="tire-spec-label">Κόστος</div><div class="tire-spec-val">€${cur.front_cost}</div></div>` : '';
-              html += '</div>';
-              html += '<div class="tire-section-title">Πίσω</div>';
-              html += '<div class="tire-specs">';
-              html += cur.rear_size ? `<div class="tire-spec"><div class="tire-spec-label">Διάσταση</div><div class="tire-spec-val big">${cur.rear_size}</div></div>` : '';
-              html += cur.rear_brand ? `<div class="tire-spec"><div class="tire-spec-label">Μάρκα/Μοντέλο</div><div class="tire-spec-val">${cur.rear_brand} ${cur.rear_model||''}</div></div>` : '';
-              html += cur.rear_dot ? `<div class="tire-spec"><div class="tire-spec-label">DOT</div><div class="tire-spec-val">${cur.rear_dot}</div></div>` : '';
-              html += cur.rear_cost ? `<div class="tire-spec"><div class="tire-spec-label">Κόστος</div><div class="tire-spec-val">€${cur.rear_cost}</div></div>` : '';
-              html += '</div>';
-            } else {
-              html += '<div class="tire-specs">';
-              html += cur.size ? `<div class="tire-spec"><div class="tire-spec-label">Διάσταση</div><div class="tire-spec-val big">${cur.size}</div></div>` : '';
-              html += cur.brand ? `<div class="tire-spec"><div class="tire-spec-label">Μάρκα/Μοντέλο</div><div class="tire-spec-val">${cur.brand} ${cur.model||''}</div></div>` : '';
-              html += cur.season ? `<div class="tire-spec"><div class="tire-spec-label">Τύπος</div><div class="tire-spec-val">${cur.season}</div></div>` : '';
-              html += cur.dot ? `<div class="tire-spec"><div class="tire-spec-label">DOT</div><div class="tire-spec-val">${cur.dot}</div></div>` : '';
-              html += cur.load ? `<div class="tire-spec"><div class="tire-spec-label">Φορτίο/Ταχύτητα</div><div class="tire-spec-val">${cur.load}${cur.speed||''}</div></div>` : '';
-              html += kmDriven !== null ? `<div class="tire-spec"><div class="tire-spec-label">Χλμ στα ελαστικά</div><div class="tire-spec-val">${Number(kmDriven).toLocaleString('el-GR')} χλμ</div></div>` : '';
-              html += '</div>';
-            }
-            if(cur.notes) html += `<div style="margin-top:8px;font-size:.82rem;color:var(--text2)">${cur.notes}</div>`;
-            html += '</div>';
-          }
-
-          // History
-          if(tires.length > 0) {
-            html += '<div style="font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Ιστορικό Αλλαγών</div>';
-            html += '<div class="tire-history">';
-            tires.forEach((t,i) => {
-              const isFirst = i===0;
-              const dotYear = t.dot||t.front_dot ? parseInt((t.dot||t.front_dot).slice(-2)) + 2000 : null;
-              const age = dotYear ? `${new Date().getFullYear()-dotYear} έτη` : '';
-              const size = isMoto ? `${t.front_size||''}/${t.rear_size||''}` : (t.size||'');
-              const brand = isMoto ? `${t.front_brand||''}` : (t.brand||'');
-              html += `<div class="tire-item ${isFirst?'current':''}">
-                <button class="tire-del" onclick="delTire('${v.id}',${i})">✕</button>
-                <div class="tire-item-header">
-                  <span class="tire-item-date">${fmtDate(t.date)}</span>
-                  <span class="tire-item-cost">${t.total_cost?'€'+t.total_cost:''}</span>
-                </div>
-                <div class="tire-item-brand">${brand}</div>
-                <div class="tire-item-size">${size}${t.season?' · '+t.season:''}</div>
-                <div class="tire-item-km">${t.km_at?'Τοποθέτηση: '+Number(t.km_at).toLocaleString('el-GR')+' χλμ':''}</div>
-                ${age?`<div class="tire-item-age" style="color:${dotYear&&new Date().getFullYear()-dotYear>=6?'var(--red)':dotYear&&new Date().getFullYear()-dotYear>=4?'var(--amber)':'var(--text3)'}">Ηλικία: ${age}</div>`:''}
-                ${isFirst?'<span style="position:absolute;top:10px;left:14px;font-size:.6rem;background:rgba(201,168,76,.2);color:var(--gold);padding:1px 6px;border-radius:4px;font-weight:700">ΤΡΕΧΟΝΤΑ</span>':''}
-              </div>`;
-            });
-            html += '</div>';
-          } else {
-            html += '<div class="pay-empty">🛞 Δεν υπάρχουν εγγραφές ελαστικών.</div>';
-          }
-          return html;
-        })()}
-
-        <!-- Add tire form -->
-        <div class="tire-add-form">
-          <div class="tire-add-title">➕ Νέα Αλλαγή Ελαστικών</div>
-          ${v.type==='moto' ? `
-            <div class="tire-section-title">Εμπρός Ελαστικό</div>
-            <div class="fg2" style="margin-bottom:8px">
-              <div class="fl"><label>Διάσταση εμπρός</label><input class="fi" id="tf_fs_${v.id}" placeholder="π.χ. 120/70-17"></div>
-              <div class="fl"><label>Μάρκα</label><input class="fi" id="tf_fb_${v.id}" placeholder="π.χ. Michelin"></div>
-              <div class="fl"><label>Μοντέλο</label><input class="fi" id="tf_fm_${v.id}" placeholder="π.χ. Road 6"></div>
-              <div class="fl"><label>DOT εμπρός</label><input class="fi" id="tf_fd_${v.id}" placeholder="π.χ. 2424"></div>
-              <div class="fl"><label>Δείκτης φορτίου</label><input class="fi" id="tf_fl_${v.id}" placeholder="π.χ. 58"></div>
-              <div class="fl"><label>Δείκτης ταχύτητας</label><input class="fi" id="tf_fsp_${v.id}" placeholder="π.χ. W"></div>
-              <div class="fl"><label>Κόστος εμπρός (€)</label><input class="fi" id="tf_fc_${v.id}" type="number" step="0.01"></div>
-            </div>
-            <div class="tire-section-title">Πίσω Ελαστικό</div>
-            <div class="fg2" style="margin-bottom:8px">
-              <div class="fl"><label>Διάσταση πίσω</label><input class="fi" id="tf_rs_${v.id}" placeholder="π.χ. 160/60-17"></div>
-              <div class="fl"><label>Μάρκα</label><input class="fi" id="tf_rb_${v.id}" placeholder="π.χ. Michelin"></div>
-              <div class="fl"><label>Μοντέλο</label><input class="fi" id="tf_rm_${v.id}" placeholder="π.χ. Road 6"></div>
-              <div class="fl"><label>DOT πίσω</label><input class="fi" id="tf_rd_${v.id}" placeholder="π.χ. 2424"></div>
-              <div class="fl"><label>Δείκτης φορτίου</label><input class="fi" id="tf_rl_${v.id}" placeholder="π.χ. 62"></div>
-              <div class="fl"><label>Δείκτης ταχύτητας</label><input class="fi" id="tf_rsp_${v.id}" placeholder="π.χ. W"></div>
-              <div class="fl"><label>Κόστος πίσω (€)</label><input class="fi" id="tf_rc_${v.id}" type="number" step="0.01"></div>
-            </div>
-          ` : `
-            <div class="fg2" style="margin-bottom:8px">
-              <div class="fl"><label>Διάσταση</label><input class="fi" id="tf_sz_${v.id}" placeholder="π.χ. 205/55 R16"></div>
-              <div class="fl"><label>Μάρκα</label><input class="fi" id="tf_br_${v.id}" placeholder="π.χ. Michelin"></div>
-              <div class="fl"><label>Μοντέλο</label><input class="fi" id="tf_mo_${v.id}" placeholder="π.χ. Primacy 4"></div>
-              <div class="fl"><label>Τύπος</label>
-                <select class="fi" id="tf_se_${v.id}">
-                  <option>Θερινό</option><option>Χειμερινό</option><option>All Season</option>
-                </select>
-              </div>
-              <div class="fl"><label>DOT (4 ψηφία)</label><input class="fi" id="tf_do_${v.id}" placeholder="π.χ. 2424 = εβδ.24/2024"></div>
-              <div class="fl"><label>Δείκτης φορτίου</label><input class="fi" id="tf_lo_${v.id}" placeholder="π.χ. 91"></div>
-              <div class="fl"><label>Δείκτης ταχύτητας</label><input class="fi" id="tf_sp_${v.id}" placeholder="π.χ. V"></div>
-              <div class="fl"><label>Κόστος αγοράς (€)</label><input class="fi" id="tf_pc_${v.id}" type="number" step="0.01"></div>
-            </div>
-          `}
-          <div class="fg2" style="margin-bottom:8px">
-            <div class="fl"><label>Ημερομηνία τοποθέτησης *</label><input class="fi" id="tf_dt_${v.id}" type="date"></div>
-            <div class="fl"><label>Χλμ κατά τοποθέτηση</label><input class="fi" id="tf_km_${v.id}" type="number" placeholder="${v.km||''}"></div>
-            <div class="fl"><label>Κόστος τοποθέτησης (€)</label><input class="fi" id="tf_ic_${v.id}" type="number" step="0.01"></div>
-            <div class="fl"><label>Συνολικό κόστος (€)</label><input class="fi" id="tf_tc_${v.id}" type="number" step="0.01"></div>
-          </div>
-          <div class="fl" style="margin-bottom:10px"><label>Παρατηρήσεις</label><input class="fi" id="tf_nt_${v.id}" placeholder="π.χ. Από κατάστημα XYZ, ισορρόπηση included"></div>
-          <button class="tire-add-btn" onclick="addTire('${v.id}')">✓ Καταχώρηση Ελαστικών</button>
-        </div>
-      </div>
-
-  p.innerHTML = p.innerHTML.replace('<div class="dp-title">Ιστορικό Service</div>', tabsHtml + '<div id="dp-svc-${v.id}"><div class="dp-title">Ιστορικό Service</div>');
+  // ── Append pay & tire panels ──
+  const payHtml = buildPayTab(v);
+  const tireHtml = buildTireTab(v);
+  p.innerHTML += '<div id="dp-pay-' + v.id + '" style="display:none">' + payHtml + '</div>'
+               + '<div id="dp-tire-' + v.id + '" style="display:none">' + tireHtml + '</div>';
 }
 
 function addSvc(vid) {
@@ -1455,106 +1236,41 @@ function remColor(days) {
 }
 
 function renderReminders() {
-  const filterEl = document.getElementById('remFilter');
-  const listEl = document.getElementById('remList');
-
-  // Build all items
-  function getItems(vehicles) {
-    const items = [];
-    vehicles.forEach(v => {
-      [
-        {lbl:'Ασφάλεια', date:v.ins_exp, icon:'🛡️', extra:v.ins_co||''},
-        {lbl:'ΚΤΕΟ', date:v.kteo_next, icon:'🔍', extra:''},
-        {lbl:'Τέλη Κυκλοφορίας', date:v.tax_exp, icon:'📋', extra:''},
-        {lbl:'Επόμενο Service', date:v.svc_next, icon:'🔧', extra:v.svc_next_desc||''},
-        {lbl:'Άδεια Οδήγησης', date:v.license_exp, icon:'🪪', extra:''},
-        {lbl:'Παράβολο', date:v.paravolo_exp, icon:'📄', extra:v.paravolo_desc||''},
-      ].forEach(c => {
-        if (!c.date) return;
-        const days = daysUntil(c.date);
-        const col = days < 0 ? 'red' : days <= 30 ? 'amber' : 'green';
-        items.push({...c, vid:v.id, plate:v.plate, make:v.make, model:v.model, days, col});
-      });
-    });
-    return items;
-  }
-
-  const allItems = getItems(appData.vehicles);
-  const activeFilter = window._remFilter || 'all';
-
-  // Build filter buttons
-  function urgClass(items) {
-    if (items.some(i=>i.days!==null&&i.days<0)) return 'red';
-    if (items.some(i=>i.days!==null&&i.days<=30)) return 'amber';
-    return 'green';
-  }
-
-  let fhtml = `<button class="rem-filter-btn ${activeFilter==='all'?'active':''}" onclick="setRemFilter('all')">
-    📋 Όλα <span class="rem-count-badge ${urgClass(allItems)}">${allItems.length}</span>
-  </button>`;
-
-  appData.vehicles.forEach(v => {
-    const vi = getItems([v]);
-    const cls = urgClass(vi);
-    fhtml += `<button class="rem-filter-btn ${activeFilter===v.id?'active':''}" onclick="setRemFilter('${v.id}')">
-      <span class="rem-filter-plate">${v.plate}</span>
-      <span style="font-size:.72rem;color:var(--text3)">${v.make}</span>
-      ${vi.length ? `<span class="rem-count-badge ${cls}">${vi.length}</span>` : ''}
-    </button>`;
+  const fe=document.getElementById('remFilter');
+  const le=document.getElementById('remList');
+  const all=getRemItems(appData.vehicles);
+  function urgCls(items){if(items.some(i=>i.days<0))return'red';if(items.some(i=>i.days<=30))return'amber';return'green';}
+  let fh='<button class="rem-filter-btn '+(window._remF==='all'||!window._remF?'active':'')+'" onclick="setRemFilter('all')">📋 Όλα <span class="rem-cnt '+urgCls(all)+'">'+all.length+'</span></button>';
+  appData.vehicles.forEach(v=>{
+    const vi=getRemItems([v]);
+    fh+='<button class="rem-filter-btn '+(window._remF===v.id?'active':'')+'" onclick="setRemFilter(''+v.id+'')">'
+      +'<span class="rem-filter-plate">'+v.plate+'</span> '
+      +(vi.length?'<span class="rem-cnt '+urgCls(vi)+'">'+vi.length+'</span>':'')+'</button>';
   });
-  filterEl.innerHTML = fhtml;
-
-  // Filter items
-  const items = activeFilter === 'all' ? allItems : allItems.filter(i=>i.vid===activeFilter);
-  const orderMap = {red:0, amber:1, green:2};
-  items.sort((a,b) => {
-    const oa = orderMap[a.col]??3, ob = orderMap[b.col]??3;
-    return oa !== ob ? oa - ob : (a.days??9999) - (b.days??9999);
-  });
-
-  if (!items.length) {
-    listEl.innerHTML = '<div class="empty">Δεν υπάρχουν υπενθυμίσεις.<br>Συμπλήρωσε ημερομηνίες στα οχήματα.</div>';
-    return;
-  }
-
-  const groups = [
-    {key:'red',   label:'🔴 Ληγμένα — Άμεση Ενέργεια', color:'var(--red)'},
-    {key:'amber', label:'🟡 Λήγουν εντός 30 ημερών',    color:'var(--amber)'},
-    {key:'green', label:'🟢 Εντάξει',                    color:'var(--green)'},
-  ];
-
-  let html = '';
-  groups.forEach(g => {
-    const gi = items.filter(i=>i.col===g.key);
-    if (!gi.length) return;
-    html += `<div class="rem-group-title" style="color:${g.color}">${g.label} <span style="background:rgba(255,255,255,.06);border-radius:10px;padding:1px 8px;font-size:.7rem">${gi.length}</span></div>`;
-    html += gi.map(it => {
-      const c = it.col==='red'?'var(--red)':it.col==='amber'?'var(--amber)':'var(--green)';
-      const dTxt = it.days<0 ? `Έληξε ${Math.abs(it.days)} μέρες πριν` :
-                   it.days===0 ? 'Λήγει ΣΗΜΕΡΑ!' :
-                   it.days===1 ? 'Αύριο!' :
-                   it.days<=7  ? `Σε ${it.days} μέρες ⚡` :
-                                 `Σε ${it.days} μέρες`;
-      const plateTag = activeFilter==='all' ? `<span style="font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:1.5px;background:var(--bg2);border:1px solid var(--border);padding:1px 7px;border-radius:4px;color:var(--text3)">${it.plate}</span>` : '';
-      return `<div class="rem-item" style="border-left:3px solid ${c};margin-bottom:8px">
-        <div class="rem-bar" style="background:${c}"></div>
-        <div class="rem-info">
-          <div class="rem-title" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${it.icon} ${it.lbl} ${plateTag}</div>
-          <div class="rem-sub">${it.make} ${it.model}${it.extra?' · '+it.extra:''}</div>
-        </div>
-        <div class="rem-right">
-          <div class="rem-date" style="color:${c}">${fmtDate(it.date)}</div>
-          <div class="rem-days" style="color:${c};font-size:.72rem">${dTxt}</div>
-        </div>
-      </div>`;
+  if(fe)fe.innerHTML=fh;
+  const f=window._remF||'all';
+  const items=f==='all'?all:all.filter(i=>i.vid===f);
+  const ord={red:0,amber:1,green:2};
+  items.sort((a,b)=>(ord[a.col]??3)-(ord[b.col]??3)||(a.days??9999)-(b.days??9999));
+  if(!items.length){le.innerHTML='<div class="empty">Δεν υπάρχουν υπενθυμίσεις.</div>';return;}
+  const grp=[{k:'red',l:'🔴 Ληγμένα',c:'var(--red)'},{k:'amber',l:'🟡 Εντός 30 ημερών',c:'var(--amber)'},{k:'green',l:'🟢 Εντάξει',c:'var(--green)'}];
+  let html='';
+  grp.forEach(g=>{
+    const gi=items.filter(i=>i.col===g.k);if(!gi.length)return;
+    html+='<div style="font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:'+g.c+';margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)">'+g.l+'</div>';
+    html+=gi.map(it=>{
+      const c=it.col==='red'?'var(--red)':it.col==='amber'?'var(--amber)':'var(--green)';
+      const dt=it.days<0?'Έληξε '+Math.abs(it.days)+'μ. πριν':it.days===0?'ΣΗΜΕΡΑ!':it.days<=5?'🚨 '+it.days+' μέρες':it.days<=7?it.days+'μ. ⚡':it.days+' μέρες';
+      const ptag=f==='all'?'<span style="font-family:Bebas Neue,sans-serif;font-size:.75rem;letter-spacing:1.5px;background:var(--bg2);border:1px solid var(--border);padding:1px 6px;border-radius:4px;color:var(--text3);margin-left:4px">'+it.plate+'</span>':'';
+      return '<div class="rem-item" style="border-left:3px solid '+c+';margin-bottom:8px">'
+        +'<div class="rem-bar" style="background:'+c+'"></div>'
+        +'<div class="rem-info"><div class="rem-title">'+it.icon+' '+it.lbl+ptag+'</div>'
+        +'<div class="rem-sub">'+it.make+' '+it.model+(it.extra?' · '+it.extra:'')+'</div></div>'
+        +'<div class="rem-right"><div class="rem-date" style="color:'+c+'">'+fmtDate(it.date)+'</div>'
+        +'<div class="rem-days" style="color:'+c+';font-size:.72rem">'+dt+'</div></div></div>';
     }).join('');
   });
-  listEl.innerHTML = html;
-}
-
-function setRemFilter(id) {
-  window._remFilter = id;
-  renderReminders();
+  le.innerHTML=html;
 }
 
 // ══════════════════════════════════════════════════════
@@ -1644,7 +1360,7 @@ function showPage(name, btn) {
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   if(btn) btn.classList.add('active');
-  if(name==='reminders') { renderReminders(); checkAndPlaySoundAlerts(); }
+  if(name==='reminders'){renderReminders();checkAndPlaySoundAlerts();}
   if(name==='expenses') renderExpenses();
   if(name==='fuel') renderFuel();
 }
